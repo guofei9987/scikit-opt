@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="acc16020-f4ab-4ac6-b137-39d1014ee6ac" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/demo_pso.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pso.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/demo_pso.py" afterPath="$PROJECT_DIR$/demo_pso.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pso.py" afterPath="$PROJECT_DIR$/pso.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -15,11 +15,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="pso.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="pso.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pso.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2976">
-              <caret line="66" column="0" lean-forward="true" selection-start-line="66" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
+            <state relative-caret-position="-997">
+              <caret line="10" column="21" lean-forward="true" selection-start-line="10" selection-start-column="21" selection-end-line="10" selection-end-column="21" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -27,11 +27,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="demo_pso.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="demo_pso.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/demo_pso.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="682">
-              <caret line="11" column="20" lean-forward="true" selection-start-line="11" selection-start-column="20" selection-end-line="11" selection-end-column="20" />
+              <caret line="15" column="21" lean-forward="true" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="21" />
               <folding />
             </state>
           </provider>
@@ -76,14 +76,14 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/haha.py" />
-        <option value="$PROJECT_DIR$/pso.py" />
         <option value="$PROJECT_DIR$/demo_pso.py" />
+        <option value="$PROJECT_DIR$/pso.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="628" />
-    <option name="y" value="75" />
+    <option name="x" value="1282" />
+    <option name="y" value="114" />
     <option name="width" value="3131" />
     <option name="height" value="1949" />
   </component>
@@ -208,7 +208,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="628" y="75" width="3131" height="1949" extended-state="0" />
+    <frame x="1282" y="114" width="3131" height="1949" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.10095363" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -285,21 +285,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pso.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2976">
-          <caret line="66" column="0" lean-forward="true" selection-start-line="66" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/demo_pso.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="682">
-          <caret line="11" column="20" lean-forward="true" selection-start-line="11" selection-start-column="20" selection-end-line="11" selection-end-column="20" />
+          <caret line="15" column="21" lean-forward="true" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="21" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pso.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-997">
+          <caret line="10" column="21" lean-forward="true" selection-start-line="10" selection-start-column="21" selection-end-line="10" selection-end-column="21" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

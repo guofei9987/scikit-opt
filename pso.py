@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 
 class PSO():
-    def __init__(self, func, pop, dim, max_iter):
+    def __init__(self, func, dim, pop=40, max_iter=150):
         self.func = func
         self.w = 0.8
         self.c1 = 2
@@ -45,7 +45,7 @@ class PSO():
         self.init_Population()
         for i in range(self.pop):
             self.V = self.w * self.V + self.c1 * self.r1 * (self.pbest_x - self.X) + self.c2 * self.r2 * (
-            self.gbest_x - self.X)
+                self.gbest_x - self.X)
             self.X = self.X + self.V
 
             self.cal_y()
@@ -62,9 +62,3 @@ class PSO():
     def plot_history(self):
         plt.plot(self.gbest_y_hist)
         plt.show()
-
-
-
-
-
-
