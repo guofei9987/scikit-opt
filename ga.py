@@ -3,11 +3,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-def gray2rv(gray_code):
-    # demo of Gray Code to real value
-    len_gray_code = len(gray_code)
-    b = gray_code.cumsum() % 2
-    return sum(b * 0.5 ** np.array(1, len_gray_code + 1))
+# def gray2rv(gray_code):
+#     # demo of Gray Code to real value
+#     len_gray_code = len(gray_code)
+#     b = gray_code.cumsum() % 2
+#     return sum(b * 0.5 ** np.array(1, len_gray_code + 1))
 
 
 def bs2rv(Chrom, FieldD):
@@ -42,7 +42,7 @@ def bs2rv(Chrom, FieldD):
 def ranking(func, Phen):
     FitV = []
     for i in Phen:
-        FitV.append(func(i))
+        FitV.append(- func(i)) # 为了统一求最小值，所以设置函数值越小，适应性越高
     FitV = np.array(FitV)
     return FitV
 
@@ -92,7 +92,7 @@ def mut(Chrom, Pm=0.01):
 
 def demo_func1(p):
     x, y, z = p
-    return -(x ** 2 + y ** 2 + z ** 2)
+    return x ** 2 + y ** 2 + z ** 2
 
 
 def ga(func=demo_func1, pop=50, iter_max=200, lb=[-1, -10, -5], ub=[2, 10, 2], precision=None, Pm=0.001):

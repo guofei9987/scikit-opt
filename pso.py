@@ -19,7 +19,7 @@ class PSO():
         self.pbest_x = np.zeros((self.pop, self.dim))  # 个体经历的最佳位置
         self.gbest_x = np.zeros((1, self.dim))  # 全局最佳位置
         self.pbest_y = np.zeros(self.pop)  # 每个个体的历史最佳适应值
-        self.gbest_y = 1e10  # 全局最佳适应值
+        self.gbest_y = np.inf  # 全局最佳适应值
         self.gbest_y_hist = []  # 记录历史全局最优，用于画图
 
     def cal_y(self):
