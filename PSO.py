@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-class PSO():
+class PSO:
     def __init__(self, func, dim, pop=40, max_iter=150):
         self.func = func
         self.w = 0.8
@@ -10,11 +10,11 @@ class PSO():
         self.c2 = 2
         self.r1 = 0.6
         self.r2 = 0.3
-        self.pop = pop  # 粒子数量
-        self.dim = dim  # 搜索维度
+        self.pop = pop  # number of particles
+        self.dim = dim  # dimension of particles, which is the number of variables of func
         self.max_iter = max_iter  # 迭代次数
-        self.X = np.zeros((self.pop, self.dim))  # 所有粒子的位置
-        self.V = np.zeros((self.pop, self.dim))  # 所有粒子的速度
+        self.X = np.zeros((self.pop, self.dim))  # location of particles, which is the value of variables of func
+        self.V = np.zeros((self.pop, self.dim))  # speed of particles
         self.y = np.zeros(self.pop)
         self.pbest_x = np.zeros((self.pop, self.dim))  # 个体经历的最佳位置
         self.gbest_x = np.zeros((1, self.dim))  # 全局最佳位置
@@ -23,11 +23,8 @@ class PSO():
         self.gbest_y_hist = []  # 记录历史全局最优，用于画图
 
     def cal_y(self):
-        # 计算y值
-        y = []
-        for i in self.X:
-            y.append(self.func(i))
-        self.y = np.array(y)
+        # calculate y
+        self.y = np.array([self.func(i) for i in self.X])
 
     def init_Population(self):
         X = np.random.rand(self.pop, self.dim)
@@ -44,10 +41,10 @@ class PSO():
     def fit(self):
         self.init_Population()
         for i in range(self.pop):
-            self.V = self.w * self.V + self.c1 * self.r1 * (self.pbest_x - self.X) + self.c2 * self.r2 * (
-                self.gbest_x - self.X)
+            self.V = self.w * self.V + \
+                     self.c1 * self.r1 * (self.pbest_x - self.X) + \
+                     self.c2 * self.r2 * (self.gbest_x - self.X)
             self.X = self.X + self.V
-
             self.cal_y()
 
             for i in range(self.pop):

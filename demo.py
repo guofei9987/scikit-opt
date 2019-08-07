@@ -1,16 +1,20 @@
-from pso import PSO
+from PSO import PSO
 
 from test_func import sphere as obj_func
 
 
 print('------------')
 print('starting PSO...')
-# my_pso = PSO(func=obj_func, pop=30, dim=5, max_iter=100)
-my_pso = PSO(func=obj_func, dim=3)
-fitness = my_pso.fit()
-print('best_x is ',my_pso.gbest_x)
-print('best_y is ',my_pso.gbest_y)
-my_pso.plot_history()
+
+def demo_func(x):
+    x1, x2, x3 = x
+    return x1 ** 2 + (x2 - 0.05) ** 2 + x3 ** 2
+
+pso = PSO(func=obj_func, dim=3)
+fitness = pso.fit()
+print('best_x is ',pso.gbest_x)
+print('best_y is ',pso.gbest_y)
+pso.plot_history()
 
 
 

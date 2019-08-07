@@ -43,20 +43,15 @@ plt.show()
 
 
 ```py
-def demo_func2(p):
-    # Sphere函数
-    out_put = 0
-    for i in p:
-        out_put += i ** 2
-    return out_put
+def demo_func(x):
+    x1, x2, x3 = x
+    return x1 ** 2 + (x2 - 0.05) ** 2 + x3 ** 2
+
+pso = PSO(func=demo_func, dim=3)
+fitness = pso.fit()
+print('best_x is ',pso.gbest_x)
+print('best_y is ',pso.gbest_y)
+pso.plot_history()
 ```
 
-```py
-from pso import PSO
-my_pso = PSO(func=demo_func2, pop=30, dim=5, max_iter=100)
-fitness = my_pso.fit()
-print(my_pso.gbest_x)
-print(my_pso.gbest_y)
-my_pso.plot_history()
-```
 ![Figure_1-1](https://i.imgur.com/4C9Yjv7.png)
