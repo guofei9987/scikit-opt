@@ -61,27 +61,22 @@ class GA:
         self.X = X
         return self.X
 
-    def ranking(self):
+    def ranking(self, X):
         # GA select the biggest one, but we want to minimize func, so we put a negative here
-        func, X = self.func, self.X
-        FitV = np.array([-func(x) for x in X])
+        FitV = np.array([-self.func(x) for x in X])
         return FitV
 
     def selection(self, FitV):
         # do Roulette to select the best ones
-        # FitV: 适应度
-        # index
-        # sel_index=[]
-        pop, = FitV.shape
         FitV = FitV - FitV.min() + 1e-10
         sel_prob = FitV / FitV.sum()
-        sel_index = np.random.choice(range(pop), size=pop, p=sel_prob)
-        return sel_index
+        sel_index = np.random.choice(range(self.pop), size=self.pop, p=sel_prob)
+        self.Chrom = self.Chrom[sel_index, :]  # next generation
+        return self.Chrom
 
     def crossover(self):
-        # 奇数个的处理
         Chrom, pop = self.Chrom, self.pop
-        i = int(pop / 2)  # crossover in the point i
+        i=np.random.randint(1,self.total_Lind)  # crossover at the point i
         Chrom1 = np.concatenate([Chrom[::2, :i], Chrom[1::2, i:]], axis=1)
         Chrom2 = np.concatenate([Chrom[1::2, :i], Chrom[0::2, i:]], axis=1)
         self.Chrom = np.concatenate([Chrom1, Chrom2], axis=0)
@@ -89,28 +84,24 @@ class GA:
 
     def mut(self):
         # mutation
-        Chrom = self.Chrom
-        Pm = self.Pm
-        pop = self.pop
-        total_Lind = self.total_Lind
-        mask = (np.random.rand(pop, total_Lind) < Pm) * 1
-        self.Chrom = (mask + Chrom) % 2
+        mask = (np.random.rand(self.pop, self.total_Lind) < self.Pm) * 1
+        self.Chrom = (mask + self.Chrom) % 2
         return self.Chrom
 
     def fit(self):
         max_iter = self.max_iter
         func = self.func
         for i in range(max_iter):
+            X = self.bs2rv()
+            FitV = self.ranking(X)
+            self.selection(FitV)
             self.crossover()
             self.mut()
-            X = self.bs2rv()  # func的输入
-            FitV = self.ranking()  # func的输出，ndarray
-            sel_index = self.selection(FitV)  # index，选中的基因
-            self.Chrom = self.Chrom[sel_index, :]  # 选出基因
+
+            # record the best ones
             generation_best_X = X[FitV.argmax(), :]
             self.generation_best_X.append(generation_best_X)
             self.generation_best_ranking.append(FitV.max())
             self.FitV_history.append(FitV)
         general_best = self.generation_best_X[(np.array(self.generation_best_ranking)).argmax()]
         return general_best, func(general_best)
-
