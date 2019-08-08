@@ -2,6 +2,7 @@ import numpy as np
 
 
 class GA:
+    # genetic algorithms
     def __init__(self, func,
                  lb=[-1, -10, -5], ub=[2, 10, 2],
                  precision=None, pop=50, max_iter=200,
@@ -65,7 +66,9 @@ class GA:
 
     def selection(self, FitV):
         # do Roulette to select the best ones
-        FitV = FitV - FitV.min() + 1e-10
+        # FitV = FitV - FitV.min() + 1e-10
+        FitV = (FitV - FitV.min())/(FitV.max() - FitV.min()+1e-10) + 0.2
+        # the worst one should still has a chance to be selected
         sel_prob = FitV / FitV.sum()
         sel_index = np.random.choice(range(self.pop), size=self.pop, p=sel_prob)
         self.Chrom = self.Chrom[sel_index, :]  # next generation
@@ -104,13 +107,8 @@ class GA:
         return general_best, func(general_best)
 
 
-# %%
-import random
-
-
-# %%
-
 class GA_TSP(GA):
+    # genetic algorithms for TSP
     def __init__(self, func, points,
                  pop=50, max_iter=200,
                  Pm=0.001):
@@ -126,7 +124,7 @@ class GA_TSP(GA):
         self.generation_best_ranking = []
 
     def chrom2x(self):
-        self.X=self.Chrom
+        self.X = self.Chrom
         return self.X
 
     def crtbp(self, pop=10, total_Lind=30):
@@ -136,10 +134,12 @@ class GA_TSP(GA):
         return self.Chrom
 
     def crossover(self):
-        Chrom, pop,total_Lind = self.Chrom, self.pop,self.total_Lind
+        Chrom, pop, total_Lind = self.Chrom, self.pop, self.total_Lind
         for i in range(0, int(pop / 2), 2):
             Chrom1, Chrom2 = self.Chrom[i], self.Chrom[i + 1]
-            n1, n2 = int(total_Lind / 3), int(total_Lind / 3 * 2)  # crossover at the point n1 to n2
+            n1, n2 = np.random.randint(0, self.total_Lind, 2)
+            n1, n2 = min(n1, n2), max(n1, n2)
+            # crossover at the point n1 to n2
             for j in range(n1, n2):
                 x = np.argwhere(Chrom1 == Chrom2[j])
                 y = np.argwhere(Chrom2 == Chrom1[j])
@@ -152,46 +152,8 @@ class GA_TSP(GA):
         # mutation
         for i in range(self.pop):
             if np.random.rand() < self.Pm:
-                n1, n2 = int(self.total_Lind / 3), int(self.total_Lind / 3 * 2)  # crossover at the point n1 to n2
+                n1, n2 = np.random.randint(0, self.total_Lind, 2)
+                n1, n2 = min(n1, n2), max(n1, n2)
                 self.Chrom[i, n1], self.Chrom[i, n2] = self.Chrom[i, n2], self.Chrom[i, n1]
         return self.Chrom
 
-
-#
-# import numpy as np
-#
-# num_points = 8
-#
-# points = range(num_points)
-# points_coordinate = np.random.rand(num_points, 2)
-# distance_matrix = np.zeros(shape=(num_points, num_points))
-# for i in range(num_points):
-#     for j in range(num_points):
-#         distance_matrix[i][j] = np.linalg.norm(points_coordinate[i] - points_coordinate[j], ord=2)
-# print('distance_matrix is: \n', distance_matrix)
-#
-#
-# def demo_func(points):
-#     num_points, = points.shape
-#     total_distance = 0
-#     for i in range(num_points - 1):
-#         total_distance += distance_matrix[points[i], points[i + 1]]
-#     total_distance += distance_matrix[points[i + 1], points[0]]
-#     return total_distance
-#
-#
-# ga_tsp = GA_TSP(func=demo_func, points=points, pop=50, max_iter=200, Pm=0.001)
-#
-# best_points, best_distance = ga_tsp.fit()
-#
-# # %%
-# import matplotlib.pyplot as plt
-#
-# best_points_ = np.concatenate([best_points, [best_points[0]]])
-#
-# c = points_coordinate[best_points_, :]
-#
-# plt.plot(c[:, 0], c[:, 1],'o-r')
-# plt.show()
-
-# %%
