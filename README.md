@@ -16,6 +16,43 @@ ga = GA(func=demo_func, lb=[-1, -10, -5], ub=[2, 10, 2], max_iter=500)
 best_x, best_y = ga.fit()
 ```
 
+## Genetic Algorithm for TSP
+overload the `crossover`, `mutation` to solve the TSP(Travelling Salesman Problem)
+```py
+from GA import GA_TSP
+import numpy as np
+
+num_points = 8
+
+points = range(num_points)
+points_coordinate = np.random.rand(num_points, 2)
+distance_matrix = np.zeros(shape=(num_points, num_points))
+for i in range(num_points):
+    for j in range(num_points):
+        distance_matrix[i][j] = np.linalg.norm(points_coordinate[i] - points_coordinate[j], ord=2)
+print('distance_matrix is: \n', distance_matrix)
+
+
+def demo_func(points):
+    num_points, = points.shape
+    total_distance = 0
+    for i in range(num_points - 1):
+        total_distance += distance_matrix[points[i], points[i + 1]]
+    total_distance += distance_matrix[points[i + 1], points[0]]
+    return total_distance
+
+
+ga_tsp = GA_TSP(func=demo_func, points=points, pop=50, max_iter=200, Pm=0.001)
+
+best_points, best_distance = ga_tsp.fit()
+
+fig, ax = plt.subplots(1, 1)
+best_points_ = np.concatenate([best_points, [best_points[0]]])
+best_points_coordinate = points_coordinate[best_points_, :]
+ax.plot(best_points_coordinate[:, 0], best_points_coordinate[:, 1],'o-r')
+plt.show()
+```
+
 ### plot the result using matplotlib
 ```py
 import pandas as pd
