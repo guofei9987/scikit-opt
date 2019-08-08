@@ -16,8 +16,14 @@ ga = GA(func=demo_func, lb=[-1, -10, -5], ub=[2, 10, 2], max_iter=500)
 best_x, best_y = ga.fit()
 ```
 
+
+
+![Figure_1-1](https://i.imgur.com/yT7lm8a.png)
+
 ## Genetic Algorithm for TSP
-overload the `crossover`, `mutation` to solve the TSP(Travelling Salesman Problem)
+Just import the `GA_TSP`, it overload the `crossover`, `mutation` to solve the TSP(Travelling Salesman Problem)
+
+Firstly, you should dump your data (the distance matrix). Here I generate it randomly as a demo:
 ```py
 from GA import GA_TSP
 import numpy as np
@@ -33,16 +39,18 @@ for i in range(num_points):
 print('distance_matrix is: \n', distance_matrix)
 
 
-def demo_func(points):
+def cal_total_distance(points):
     num_points, = points.shape
     total_distance = 0
     for i in range(num_points - 1):
         total_distance += distance_matrix[points[i], points[i + 1]]
     total_distance += distance_matrix[points[i + 1], points[0]]
     return total_distance
+```
 
-
-ga_tsp = GA_TSP(func=demo_func, points=points, pop=50, max_iter=200, Pm=0.001)
+Do the ga and plot the result:
+```py
+ga_tsp = GA_TSP(func=cal_total_distance, points=points, pop=50, max_iter=200, Pm=0.001)
 
 best_points, best_distance = ga_tsp.fit()
 
@@ -52,6 +60,8 @@ best_points_coordinate = points_coordinate[best_points_, :]
 ax.plot(best_points_coordinate[:, 0], best_points_coordinate[:, 1],'o-r')
 plt.show()
 ```
+
+![GA_TPS](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/ga_tsp.png?raw=true)
 
 ### plot the result using matplotlib
 ```py
@@ -72,10 +82,6 @@ ax[2].plot(plt_max.index, plt_max.cummax())
 ax[2].set_title('best fitness of every generation')
 plt.show()
 ```
-
-![Figure_1-1](https://i.imgur.com/yT7lm8a.png)
-
-
 ## PSO
 
 
