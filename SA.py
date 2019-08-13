@@ -45,4 +45,3 @@ class SA:
 
         return self.x_star, self.f_star
 
-
