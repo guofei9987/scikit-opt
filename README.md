@@ -93,3 +93,26 @@ pso.plot_history()
 ```
 
 ![Figure_1-1](https://i.imgur.com/4C9Yjv7.png)
+
+
+## SA
+```python
+from SA import SA
+def demo_func(x):
+    x1, x2, x3 = x
+    return x1 ** 2 + (x2 - 0.05) ** 2 + x3 ** 2
+
+sa = SA(func=demo_func, x0=[1, 1, 1])
+x_star, y_star = sa.fit()
+print(x_star, y_star)
+
+```
+
+```python
+import matplotlib.pyplot as plt
+import pandas as pd
+
+plt.plot(pd.DataFrame(sa.f_list).cummin(axis=0))
+plt.show()
+```
+![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa.png?raw=true)
