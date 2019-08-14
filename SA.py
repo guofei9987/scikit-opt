@@ -13,7 +13,7 @@ class SA:
         self.x_star, self.f_star = None, None
 
     def new_x(self, x):
-        return 0.2 * np.random.randn(3) + x
+        return 0.2 * np.random.randn(len(x)) + x
 
     def fit(self):
         func = self.func
@@ -24,7 +24,6 @@ class SA:
         x = self.x
 
         f1 = func(x)
-
         self.x_star, self.f_star = x, f1  # 全局最优
         while T > T_min:
             for i in range(L):
@@ -41,7 +40,15 @@ class SA:
                 df = f2 - f1
                 if df < 0 or np.exp(-df / T) > np.random.rand():
                     x, f1 = x2, f2
-            T = T * q  # 降温
 
+            T = T * q  # 降温
         return self.x_star, self.f_star
 
+
+class SA_TSP(SA):
+    def new_x(self, x):
+        x=x.copy()
+        n1, n2 = np.random.randint(0, len(x), 2)
+        n1, n2 = min(n1, n2), max(n1, n2)
+        x[n1], x[n2] = x[n2], x[n1]
+        return x

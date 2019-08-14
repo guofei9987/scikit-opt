@@ -34,9 +34,8 @@ plt.show()
 ## 2. Genetic Algorithm for TSP(Travelling Salesman Problem)
 Just import the `GA_TSP`, it overloads the `crossover`, `mutation` to solve the TSP
 
-Firstly, you should dump your data (the distance matrix). Here I generate the data randomly as a demo:
+Firstly, your data (the distance matrix). Here I generate the data randomly as a demo:
 ```py
-from GA import GA_TSP
 import numpy as np
 
 num_points = 8
@@ -61,6 +60,7 @@ def cal_total_distance(points):
 
 Do GA 
 ```py
+from GA import GA_TSP
 ga_tsp = GA_TSP(func=cal_total_distance, points=points, pop=50, max_iter=200, Pm=0.001)
 best_points, best_distance = ga_tsp.fit()
 ```
@@ -116,3 +116,23 @@ plt.plot(pd.DataFrame(sa.f_list).cummin(axis=0))
 plt.show()
 ```
 ![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa.png?raw=true)
+
+### SA for TSP
+Firstly, your data (the distance matrix). Here I generate the data randomly as a demo (find it in GA for TSP above)
+
+DO SA for TSP
+```python
+from SA import SA_TSP
+sa_tsp = SA_TSP(func=demo_func, x0=range(num_points))
+best_points, best_distance = sa_tsp.fit()
+```
+
+plot the result
+```python
+fig, ax = plt.subplots(1, 1)
+best_points_ = np.concatenate([best_points, [best_points[0]]])
+best_points_coordinate = points_coordinate[best_points_, :]
+ax.plot(best_points_coordinate[:, 0], best_points_coordinate[:, 1], 'o-r')
+plt.show()
+```
+![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa_tsp.png?raw=true)
