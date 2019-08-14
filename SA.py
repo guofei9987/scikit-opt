@@ -47,7 +47,7 @@ class SA:
 
 class SA_TSP(SA):
     def new_x(self, x):
-        x=x.copy()
+        x = x.copy()
         n1, n2 = np.random.randint(0, len(x), 2)
         n1, n2 = min(n1, n2), max(n1, n2)
         x[n1], x[n2] = x[n2], x[n1]
