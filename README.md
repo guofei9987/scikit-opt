@@ -31,7 +31,7 @@ plt.show()
 
 ![Figure_1-1](https://i.imgur.com/yT7lm8a.png)
 
-## 2. Genetic Algorithm for TSP(Travelling Salesman Problem)
+### 1.1 Genetic Algorithm for TSP(Travelling Salesman Problem)
 Just import the `GA_TSP`, it overloads the `crossover`, `mutation` to solve the TSP
 
 Firstly, your data (the distance matrix). Here I generate the data randomly as a demo:
@@ -77,7 +77,7 @@ plt.show()
 ![GA_TPS](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/ga_tsp.png?raw=true)
 
 
-## PSO
+## 2. PSO
 
 
 ```py
@@ -95,7 +95,7 @@ pso.plot_history()
 ![Figure_1-1](https://i.imgur.com/4C9Yjv7.png)
 
 
-## SA
+## 3. SA(Simulated Annealing)
 ```python
 from SA import SA
 def demo_func(x):
@@ -117,7 +117,7 @@ plt.show()
 ```
 ![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa.png?raw=true)
 
-### SA for TSP
+### 3.1 SA for TSP
 Firstly, your data (the distance matrix). Here I generate the data randomly as a demo (find it in GA for TSP above)
 
 DO SA for TSP
@@ -136,3 +136,11 @@ ax.plot(best_points_coordinate[:, 0], best_points_coordinate[:, 1], 'o-r')
 plt.show()
 ```
 ![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa_tsp.png?raw=true)
+
+## 4. ASA for tsp (Ant Colony Algorithm)
+ASA needs lots of parameter management, which is why I am not going to code it as a class.  
+
+```bash
+python ACA.py
+```
+![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/aca_tsp.png?raw=true)
