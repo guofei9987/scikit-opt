@@ -1,6 +1,6 @@
-Genetic Algorithm, PSO in Python
+genetic algorithm, Particle swarm optimization, Simulated Annealing, Ant Colony Algorithm in Python
 
-
+[中文文档](README_CN.md)
 
 ## 1. Genetic Algorithm
 
@@ -144,3 +144,8 @@ ASA needs lots of parameter management, which is why I am not going to code it a
 python ACA.py
 ```
 ![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/aca_tsp.png?raw=true)
+
+
+----------------------
+
+<iframe src="https://guofei9987.github.io/donate/" style="overflow-x:hidden;overflow-y:hidden; border:0xp none #fff; min-height:240px; width:100%;"  frameborder="0" scrolling="no"></iframe>
