@@ -1,7 +1,49 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# @Time    : 2019/8/20
+# @Author  : @guofei9987
+
+
 import numpy as np
 
 
 class GA:
+    """
+    Do genetic algorithm
+
+    Parameters
+    ----------------
+    func : function
+        The func you want to do optimal
+    lb : array_like
+        The lower bound of every variables of func
+    ub : array_like
+        The upper bound of every vaiiables of func
+    precision : array_like
+        The precision of every vaiiables of func
+    pop : int
+        Size of population
+    max_iter : int
+        Max of iter
+    Pm : float between 0 and 1
+        Probability of mutation
+
+    Attributes
+    ----------------------
+    Lind : array_like
+         The num of genes of every variable of func（segments）
+    generation_best_X : array_like. Size is max_iter.
+        Best X of every generation
+    generation_best_ranking : array_like. Size if max_iter.
+        Best ranking of every generation
+
+
+    Examples
+    -------------
+    >>>demo_func=lambda x:return x[0]**2 + x[1]**2 + x[2]**2
+    >>>ga = GA(func=demo_func, lb=[-1, -10, -5], ub=[2, 10, 2], max_iter=500)
+    >>>best_x, best_y = ga.fit()
+    """
     # genetic algorithms
     def __init__(self, func,
                  lb=[-1, -10, -5], ub=[2, 10, 2],
@@ -108,6 +150,64 @@ class GA:
 
 
 class GA_TSP(GA):
+    """
+    Do genetic algorithm to solve the TSP (Travelling Salesman Problem)
+
+    Parameters
+    ----------------
+    func : function
+        The func you want to do optimal.
+        It inputs a candidate solution(a routine), and return the costs of the routine.
+    pop : int
+        Size of population
+    max_iter : int
+        Max of iter
+    Pm : float between 0 and 1
+        Probability of mutation
+
+    Attributes
+    ----------------------
+    Lind : array_like
+         The num of genes of every variable of func（segments）
+    generation_best_X : array_like. Size is max_iter.
+        Best X of every generation
+    generation_best_ranking : array_like. Size if max_iter.
+        Best ranking of every generation
+
+
+    Examples
+    -------------
+    Firstly, your data (the distance matrix). Here I generate the data randomly as a demo:
+    ```py
+    import numpy as np
+
+    num_points = 8
+
+    points = range(num_points)
+    points_coordinate = np.random.rand(num_points, 2)
+    distance_matrix = np.zeros(shape=(num_points, num_points))
+    for i in range(num_points):
+        for j in range(num_points):
+            distance_matrix[i][j] = np.linalg.norm(points_coordinate[i] - points_coordinate[j], ord=2)
+    print('distance_matrix is: \n', distance_matrix)
+
+
+    def cal_total_distance(points):
+        num_points, = points.shape
+        total_distance = 0
+        for i in range(num_points - 1):
+            total_distance += distance_matrix[points[i], points[i + 1]]
+        total_distance += distance_matrix[points[i + 1], points[0]]
+        return total_distance
+    ```
+
+    Do GA
+    ```py
+    from GA import GA_TSP
+    ga_tsp = GA_TSP(func=cal_total_distance, points=points, pop=50, max_iter=200, Pm=0.001)
+    best_points, best_distance = ga_tsp.fit()
+    ```
+    """
     # genetic algorithms for TSP
     def __init__(self, func, points,
                  pop=50, max_iter=200,
