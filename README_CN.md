@@ -1,4 +1,8 @@
-## [scikit-opt](https://github.com/guofei9987/scikit-opt)
+
+动动手点个 star，让更多人能用到好的 Python 库
+
+-----------------------------------
+## [scikit-opt](https://github.com/guofei9987/scikit-opt)  
 
 遗传算法、粒子群算法、模拟退火、蚁群算法、免疫优化算法、鱼群算法较好的封装  
 

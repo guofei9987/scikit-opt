@@ -1,7 +1,9 @@
+[中文文档](README_CN.md)
+
 ## [scikit-opt](https://github.com/guofei9987/scikit-opt)
 genetic algorithm, Particle swarm optimization, Simulated Annealing, Ant Colony Algorithm in Python
 
-[中文文档](README_CN.md)
+
 
 ## 1. Genetic Algorithm
 
