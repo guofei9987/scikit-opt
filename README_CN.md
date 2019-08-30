@@ -86,7 +86,7 @@ plt.show()
 ![GA_TPS](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/ga_tsp.png?raw=true)
 
 
-## 2. 粒子群算法(PSO)
+## 2. 粒子群算法(PSO, Particle swarm optimization)
 
 定义目标函数
 ```py
@@ -104,7 +104,7 @@ print('best_y is ',pso.gbest_y)
 pso.plot_history()
 ```
 
-![Figure_1-1](https://i.imgur.com/4C9Yjv7.png)
+![GA_TPS](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/pso.png?raw=true)
 
 
 ## 3. 模拟退火算法(SA, Simulated Annealing)
