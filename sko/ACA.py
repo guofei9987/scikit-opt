@@ -1,27 +1,26 @@
-import pandas as pd
 import numpy as np
+from scipy import spatial
+import pandas as pd
 import matplotlib.pyplot as plt
 np.random.seed(6)
 num_points = 8
 
-points = range(num_points)
-points_coordinate = np.random.rand(num_points, 2)
-distance_matrix = np.zeros(shape=(num_points, num_points))
-for i in range(num_points):
-    for j in range(num_points):
-        distance_matrix[i][j] = np.linalg.norm(points_coordinate[i] - points_coordinate[j], ord=2)
+points_coordinate = np.random.rand(num_points, 2)  # generate coordinate of points
+distance_matrix = spatial.distance.cdist(points_coordinate, points_coordinate, metric='euclidean')
 print('distance_matrix is: \n', distance_matrix)
 
 
-def demo_func(points):
-    num_points, = points.shape
-    total_distance = 0
-    for i in range(num_points - 1):
-        total_distance += distance_matrix[points[i], points[i + 1]]
-    total_distance += distance_matrix[points[i + 1], points[0]]
-    return total_distance
+def cal_total_distance(routine):
+    num_points, = routine.shape
+    return sum([distance_matrix[routine[i % num_points], routine[(i + 1) % num_points]] for i in range(num_points)])
 
 
+# test:
+points = np.arange(num_points)  # generate index of points
+cal_total_distance(points)
+
+
+demo_func=cal_total_distance
 # %%
 import numpy as np
 
