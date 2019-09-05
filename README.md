@@ -1,8 +1,8 @@
-[中文文档](README_CN.md)
+[:clipboard: Document](https://scikit-opt.github.io/), [:clipboard: 文档](https://scikit-opt.github.io/),  
 
-[document](https://scikit-opt.github.io/)
 
 # [scikit-opt](https://github.com/guofei9987/scikit-opt)
+Heuristic Algorithms in Python  
 Genetic Algorithm, Particle Swarm Optimization, Simulated Annealing, Ant Colony Algorithm in Python
 
 # install
@@ -67,7 +67,7 @@ def cal_total_distance(points):
     return total_distance
 ```
 
-Do GA 
+Do GA
 ```py
 from GA import GA_TSP
 ga_tsp = GA_TSP(func=cal_total_distance, points=points, pop=50, max_iter=200, Pm=0.001)
