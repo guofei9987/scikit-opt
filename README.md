@@ -14,7 +14,7 @@ pip install scikit-opt
 ## 1. Genetic Algorithm
 
 ```py
-from ga import GA
+from sko.GA import GA
 
 
 def demo_func(x):
@@ -44,7 +44,7 @@ plt.show()
 Just import the `GA_TSP`, it overloads the `crossover`, `mutation` to solve the TSP
 
 Firstly, your data (the distance matrix). Here I generate the data randomly as a demo:
-```py
+```python
 import numpy as np
 
 num_points = 8
@@ -68,14 +68,14 @@ def cal_total_distance(points):
 ```
 
 Do GA
-```py
-from GA import GA_TSP
+```python
+from sko.GA import GA_TSP
 ga_tsp = GA_TSP(func=cal_total_distance, points=points, pop=50, max_iter=200, Pm=0.001)
 best_points, best_distance = ga_tsp.fit()
 ```
 
 Plot the result:
-```py
+```python
 fig, ax = plt.subplots(1, 1)
 best_points_ = np.concatenate([best_points, [best_points[0]]])
 best_points_coordinate = points_coordinate[best_points_, :]
@@ -89,11 +89,12 @@ plt.show()
 ## 2. PSO(Particle swarm optimization)
 
 
-```py
+```python
 def demo_func(x):
     x1, x2, x3 = x
     return x1 ** 2 + (x2 - 0.05) ** 2 + x3 ** 2
 
+from sko.PSO import PSO
 pso = PSO(func=demo_func, dim=3)
 fitness = pso.fit()
 print('best_x is ',pso.gbest_x)
@@ -106,7 +107,7 @@ pso.plot_history()
 
 ## 3. SA(Simulated Annealing)
 ```python
-from SA import SA
+from sko.SA import SA
 def demo_func(x):
     x1, x2, x3 = x
     return x1 ** 2 + (x2 - 0.05) ** 2 + x3 ** 2
@@ -131,7 +132,7 @@ Firstly, your data (the distance matrix). Here I generate the data randomly as a
 
 DO SA for TSP
 ```python
-from SA import SA_TSP
+from sko.SA import SA_TSP
 sa_tsp = SA_TSP(func=demo_func, x0=range(num_points))
 best_points, best_distance = sa_tsp.fit()
 ```
