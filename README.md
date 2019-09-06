@@ -1,4 +1,5 @@
-[:clipboard: Document](https://scikit-opt.github.io/), [:clipboard: 文档](https://scikit-opt.github.io/),  
+[:clipboard: Document](https://scikit-opt.github.io/#/docs/en), 
+[:clipboard: 文档](https://scikit-opt.github.io/#/docs/en),  
 
 
 # [scikit-opt](https://github.com/guofei9987/scikit-opt)
