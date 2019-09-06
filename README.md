@@ -10,12 +10,12 @@ Genetic Algorithm, Particle Swarm Optimization, Simulated Annealing, Ant Colony 
 pip install scikit-opt
 ```
 
-# notation
+# News:
 
 **UDF** (user defined function) will be available in the next release! (version 0.2)
 
-For example, you want to define a new type of `selection` function.  
-Your `selection` function is like this:
+For example, you just worked out a new type of `selection` function.  
+Now, your `selection` function is like this:
 ```python
 def selection_elite(self, FitV):
     '''
@@ -38,7 +38,7 @@ def selection_elite(self, FitV):
     return self.Chrom
 ```
 
-Regist your udf to GA
+Regist your selection to GA
 ```python
 from sko.GA import register_udf
 GA_1 = register_udf({'selection': selection_elite})
