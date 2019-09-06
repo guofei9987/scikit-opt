@@ -1,7 +1,7 @@
-demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
 from sko.GA import GA
 
-ga = GA(func=demo_func,n_dim=3, lb=[-1, -10, -5], ub=[2, 10, 2], max_iter=500)
+demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
+ga = GA(func=demo_func, n_dim=3, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2])
 best_x, best_y = ga.fit()
 
 print('best_x:', best_x, '\n', 'best_y:', best_y)
@@ -23,6 +23,5 @@ ax[1].legend()
 ax[2].plot(plt_max.index, plt_max.cummax())
 ax[2].set_title('best fitness of every generation')
 plt.show()
-
 
 # %%

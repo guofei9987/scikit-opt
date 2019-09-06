@@ -40,9 +40,9 @@ class GA:
 
     Examples
     -------------
-    >>>demo_func=lambda x: x[0]**2 + x[1]**2 + x[2]**2
-    >>>ga = GA(func=demo_func, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2])
-    >>>best_x, best_y = ga.fit()
+    >>> demo_func=lambda x: x[0]**2 + x[1]**2 + x[2]**2
+    >>> ga = GA(func=demo_func,n_dim=3, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2])
+    >>> best_x, best_y = ga.fit()
     """
 
     # genetic algorithms
@@ -113,7 +113,7 @@ class GA:
         return FitV
 
     def selection(self, FitV):
-        # do Roulette to select the best ones
+        # do Roulette to select the next generation
         # FitV = FitV - FitV.min() + 1e-10
         FitV = (FitV - FitV.min()) / (FitV.max() - FitV.min() + 1e-10) + 0.2
         # the worst one should still has a chance to be selected
@@ -239,3 +239,19 @@ class GA_TSP(GA):
                 n1, n2 = np.random.randint(0, self.len_chrom, 2)
                 self.Chrom[i, n1], self.Chrom[i, n2] = self.Chrom[i, n2], self.Chrom[i, n1]
         return self.Chrom
+
+
+def register_udf(udf_func_dict):
+    class GAUdf(GA):
+        pass
+
+    for udf_name in udf_func_dict:
+        if udf_name == 'crossover':
+            GAUdf.crossover = udf_func_dict[udf_name]
+        elif udf_name == 'mutation':
+            GAUdf.mutation = udf_func_dict[udf_name]
+        elif udf_name == 'selection':
+            GAUdf.selection = udf_func_dict[udf_name]
+        elif udf_name == 'ranking':
+            GAUdf.ranking = udf_func_dict[udf_name]
+    return GAUdf
