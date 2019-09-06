@@ -40,7 +40,7 @@ class GA:
 
     Examples
     -------------
-    >>>demo_func=lambda x:return x[0]**2 + x[1]**2 + x[2]**2
+    >>>demo_func=lambda x: x[0]**2 + x[1]**2 + x[2]**2
     >>>ga = GA(func=demo_func, lb=[-1, -10, -5], ub=[2, 10, 2], max_iter=500)
     >>>best_x, best_y = ga.fit()
     """
@@ -124,7 +124,7 @@ class GA:
         self.Chrom = np.concatenate([Chrom1, Chrom2], axis=0)
         return self.Chrom
 
-    def mut(self):
+    def mutation(self):
         # mutation
         mask = (np.random.rand(self.pop, self.total_Lind) < self.Pm) * 1
         self.Chrom = (mask + self.Chrom) % 2
@@ -138,7 +138,7 @@ class GA:
             FitV = self.ranking(X)
             self.selection(FitV)
             self.crossover()
-            self.mut()
+            self.mutation()
 
             # record the best ones
             generation_best_X = X[FitV.argmax(), :]
@@ -248,7 +248,7 @@ class GA_TSP(GA):
             self.Chrom[i], self.Chrom[i + 1] = Chrom1, Chrom2
         return self.Chrom
 
-    def mut(self):
+    def mutation(self):
         # mutation
         for i in range(self.pop):
             if np.random.rand() < self.Pm:
