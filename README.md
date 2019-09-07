@@ -41,8 +41,8 @@ def selection_elite(self, FitV):
 
 Regist your selection to GA
 ```python
-from sko.GA import register_udf
-GA_1 = register_udf({'selection': selection_elite})
+from sko.GA import ga_register_udf
+GA_1 = ga_register_udf({'selection': selection_elite})
 ```
 
 Now do GA as usual

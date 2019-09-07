@@ -241,7 +241,7 @@ class GA_TSP(GA):
         return self.Chrom
 
 
-def register_udf(udf_func_dict):
+def ga_register_udf(udf_func_dict):
     class GAUdf(GA):
         pass
 
