@@ -15,6 +15,8 @@ class GA:
     ----------------
     func : function
         The func you want to do optimal
+    n_dim : int
+        number of variables of func
     lb : array_like
         The lower bound of every variables of func
     ub : array_like
