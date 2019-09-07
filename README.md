@@ -196,10 +196,14 @@ plt.show()
 ![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa_tsp.png?raw=true)
 
 ## 4. ASA for tsp (Ant Colony Algorithm)
-ASA needs lots of parameter management, which is why I am not going to code it as a class.  
+
 
 ```bash
-python ACA.py
+aca = ACA_TSP(func=cal_total_distance, n_dim=8,
+              size_pop=10, max_iter=20,
+              distance_matrix=distance_matrix)
+
+best_x, best_y = aca.fit()
 ```
 ![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/aca_tsp.png?raw=true)
 
