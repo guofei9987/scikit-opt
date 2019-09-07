@@ -27,7 +27,6 @@ aca = ACA_TSP(func=cal_total_distance, n_dim=8,
 
 best_x, best_y = aca.fit()
 
-print(aca.y_best_history)
 # %%
 
 fig, ax = plt.subplots(1, 1)
