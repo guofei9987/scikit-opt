@@ -1,92 +1,63 @@
 import numpy as np
-from scipy import spatial
-import pandas as pd
-import matplotlib.pyplot as plt
-np.random.seed(6)
-num_points = 8
-
-points_coordinate = np.random.rand(num_points, 2)  # generate coordinate of points
-distance_matrix = spatial.distance.cdist(points_coordinate, points_coordinate, metric='euclidean')
-print('distance_matrix is: \n', distance_matrix)
 
 
-def cal_total_distance(routine):
-    num_points, = routine.shape
-    return sum([distance_matrix[routine[i % num_points], routine[(i + 1) % num_points]] for i in range(num_points)])
+class ACA_TSP:
+    def __init__(self, func, n_dim,
+                 size_pop=10, max_iter=20,
+                 distance_matrix=None,
+                 alpha=1, beta=2, rho=0.1,
+                 ):
+        self.func = func
+        self.n_dim = n_dim  # 城市数量
+        self.size_pop = size_pop  # 蚂蚁数量
+        self.max_iter = max_iter  # 迭代次数
+        self.alpha = alpha  # 信息素重要程度
+        self.beta = beta  # 适应度的重要程度
+        self.rho = rho  # 信息素挥发速度
 
+        self.prob_matrix_distance = 1 / (distance_matrix + 1e-10 * np.eye(n_dim, n_dim))  # 避免除零错误
 
-# test:
-points = np.arange(num_points)  # generate index of points
-cal_total_distance(points)
+        self.Tau = np.ones((n_dim, n_dim))  # 信息素矩阵，每次迭代都会更新
+        self.Table = np.zeros((size_pop, n_dim)).astype(np.int)  # 某一代每个蚂蚁的爬行路径
+        self.y = None  # 某一代每个蚂蚁的爬行总距离
+        self.x_best_history, self.y_best_history = [], []  # 记录各代的最佳情况
+        self.best_x, self.best_y = None, None
 
+    def fit(self):
+        for i in range(self.max_iter):  # 对每次迭代
+            prob_matrix = (self.Tau ** self.alpha) * (self.prob_matrix_distance) ** self.beta  # 转移概率，无须归一化。
+            for j in range(self.size_pop):  # 对每个蚂蚁
+                self.Table[j, 0] = 0  # start point，其实可以随机，但没什么区别
+                for k in range(self.n_dim - 1):  # 蚂蚁到达的每个节点
+                    taboo_set = set(self.Table[j, :k + 1])  # 已经经过的点和当前点，不能再次经过
+                    allow_list = list(set(range(self.n_dim)) - taboo_set)  # 在这些点中做选择
+                    prob = prob_matrix[self.Table[j, k], allow_list]
+                    prob = prob / prob.sum()  # 概率归一化
+                    next_point = np.random.choice(allow_list, size=1, p=prob)[0]
+                    self.Table[j, k + 1] = next_point
 
-demo_func=cal_total_distance
-# %%
-import numpy as np
+            # 计算距离
+            y = np.array([self.func(i) for i in self.Table])
 
-func = len(points)
-n = 8  # 城市数量
-m = 20  # 蚂蚁数量
-alpha = 1  # 信息素重要程度
-beta = 1  # 适应度的重要程度
-rho = 0.1  # 信息素挥发速度
+            # 顺便记录历史最好情况
+            index_best = y.argmin()
+            x_best, y_best = self.Table[index_best, :], y[index_best]
+            self.x_best_history.append(x_best)
+            self.y_best_history.append(y_best)
 
-iter_max = 800
-Tau = np.ones((n, n))  # 信息素矩阵
-Table = np.zeros((m, n)).astype(np.int)  # 一代每个蚂蚁的实际路径
+            # 计算需要新涂抹的信息素
+            delta_tau = np.zeros((self.n_dim, self.n_dim))
+            for j in range(self.size_pop):  # 每个蚂蚁
+                for k in range(self.n_dim - 1):  # 每个节点
+                    n1, n2 = self.Table[j, k], self.Table[j, k + 1]  # 蚂蚁从n1节点爬到n2节点
+                    delta_tau[n1, n2] += 1 / y[j]  # 涂抹的信息素
+                n1, n2 = self.Table[j, self.n_dim - 1], self.Table[j, 0]  # 蚂蚁从最后一个节点爬回到第一个节点
+                delta_tau[n1, n2] += 1 / y[j]  # 涂抹信息素
 
-# x_g_best, y_best = [], []  # 记录各代的最佳情况
-x_best_history, y_best_history = [], []
+            # 信息素飘散+信息素涂抹
+            self.Tau = (1 - self.rho) * self.Tau + delta_tau
 
-# %%
-for i in range(n):
-    distance_matrix[i, i] = 1e-10  # 避免除零错误
-
-for i in range(iter_max):  # 对每次迭代
-    prob_matrix = (Tau ** alpha) * (1 / distance_matrix) ** beta  # 转移概率，无须归一化。
-    for j in range(m):  # 对每个蚂蚁
-        Table[j, 0] = 0  # start point，其实可以随机，但没什么区别
-        for k in range(n - 1):  # 蚂蚁到达的每个节点
-            taboo_set = set(Table[j, :k + 1])  # 已经经过的点和当前点，不能再次经过
-            allow_list = list(set(points) - taboo_set)  # 在这些点中做选择
-            prob = prob_matrix[Table[j, k], allow_list]
-            prob = prob / prob.sum()
-            next_point = np.random.choice(allow_list, size=1, p=prob)[0]
-            Table[j, k + 1] = next_point
-
-    # 计算距离
-    y = np.array([demo_func(i) for i in Table])
-
-    # 顺便记录历史最好情况
-    index_best = y.argmin()
-    x_best, y_best = Table[index_best, :], y[index_best]
-    x_best_history.append(x_best)
-    y_best_history.append(y_best)
-
-    # 计算需要新涂抹的信息素
-    delta_tau = np.zeros((n, n))
-    for j in range(m):  # 每个蚂蚁
-        for k in range(n - 1):  # 每个节点
-            n1, n2 = Table[j, k], Table[j, k + 1]
-            delta_tau[n1, n2] += 1 / y[j]
-        n1, n2 = Table[j, n - 1], Table[j, 0]
-        delta_tau[n1, n2] += 1 / y[j]
-
-    # 信息素飘散+信息素涂抹
-    Tau = (1 - rho) * Tau + delta_tau
-
-Tau
-# %%
-y_best_history = np.array(y_best_history)
-a = y_best_history.argmin()
-best_points = x_best_history[a]
-
-# %%
-fig, ax = plt.subplots(1, 1)
-plt.plot(pd.DataFrame(y_best_history).cummin(axis=0))
-
-fig, ax = plt.subplots(1, 1)
-best_points_ = np.concatenate([best_points, [best_points[0]]])
-best_points_coordinate = points_coordinate[best_points_, :]
-ax.plot(best_points_coordinate[:, 0], best_points_coordinate[:, 1], 'o-r')
-plt.show()
+        best_generation = np.array(self.y_best_history).argmin()
+        self.best_x = self.x_best_history[best_generation]
+        self.best_y = self.y_best_history[best_generation]
+        return self.best_x, self.best_y
