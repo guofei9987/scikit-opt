@@ -2,6 +2,40 @@ import numpy as np
 
 
 class SA:
+    """
+    DO SA(Simulated Annealing)
+
+    Parameters
+    ----------------
+    func : function
+        The func you want to do optimal
+    n_dim : int
+        number of variables of func
+    x0 : array, shape is n_dim
+        initial solution
+    max_iter : int
+        Max of iter
+    T :float
+        initial temperature
+    T_min : float
+        end temperature
+    L : float
+        num of iteration under every temperature（Long of Chain）
+    q : float
+        cool down speed
+
+    Attributes
+    ----------------------
+
+
+    Examples
+    -------------
+    >>> demo_func=lambda x: x[0]**2 + x[1]**2 + x[2]**2
+    >>> from sko.SA import SA
+    >>> sa = SA(func=demo_func, x0=[1, 1, 1])
+    >>> x_star, y_star = sa.fit()
+    """
+
     def __init__(self, func, x0, T=100, T_min=1e-7, L=300, q=0.9):
         self.func = func
         self.x = np.array(x0)  # initial solution
