@@ -19,26 +19,12 @@ def cal_total_distance(routine):
 points = np.arange(num_points)  # generate index of points
 cal_total_distance(points)
 
-# %%
-print('-------------')
-print('starting GA for TSP problem ...')
-from GA import GA_TSP
-
-ga_tsp = GA_TSP(func=cal_total_distance, points=points, pop=50, max_iter=200, Pm=0.001)
-
-best_points, best_distance = ga_tsp.fit()
-
-fig, ax = plt.subplots(1, 1)
-best_points_ = np.concatenate([best_points, [best_points[0]]])
-best_points_coordinate = points_coordinate[best_points_, :]
-ax.plot(best_points_coordinate[:, 0], best_points_coordinate[:, 1], 'o-r')
-plt.show()
 
 # %%
 
 print('-------------')
 print('starting SA for TSP problem ...')
-from SA import SA_TSP
+from sko.SA import SA_TSP
 
 sa_tsp = SA_TSP(func=cal_total_distance, x0=range(num_points))
 
