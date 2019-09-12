@@ -1,6 +1,8 @@
 [:clipboard: Document](https://scikit-opt.github.io/#/docs/en), 
-[:clipboard: 文档](https://scikit-opt.github.io/#/docs/en),  
+[:clipboard: 文档](https://scikit-opt.github.io/#/docs/zh)  
 
+[![Stars](https://img.shields.io/github/stars/guofei9987/scikit-opt.svg?label=Stars&style=social)](https://github.com/guofei9987/scikit-opt/stargazers)
+[![Forks](https://img.shields.io/github/forks/guofei9987/scikit-opt.svg?label=Fork&style=social)](https://github.com/guofei9987/scikit-opt/network/members)
 
 # [scikit-opt](https://github.com/guofei9987/scikit-opt)
 Heuristic Algorithms in Python  
