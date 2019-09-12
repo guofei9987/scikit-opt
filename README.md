@@ -13,9 +13,13 @@ Genetic Algorithm, Particle Swarm Optimization, Simulated Annealing, Ant Colony 
 pip install scikit-opt
 ```
 
-# News:
+## News:
+All algorithms will be available on **TensorFlow/Spark** on version 0.3 or version 0.4, getting parallel performance. 
 
-**UDF** (user defined function) will be available in the next release! (version 0.2)
+
+# feature 1 
+
+**UDF** (user defined function) is available in version 0.2 release! 
 
 For example, you just worked out a new type of `selection` function.  
 Now, your `selection` function is like this:
