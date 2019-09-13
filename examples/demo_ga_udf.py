@@ -1,10 +1,10 @@
 import numpy as np
-from sko.GA import ga_register_udf
+from sko.GA import GA, GA_TSP, ga_with_udf
 
 
-def selection_elite(self, FitV):
+def selection_elite(self):
     print('udf selection actived')
-
+    FitV = self.FitV
     FitV = (FitV - FitV.min()) / (FitV.max() - FitV.min() + 1e-10) + 0.2
     # the worst one should still has a chance to be selected
     # the elite(defined as the best one for a generation) must survive the selection
@@ -18,10 +18,11 @@ def selection_elite(self, FitV):
     return self.Chrom
 
 
-GA_1 = ga_register_udf({'selection': selection_elite})
+options = {'selection': {'udf': selection_elite}}
+GA_1 = ga_with_udf(GA, options)
 
 demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
 ga = GA_1(func=demo_func, n_dim=3, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2])
 best_x, best_y = ga.fit()
-#
+
 print('best_x:', best_x, '\n', 'best_y:', best_y)
