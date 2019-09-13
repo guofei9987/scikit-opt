@@ -112,13 +112,13 @@ class GA:
 
     def ranking(self):
         # GA select the biggest one, but we want to minimize func, so we put a negative here
-        X=self.X
+        X = self.X
         self.FitV = np.array([-self.func(x) for x in X])
         return self.FitV
 
     def selection(self):
         # do Roulette to select the next generation
-        FitV=self.FitV
+        FitV = self.FitV
         # FitV = FitV - FitV.min() + 1e-10
         FitV = (FitV - FitV.min()) / (FitV.max() - FitV.min() + 1e-10) + 0.2
         # the worst one should still has a chance to be selected
@@ -248,8 +248,8 @@ class GA_TSP(GA):
 
 
 # %% functions:
-def selection_tournament(self, FitV, tourn_size=3):
-    print(tourn_size)
+def selection_tournament(self, tourn_size=3):
+    FitV = self.FitV
     sel_index = []
     for i in range(self.size_pop):
         aspirants_index = np.random.choice(range(self.size_pop), size=tourn_size)
@@ -257,8 +257,71 @@ def selection_tournament(self, FitV, tourn_size=3):
     self.Chrom = self.Chrom[sel_index, :]  # next generation
     return self.Chrom
 
+def selection_roulette_1(self):
+    # do Roulette to select the next generation
+    FitV = self.FitV
+    # FitV = FitV - FitV.min() + 1e-10
+    FitV = (FitV - FitV.min()) / (FitV.max() - FitV.min() + 1e-10) + 0.2
+    # the worst one should still has a chance to be selected
+    sel_prob = FitV / FitV.sum()
+    sel_index = np.random.choice(range(self.size_pop), size=self.size_pop, p=sel_prob)
+    self.Chrom = self.Chrom[sel_index, :]  # next generation
+    return self.Chrom
 
-def mutation_TSP_type3(self):
+def selection_roulette_2(self):
+    # do Roulette to select the next generation
+    FitV = self.FitV
+    FitV = FitV - FitV.min() + 1e-10
+    # the worst one should still has a chance to be selected
+    sel_prob = FitV / FitV.sum()
+    sel_index = np.random.choice(range(self.size_pop), size=self.size_pop, p=sel_prob)
+    self.Chrom = self.Chrom[sel_index, :]  # next generation
+    return self.Chrom
+
+
+def crossover_rv_3(self):
+    Chrom, size_pop = self.Chrom, self.size_pop
+    i = np.random.randint(1, self.len_chrom)  # crossover at the point i
+    Chrom1 = np.concatenate([Chrom[::2, :i], Chrom[1::2, i:]], axis=1)
+    Chrom2 = np.concatenate([Chrom[1::2, :i], Chrom[0::2, i:]], axis=1)
+    self.Chrom = np.concatenate([Chrom1, Chrom2], axis=0)
+    return self.Chrom
+
+def mutation_rv_1(self):
+    # mutation
+    mask = (np.random.rand(self.size_pop, self.len_chrom) < self.prob_mut) * 1
+    self.Chrom = (mask + self.Chrom) % 2
+    return self.Chrom
+
+
+
+
+def crossover_TSP_1(self):
+    Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
+    for i in range(0, int(size_pop / 2), 2):
+        Chrom1, Chrom2 = self.Chrom[i], self.Chrom[i + 1]
+        n1, n2 = np.random.randint(0, self.len_chrom, 2)
+        n1, n2 = min(n1, n2), max(n1, n2)
+        # crossover at the point n1 to n2
+        for j in range(n1, n2):
+            x = np.argwhere(Chrom1 == Chrom2[j])
+            y = np.argwhere(Chrom2 == Chrom1[j])
+            Chrom1[j], Chrom2[j] = Chrom2[j], Chrom1[j]
+            Chrom1[x], Chrom2[y] = Chrom2[y], Chrom1[x]
+        self.Chrom[i], self.Chrom[i + 1] = Chrom1, Chrom2
+    return self.Chrom
+
+
+def mutation_TSP_1(self):
+    for i in range(self.size_pop):
+        for j in range(self.n_dim):
+            if np.random.rand() < self.prob_mut:
+                # n1, n2 = np.random.randint(0, self.len_chrom, 2)
+                n = np.random.randint(0, self.len_chrom, 1)
+                self.Chrom[i, j], self.Chrom[i, n] = self.Chrom[i, n], self.Chrom[i, j]
+    return self.Chrom
+
+def mutation_TSP_3(self):
     for i in range(self.size_pop):
         if np.random.rand() < self.prob_mut:
             n1, n2 = np.random.randint(0, self.len_chrom, 2)
@@ -267,7 +330,54 @@ def mutation_TSP_type3(self):
 
 
 # %%
+from copy import deepcopy
+
+
+def ga_with_udf(GA_class,options):
+    '''
+    options = {'selection': {'udf': selection_tournament, 'kwargs': {'tourn_size': 5}},
+           'mutation': {'udf': mutation_TSP_type3}}
+    GA_TSP2 = ga_register_udf(options)
+    :param options:
+    :return:
+    '''
+    options = deepcopy(options)
+
+    class GAUdf(GA_class):
+        if 'crossover' in options:
+            def crossover(self):
+                crossover_udf = options['crossover']['udf']
+                kwargs = options['crossover'].get('kwargs', dict())
+                self.Chrom = crossover_udf(self, **kwargs)
+
+        if 'mutation' in options:
+            def mutation(self):
+                mutation_udf = options['mutation']['udf']
+                kwargs = options['mutation'].get('kwargs', dict())
+                self.Chrom = mutation_udf(self, **kwargs)
+
+        if 'selection' in options:
+            def selection(self):
+                selection_udf = options['selection']['udf']
+                kwargs = options['selection'].get('kwargs', dict())
+                self.Chrom = selection_udf(self, **kwargs)
+
+        if 'ranking' in options:
+            def ranking(self):
+                ranking_udf = options['ranking']['udf']
+                kwargs = options['ranking'].get('kwargs', dict())
+                self.FitV = ranking_udf(self, **kwargs)
+
+    return GAUdf
+
+
 def ga_register_udf(udf_func_dict):
+    '''
+
+
+    :param udf_func_dict:
+    :return:
+    '''
     class GAUdf(GA):
         pass
 
