@@ -1,11 +1,70 @@
-Genetic Algorithm, PSO in Python
+[:clipboard: Document](https://scikit-opt.github.io/#/docs/en), 
+[:clipboard: 文档](https://scikit-opt.github.io/#/docs/zh)  
+
+[![Stars](https://img.shields.io/github/stars/guofei9987/scikit-opt.svg?label=Stars&style=social)](https://github.com/guofei9987/scikit-opt/stargazers)
+[![Forks](https://img.shields.io/github/forks/guofei9987/scikit-opt.svg?label=Fork&style=social)](https://github.com/guofei9987/scikit-opt/network/members)
+
+# [scikit-opt](https://github.com/guofei9987/scikit-opt)
+Heuristic Algorithms in Python  
+Genetic Algorithm, Particle Swarm Optimization, Simulated Annealing, Ant Colony Algorithm in Python
+
+# install
+```bash
+pip install scikit-opt
+```
+
+## News:
+All algorithms will be available on **TensorFlow/Spark** on version 0.3 or version 0.4, getting parallel performance. 
+
+
+# UDF
+
+**UDF** (user defined function) is available in version 0.2 release! 
+
+For example, you just worked out a new type of `selection` function.  
+Now, your `selection` function is like this:
+```python
+def selection_elite(self):
+    print('udf selection actived')
+    FitV = self.FitV
+    FitV = (FitV - FitV.min()) / (FitV.max() - FitV.min() + 1e-10) + 0.2
+    # the worst one should still has a chance to be selected
+    # the elite(defined as the best one for a generation) must survive the selection
+    elite_index = np.array([FitV.argmax()])
+
+    # do Roulette to select the next generation
+    sel_prob = FitV / FitV.sum()
+    roulette_index = np.random.choice(range(self.size_pop), size=self.size_pop - 1, p=sel_prob)
+    sel_index = np.concatenate([elite_index, roulette_index])
+    self.Chrom = self.Chrom[sel_index, :]  # next generation
+    return self.Chrom
+```
+
+Regist your selection to GA
+```python
+from sko.GA import GA, GA_TSP, ga_with_udf
+options = {'selection': {'udf': selection_elite}}
+GA_1 = ga_with_udf(GA, options)
+```
+
+Now do GA as usual
+```python
+demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
+ga = GA_1(func=demo_func, n_dim=3, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2])
+best_x, best_y = ga.fit()
+
+print('best_x:', best_x, '\n', 'best_y:', best_y)
+```
+>Until Now, the **udf** surport `crossover`, `mutation`, `selection`, `ranking` of GA
 
 
 
+
+# demo
 ## 1. Genetic Algorithm
 
-```py
-from ga import GA
+```python
+from sko.GA import GA
 
 
 def demo_func(x):
@@ -35,7 +94,7 @@ plt.show()
 Just import the `GA_TSP`, it overloads the `crossover`, `mutation` to solve the TSP
 
 Firstly, your data (the distance matrix). Here I generate the data randomly as a demo:
-```py
+```python
 import numpy as np
 
 num_points = 8
@@ -58,15 +117,15 @@ def cal_total_distance(points):
     return total_distance
 ```
 
-Do GA 
-```py
-from GA import GA_TSP
+Do GA
+```python
+from sko.GA import GA_TSP
 ga_tsp = GA_TSP(func=cal_total_distance, points=points, pop=50, max_iter=200, Pm=0.001)
 best_points, best_distance = ga_tsp.fit()
 ```
 
 Plot the result:
-```py
+```python
 fig, ax = plt.subplots(1, 1)
 best_points_ = np.concatenate([best_points, [best_points[0]]])
 best_points_coordinate = points_coordinate[best_points_, :]
@@ -77,14 +136,15 @@ plt.show()
 ![GA_TPS](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/ga_tsp.png?raw=true)
 
 
-## 2. PSO
+## 2. PSO(Particle swarm optimization)
 
 
-```py
+```python
 def demo_func(x):
     x1, x2, x3 = x
     return x1 ** 2 + (x2 - 0.05) ** 2 + x3 ** 2
 
+from sko.PSO import PSO
 pso = PSO(func=demo_func, dim=3)
 fitness = pso.fit()
 print('best_x is ',pso.gbest_x)
@@ -92,16 +152,16 @@ print('best_y is ',pso.gbest_y)
 pso.plot_history()
 ```
 
-![Figure_1-1](https://i.imgur.com/4C9Yjv7.png)
 
+![GA_TPS](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/pso.png?raw=true)
 
 ## 3. SA(Simulated Annealing)
 ```python
-from SA import SA
 def demo_func(x):
     x1, x2, x3 = x
     return x1 ** 2 + (x2 - 0.05) ** 2 + x3 ** 2
 
+from sko.SA import SA
 sa = SA(func=demo_func, x0=[1, 1, 1])
 x_star, y_star = sa.fit()
 print(x_star, y_star)
@@ -122,7 +182,7 @@ Firstly, your data (the distance matrix). Here I generate the data randomly as a
 
 DO SA for TSP
 ```python
-from SA import SA_TSP
+from sko.SA import SA_TSP
 sa_tsp = SA_TSP(func=demo_func, x0=range(num_points))
 best_points, best_distance = sa_tsp.fit()
 ```
@@ -138,9 +198,18 @@ plt.show()
 ![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa_tsp.png?raw=true)
 
 ## 4. ASA for tsp (Ant Colony Algorithm)
-ASA needs lots of parameter management, which is why I am not going to code it as a class.  
+
 
 ```bash
-python ACA.py
+aca = ACA_TSP(func=cal_total_distance, n_dim=8,
+              size_pop=10, max_iter=20,
+              distance_matrix=distance_matrix)
+
+best_x, best_y = aca.fit()
 ```
 ![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/aca_tsp.png?raw=true)
+
+
+----------------------
+
+[donate me](https://guofei9987.github.io/donate/)
