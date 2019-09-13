@@ -17,21 +17,16 @@ pip install scikit-opt
 All algorithms will be available on **TensorFlow/Spark** on version 0.3 or version 0.4, getting parallel performance. 
 
 
-# feature 1 
+# UDF
 
 **UDF** (user defined function) is available in version 0.2 release! 
 
 For example, you just worked out a new type of `selection` function.  
 Now, your `selection` function is like this:
 ```python
-def selection_elite(self, FitV):
-    '''
-    A new selection strategy.
-    This strategy makes the elite (defined as the best one for a generation) 
-    100% survive the selection
-    '''
+def selection_elite(self):
     print('udf selection actived')
-
+    FitV = self.FitV
     FitV = (FitV - FitV.min()) / (FitV.max() - FitV.min() + 1e-10) + 0.2
     # the worst one should still has a chance to be selected
     # the elite(defined as the best one for a generation) must survive the selection
@@ -47,8 +42,9 @@ def selection_elite(self, FitV):
 
 Regist your selection to GA
 ```python
-from sko.GA import ga_register_udf
-GA_1 = ga_register_udf({'selection': selection_elite})
+from sko.GA import GA, GA_TSP, ga_with_udf
+options = {'selection': {'udf': selection_elite}}
+GA_1 = ga_with_udf(GA, options)
 ```
 
 Now do GA as usual
@@ -56,7 +52,7 @@ Now do GA as usual
 demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
 ga = GA_1(func=demo_func, n_dim=3, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2])
 best_x, best_y = ga.fit()
-#
+
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 ```
 >Until Now, the **udf** surport `crossover`, `mutation`, `selection`, `ranking` of GA
