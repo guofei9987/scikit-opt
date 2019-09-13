@@ -110,10 +110,11 @@ class GA:
         self.X = X
         return self.X
 
-    def ranking(self, X):
+    def ranking(self):
         # GA select the biggest one, but we want to minimize func, so we put a negative here
-        FitV = np.array([-self.func(x) for x in X])
-        return FitV
+        X=self.X
+        self.FitV = np.array([-self.func(x) for x in X])
+        return self.FitV
 
     def selection(self):
         # do Roulette to select the next generation
@@ -144,7 +145,7 @@ class GA:
         func = self.func
         for i in range(self.max_iter):
             self.X = self.chrom2x()
-            self.FitV = self.ranking(self.X)
+            self.ranking()
             self.selection()
             self.crossover()
             self.mutation()
