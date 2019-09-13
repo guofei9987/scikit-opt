@@ -60,7 +60,8 @@ class GA:
         self.define_chrom(kwargs)
         self.crtbp(self.size_pop, self.len_chrom)
 
-        self.X = self.chrom2x()  # shape is size_pop, n_dim (it is all x of func)
+        self.X = None  # shape is size_pop, n_dim (it is all x of func)
+        self.FitV = None
         self.FitV_history = []
         self.generation_best_X = []
         self.generation_best_ranking = []
@@ -114,8 +115,9 @@ class GA:
         FitV = np.array([-self.func(x) for x in X])
         return FitV
 
-    def selection(self, FitV):
+    def selection(self):
         # do Roulette to select the next generation
+        FitV=self.FitV
         # FitV = FitV - FitV.min() + 1e-10
         FitV = (FitV - FitV.min()) / (FitV.max() - FitV.min() + 1e-10) + 0.2
         # the worst one should still has a chance to be selected
@@ -139,20 +141,19 @@ class GA:
         return self.Chrom
 
     def fit(self):
-        max_iter = self.max_iter
         func = self.func
-        for i in range(max_iter):
-            X = self.chrom2x()
-            FitV = self.ranking(X)
-            self.selection(FitV)
+        for i in range(self.max_iter):
+            self.X = self.chrom2x()
+            self.FitV = self.ranking(self.X)
+            self.selection()
             self.crossover()
             self.mutation()
 
             # record the best ones
-            generation_best_X = X[FitV.argmax(), :]
+            generation_best_X = self.X[self.FitV.argmax(), :]
             self.generation_best_X.append(generation_best_X)
-            self.generation_best_ranking.append(FitV.max())
-            self.FitV_history.append(FitV)
+            self.generation_best_ranking.append(self.FitV.max())
+            self.FitV_history.append(self.FitV)
         general_best = self.generation_best_X[(np.array(self.generation_best_ranking)).argmax()]
         return general_best, func(general_best)
 
@@ -237,23 +238,45 @@ class GA_TSP(GA):
 
     def mutation(self):
         for i in range(self.size_pop):
-            if np.random.rand() < self.prob_mut:
-                n1, n2 = np.random.randint(0, self.len_chrom, 2)
-                self.Chrom[i, n1], self.Chrom[i, n2] = self.Chrom[i, n2], self.Chrom[i, n1]
+            for j in range(self.n_dim):
+                if np.random.rand() < self.prob_mut:
+                    # n1, n2 = np.random.randint(0, self.len_chrom, 2)
+                    n = np.random.randint(0, self.len_chrom, 1)
+                    self.Chrom[i, j], self.Chrom[i, n] = self.Chrom[i, n], self.Chrom[i, j]
         return self.Chrom
 
 
+# %% functions:
+def selection_tournament(self, FitV, tourn_size=3):
+    print(tourn_size)
+    sel_index = []
+    for i in range(self.size_pop):
+        aspirants_index = np.random.choice(range(self.size_pop), size=tourn_size)
+        sel_index.append(max(aspirants_index, key=lambda i: FitV[i]))
+    self.Chrom = self.Chrom[sel_index, :]  # next generation
+    return self.Chrom
+
+
+def mutation_TSP_type3(self):
+    for i in range(self.size_pop):
+        if np.random.rand() < self.prob_mut:
+            n1, n2 = np.random.randint(0, self.len_chrom, 2)
+            self.Chrom[i, n1], self.Chrom[i, n2] = self.Chrom[i, n2], self.Chrom[i, n1]
+    return self.Chrom
+
+
+# %%
 def ga_register_udf(udf_func_dict):
     class GAUdf(GA):
         pass
 
-    for udf_name in udf_func_dict:
+    for udf_name, udf in udf_func_dict.items():
         if udf_name == 'crossover':
-            GAUdf.crossover = udf_func_dict[udf_name]
+            GAUdf.crossover = udf
         elif udf_name == 'mutation':
-            GAUdf.mutation = udf_func_dict[udf_name]
+            GAUdf.mutation = udf
         elif udf_name == 'selection':
-            GAUdf.selection = udf_func_dict[udf_name]
+            GAUdf.selection = udf
         elif udf_name == 'ranking':
-            GAUdf.ranking = udf_func_dict[udf_name]
+            GAUdf.ranking = udf
     return GAUdf
