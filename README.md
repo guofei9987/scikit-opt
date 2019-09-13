@@ -17,7 +17,7 @@ pip install scikit-opt
 All algorithms will be available on **TensorFlow/Spark** on version 0.3 or version 0.4, getting parallel performance. 
 
 
-# UDF
+# feature: UDF
 
 **UDF** (user defined function) is available in version 0.2 release! 
 
