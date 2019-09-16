@@ -7,6 +7,7 @@
 import numpy as np
 from sko.tools import func_transformer
 
+
 class GA:
     """
     Do genetic algorithm
@@ -61,10 +62,14 @@ class GA:
         self.crtbp(self.size_pop, self.len_chrom)
 
         self.X = None  # shape is size_pop, n_dim (it is all x of func)
+        self.Y = None  # shape is size_pop,
         self.FitV = None
-        self.FitV_history = []
+
+        # self.FitV_history = []
         self.generation_best_X = []
-        self.generation_best_ranking = []
+        self.generation_best_Y = []
+        self.all_history_Y = []
+        # self.generation_best_ranking = []
 
     def define_chrom(self, kwargs):
         # define the types of Chrom
@@ -110,10 +115,17 @@ class GA:
         self.X = X
         return self.X
 
+    def x2y(self):
+        '''
+        calculate Y for every X
+        :return:
+        '''
+        self.Y = np.array([self.func(x) for x in self.X])
+        return self.Y
+
     def ranking(self):
         # GA select the biggest one, but we want to minimize func, so we put a negative here
-        X = self.X
-        self.FitV = np.array([-self.func(x) for x in X])
+        self.FitV = -self.Y
         return self.FitV
 
     def selection(self):
@@ -145,18 +157,22 @@ class GA:
         func = self.func
         for i in range(self.max_iter):
             self.X = self.chrom2x()
+            self.x2y()
             self.ranking()
             self.selection()
             self.crossover()
             self.mutation()
 
             # record the best ones
-            generation_best_X = self.X[self.FitV.argmax(), :]
-            self.generation_best_X.append(generation_best_X)
-            self.generation_best_ranking.append(self.FitV.max())
-            self.FitV_history.append(self.FitV)
-        general_best = self.generation_best_X[(np.array(self.generation_best_ranking)).argmax()]
-        return general_best, func(general_best)
+            generation_best_index = self.Y.argmin()
+            self.generation_best_X.append(self.X[generation_best_index, :])
+            self.generation_best_Y.append(self.Y[generation_best_index])
+            self.all_history_Y.append(self.Y)
+
+        general_best_index = (np.array(self.generation_best_Y)).argmin()
+        general_best_X, general_best_Y = \
+            self.generation_best_X[general_best_index], self.generation_best_Y[general_best_index]
+        return general_best_X, general_best_Y
 
 
 class GA_TSP(GA):
@@ -248,6 +264,23 @@ class GA_TSP(GA):
 
 
 # %% functions:
+
+def ranking_raw(self):
+    # GA select the biggest one, but we want to minimize func, so we put a negative here
+    self.FitV = -self.Y
+    return self.FitV
+
+
+def ranking_linear(self):
+    '''
+    This comes from Sheffield' Matlab toolbox, with lots of changes
+    :param self:
+    :return:
+    '''
+    self.FitV = np.argsort(np.argsort(-self.Y))
+    return self.FitV
+
+
 def selection_tournament(self, tourn_size=3):
     FitV = self.FitV
     sel_index = []
@@ -256,6 +289,7 @@ def selection_tournament(self, tourn_size=3):
         sel_index.append(max(aspirants_index, key=lambda i: FitV[i]))
     self.Chrom = self.Chrom[sel_index, :]  # next generation
     return self.Chrom
+
 
 def selection_roulette_1(self):
     # do Roulette to select the next generation
@@ -268,6 +302,7 @@ def selection_roulette_1(self):
     self.Chrom = self.Chrom[sel_index, :]  # next generation
     return self.Chrom
 
+
 def selection_roulette_2(self):
     # do Roulette to select the next generation
     FitV = self.FitV
@@ -279,21 +314,41 @@ def selection_roulette_2(self):
     return self.Chrom
 
 
-def crossover_rv_3(self):
-    Chrom, size_pop = self.Chrom, self.size_pop
-    i = np.random.randint(1, self.len_chrom)  # crossover at the point i
-    Chrom1 = np.concatenate([Chrom[::2, :i], Chrom[1::2, i:]], axis=1)
-    Chrom2 = np.concatenate([Chrom[1::2, :i], Chrom[0::2, i:]], axis=1)
-    self.Chrom = np.concatenate([Chrom1, Chrom2], axis=0)
+def crossover_1point(self):
+    Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
+    for i in range(0, int(size_pop / 2), 2):
+        Chrom1, Chrom2 = self.Chrom[i], self.Chrom[i + 1]
+        n1 = np.random.randint(0, self.len_chrom, 1)
+        # crossover at the point n1
+        Chrom1[n1:], Chrom2[n1:] = Chrom2[n1:], Chrom1[n1:]
     return self.Chrom
+
+
+def crossover_2point(self):
+    Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
+    for i in range(0, int(size_pop / 2), 2):
+        Chrom1, Chrom2 = self.Chrom[i], self.Chrom[i + 1]
+        n1, n2 = np.random.randint(0, self.len_chrom, 2)
+        n1, n2 = min(n1, n2), max(n1, n2)
+        # crossover at the point n1 to n2
+        Chrom1[n1:n2], Chrom2[n1:n2] = Chrom2[n1:n2], Chrom1[n1:n2]
+    return self.Chrom
+
+
+# def crossover_rv_3(self):
+#     Chrom, size_pop = self.Chrom, self.size_pop
+#     i = np.random.randint(1, self.len_chrom)  # crossover at the point i
+#     Chrom1 = np.concatenate([Chrom[::2, :i], Chrom[1::2, i:]], axis=1)
+#     Chrom2 = np.concatenate([Chrom[1::2, :i], Chrom[0::2, i:]], axis=1)
+#     self.Chrom = np.concatenate([Chrom1, Chrom2], axis=0)
+#     return self.Chrom
+
 
 def mutation_rv_1(self):
     # mutation
     mask = (np.random.rand(self.size_pop, self.len_chrom) < self.prob_mut) * 1
     self.Chrom = (mask + self.Chrom) % 2
     return self.Chrom
-
-
 
 
 def crossover_TSP_1(self):
@@ -321,6 +376,7 @@ def mutation_TSP_1(self):
                 self.Chrom[i, j], self.Chrom[i, n] = self.Chrom[i, n], self.Chrom[i, j]
     return self.Chrom
 
+
 def mutation_TSP_3(self):
     for i in range(self.size_pop):
         if np.random.rand() < self.prob_mut:
@@ -333,7 +389,7 @@ def mutation_TSP_3(self):
 from copy import deepcopy
 
 
-def ga_with_udf(GA_class,options):
+def ga_with_udf(GA_class, options):
     '''
     options = {'selection': {'udf': selection_tournament, 'kwargs': {'tourn_size': 5}},
            'mutation': {'udf': mutation_TSP_type3}}
@@ -378,6 +434,7 @@ def ga_register_udf(udf_func_dict):
     :param udf_func_dict:
     :return:
     '''
+
     class GAUdf(GA):
         pass
 
