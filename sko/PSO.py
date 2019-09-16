@@ -5,6 +5,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+from sko.tools import func_transformer
 
 
 class PSO:
@@ -45,7 +46,7 @@ class PSO:
     >>> pso.plot_history()
     """
     def __init__(self, func, dim, pop=40, max_iter=150):
-        self.func = func
+        self.func = func_transformer(func)
         self.w = 0.8  # 惯性权重
         self.cp, self.cg = 2, 2  # 加速常数，一般取2附近. p代表个体记忆，g代表集体记忆
         self.pop = pop  # number of particles

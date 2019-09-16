@@ -5,7 +5,7 @@
 
 
 import numpy as np
-
+from sko.tools import func_transformer
 
 class GA:
     """
@@ -51,7 +51,7 @@ class GA:
     def __init__(self, func, n_dim,
                  size_pop=50, max_iter=200,
                  prob_mut=0.001, **kwargs):
-        self.func = func
+        self.func = func_transformer(func)
         self.size_pop = size_pop  # size of population
         self.max_iter = max_iter
         self.prob_mut = prob_mut  # probability of mutation
