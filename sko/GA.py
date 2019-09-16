@@ -48,7 +48,6 @@ class GA:
     >>> best_x, best_y = ga.fit()
     """
 
-    # genetic algorithms
     def __init__(self, func, n_dim,
                  size_pop=50, max_iter=200,
                  prob_mut=0.001, **kwargs):
@@ -128,23 +127,23 @@ class GA:
         self.FitV = -self.Y
         return self.FitV
 
-    def selection(self):
-        # do Roulette to select the next generation
+    def selection(self, tourn_size=3):
         FitV = self.FitV
-        # FitV = FitV - FitV.min() + 1e-10
-        FitV = (FitV - FitV.min()) / (FitV.max() - FitV.min() + 1e-10) + 0.2
-        # the worst one should still has a chance to be selected
-        sel_prob = FitV / FitV.sum()
-        sel_index = np.random.choice(range(self.size_pop), size=self.size_pop, p=sel_prob)
+        sel_index = []
+        for i in range(self.size_pop):
+            aspirants_index = np.random.choice(range(self.size_pop), size=tourn_size)
+            sel_index.append(max(aspirants_index, key=lambda i: FitV[i]))
         self.Chrom = self.Chrom[sel_index, :]  # next generation
         return self.Chrom
 
     def crossover(self):
-        Chrom, size_pop = self.Chrom, self.size_pop
-        i = np.random.randint(1, self.len_chrom)  # crossover at the point i
-        Chrom1 = np.concatenate([Chrom[::2, :i], Chrom[1::2, i:]], axis=1)
-        Chrom2 = np.concatenate([Chrom[1::2, :i], Chrom[0::2, i:]], axis=1)
-        self.Chrom = np.concatenate([Chrom1, Chrom2], axis=0)
+        Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
+        for i in range(0, int(size_pop / 2), 2):
+            Chrom1, Chrom2 = self.Chrom[i], self.Chrom[i + 1]
+            n1, n2 = np.random.randint(0, self.len_chrom, 2)
+            n1, n2 = min(n1, n2), max(n1, n2)
+            # crossover at the point n1 to n2
+            Chrom1[n1:n2], Chrom2[n1:n2] = Chrom2[n1:n2], Chrom1[n1:n2]
         return self.Chrom
 
     def mutation(self):
@@ -154,7 +153,7 @@ class GA:
         return self.Chrom
 
     def fit(self):
-        func = self.func
+        # func = self.func
         for i in range(self.max_iter):
             self.X = self.chrom2x()
             self.x2y()
@@ -294,8 +293,7 @@ def selection_tournament(self, tourn_size=3):
 def selection_roulette_1(self):
     # do Roulette to select the next generation
     FitV = self.FitV
-    # FitV = FitV - FitV.min() + 1e-10
-    FitV = (FitV - FitV.min()) / (FitV.max() - FitV.min() + 1e-10) + 0.2
+    FitV = FitV - FitV.min() + 1e-10
     # the worst one should still has a chance to be selected
     sel_prob = FitV / FitV.sum()
     sel_index = np.random.choice(range(self.size_pop), size=self.size_pop, p=sel_prob)
@@ -306,7 +304,8 @@ def selection_roulette_1(self):
 def selection_roulette_2(self):
     # do Roulette to select the next generation
     FitV = self.FitV
-    FitV = FitV - FitV.min() + 1e-10
+    # FitV = FitV - FitV.min() + 1e-10
+    FitV = (FitV - FitV.min()) / (FitV.max() - FitV.min() + 1e-10) + 0.2
     # the worst one should still has a chance to be selected
     sel_prob = FitV / FitV.sum()
     sel_index = np.random.choice(range(self.size_pop), size=self.size_pop, p=sel_prob)
@@ -354,7 +353,7 @@ def mutation_rv_1(self):
 def crossover_TSP_1(self):
     Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
     for i in range(0, int(size_pop / 2), 2):
-        Chrom1, Chrom2 = self.Chrom[i], self.Chrom[i + 1]
+        Chrom1, Chrom2 = self.Chrom[i,:], self.Chrom[i + 1,:]
         n1, n2 = np.random.randint(0, self.len_chrom, 2)
         n1, n2 = min(n1, n2), max(n1, n2)
         # crossover at the point n1 to n2
