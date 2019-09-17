@@ -1,8 +1,8 @@
 from setuptools import setup
 
 setup(name='scikit-opt',
-      version='0.2',
-      description='Genetic Algorithm, Particle Swarm Optimization, Simulated Annealing, Ant Colony Algorithm in Python',
+      version='0.3',
+      description='Heuristic Algorithms in Python',
       url='https://github.com/guofei9987/scikit-opt',
       author='Guofei',
       author_email='guofei9987@foxmail.com',
