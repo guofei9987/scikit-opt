@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # @Time    : 2019/8/20
-# @Author  : @guofei9987
+# @Author  : github.com/guofei9987
 
 import numpy as np
 import matplotlib.pyplot as plt

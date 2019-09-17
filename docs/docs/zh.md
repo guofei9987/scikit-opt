@@ -88,12 +88,18 @@ best_x, best_y = ga.fit()
 ```py
 import pandas as pd
 import matplotlib.pyplot as plt
-FitV_history = pd.DataFrame(ga.FitV_history)
-fig, ax = plt.subplots(2, 1)
-ax[0].plot(FitV_history.index, FitV_history.values, '.', color='red')
-plt_max = FitV_history.max(axis=1)
-ax[1].plot(plt_max.index, plt_max, label='max')
-ax[1].plot(plt_max.index, plt_max.cummax())
+Y_history = ga.all_history_Y
+Y_history = pd.DataFrame(Y_history)
+fig, ax = plt.subplots(3, 1)
+ax[0].plot(Y_history.index, Y_history.values, '.', color='red')
+plt_mean = Y_history.mean(axis=1)
+plt_max = Y_history.min(axis=1)
+ax[1].plot(plt_mean.index, plt_mean, label='mean')
+ax[1].plot(plt_max.index, plt_max, label='min')
+ax[1].set_title('mean and all Y of every generation')
+ax[1].legend()
+ax[2].plot(plt_max.index, plt_max.cummin())
+ax[2].set_title('best fitness of every generation')
 plt.show()
 ```
 
@@ -231,3 +237,35 @@ aca = ACA_TSP(func=cal_total_distance, n_dim=8,
 best_x, best_y = aca.fit()
 ```
 ![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/aca_tsp.png?raw=true)
+
+
+
+## 5. 免疫优化算法(immune algorithm, IA)
+
+```python
+from sko.IA import IA_TSP_g as IA_TSP
+
+ia_tsp = IA_TSP(func=cal_total_distance, n_dim=num_points, pop=500, max_iter=2000, Pm=0.2,
+                T=0.7, alpha=0.95)
+best_points, best_distance = ia_tsp.fit()
+print('best routine:', best_points, 'best_distance:', best_distance)
+```
+
+![ia](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/ia2.png?raw=true)
+
+## 6. 人工鱼群算法(artificial fish swarm algorithm, AFSA)
+
+```python
+def func(x):
+    x1, x2 = x
+    return 1 / x1 ** 2 + x1 ** 2 + 1 / x2 ** 2 + x2 ** 2
+
+
+from sko.ASFA import ASFA
+
+asfa = ASFA(func, n_dim=2, size_pop=50, max_iter=300,
+            max_try_num=100, step=0.5, visual=0.3,
+            q=0.98, delta=0.5)
+best_x, best_y = asfa.fit()
+print(best_x, best_y)
+```
