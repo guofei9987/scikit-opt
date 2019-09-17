@@ -81,12 +81,18 @@ plot the result using matplotlib:
 ```py
 import pandas as pd
 import matplotlib.pyplot as plt
-FitV_history = pd.DataFrame(ga.FitV_history)
-fig, ax = plt.subplots(2, 1)
-ax[0].plot(FitV_history.index, FitV_history.values, '.', color='red')
-plt_max = FitV_history.max(axis=1)
-ax[1].plot(plt_max.index, plt_max, label='max')
-ax[1].plot(plt_max.index, plt_max.cummax())
+Y_history = ga.all_history_Y
+Y_history = pd.DataFrame(Y_history)
+fig, ax = plt.subplots(3, 1)
+ax[0].plot(Y_history.index, Y_history.values, '.', color='red')
+plt_mean = Y_history.mean(axis=1)
+plt_max = Y_history.min(axis=1)
+ax[1].plot(plt_mean.index, plt_mean, label='mean')
+ax[1].plot(plt_max.index, plt_max, label='min')
+ax[1].set_title('mean and all Y of every generation')
+ax[1].legend()
+ax[2].plot(plt_max.index, plt_max.cummin())
+ax[2].set_title('best fitness of every generation')
 plt.show()
 ```
 
