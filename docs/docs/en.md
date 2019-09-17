@@ -225,3 +225,35 @@ aca = ACA_TSP(func=cal_total_distance, n_dim=8,
 best_x, best_y = aca.fit()
 ```
 ![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/aca_tsp.png?raw=true)
+
+
+
+## 5. immune algorithm (IA)
+
+```python
+from sko.IA import IA_TSP_g as IA_TSP
+
+ia_tsp = IA_TSP(func=cal_total_distance, n_dim=num_points, pop=500, max_iter=2000, Pm=0.2,
+                T=0.7, alpha=0.95)
+best_points, best_distance = ia_tsp.fit()
+print('best routine:', best_points, 'best_distance:', best_distance)
+```
+
+![ia](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/ia2.png?raw=true)
+
+## 6. artificial fish swarm algorithm (AFSA)
+
+```python
+def func(x):
+    x1, x2 = x
+    return 1 / x1 ** 2 + x1 ** 2 + 1 / x2 ** 2 + x2 ** 2
+
+
+from sko.ASFA import ASFA
+
+asfa = ASFA(func, n_dim=2, size_pop=50, max_iter=300,
+            max_try_num=100, step=0.5, visual=0.3,
+            q=0.98, delta=0.5)
+best_x, best_y = asfa.fit()
+print(best_x, best_y)
+```
