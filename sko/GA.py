@@ -141,7 +141,8 @@ class GA:
         for i in range(0, int(size_pop / 2), 2):
             Chrom1, Chrom2 = self.Chrom[i], self.Chrom[i + 1]
             n1, n2 = np.random.randint(0, self.len_chrom, 2)
-            n1, n2 = min(n1, n2), max(n1, n2)
+            if n1 > n2:
+                n1, n2 = n2, n1
             # crossover at the point n1 to n2
             Chrom1[n1:n2], Chrom2[n1:n2] = Chrom2[n1:n2], Chrom1[n1:n2]
         return self.Chrom
@@ -242,7 +243,8 @@ class GA_TSP(GA):
         for i in range(0, int(size_pop / 2), 2):
             Chrom1, Chrom2 = self.Chrom[i], self.Chrom[i + 1]
             n1, n2 = np.random.randint(0, self.len_chrom, 2)
-            n1, n2 = min(n1, n2), max(n1, n2)
+            if n1 > n2:
+                n1, n2 = n2, n1
             # crossover at the point n1 to n2
             for j in range(n1, n2):
                 x = np.argwhere(Chrom1 == Chrom2[j])
@@ -328,7 +330,8 @@ def crossover_2point(self):
     for i in range(0, int(size_pop / 2), 2):
         Chrom1, Chrom2 = self.Chrom[i], self.Chrom[i + 1]
         n1, n2 = np.random.randint(0, self.len_chrom, 2)
-        n1, n2 = min(n1, n2), max(n1, n2)
+        if n1 > n2:
+            n1, n2 = n2, n1
         # crossover at the point n1 to n2
         Chrom1[n1:n2], Chrom2[n1:n2] = Chrom2[n1:n2], Chrom1[n1:n2]
     return self.Chrom
@@ -353,9 +356,10 @@ def mutation_rv_1(self):
 def crossover_TSP_1(self):
     Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
     for i in range(0, int(size_pop / 2), 2):
-        Chrom1, Chrom2 = self.Chrom[i,:], self.Chrom[i + 1,:]
+        Chrom1, Chrom2 = self.Chrom[i, :], self.Chrom[i + 1, :]
         n1, n2 = np.random.randint(0, self.len_chrom, 2)
-        n1, n2 = min(n1, n2), max(n1, n2)
+        if n1 > n2:
+            n1, n2 = n2, n1
         # crossover at the point n1 to n2
         for j in range(n1, n2):
             x = np.argwhere(Chrom1 == Chrom2[j])
