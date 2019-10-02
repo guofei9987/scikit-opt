@@ -1,13 +1,17 @@
-[:clipboard: Document](https://scikit-opt.github.io/scikit-opt/#/docs/en), 
-[:clipboard: 文档](https://scikit-opt.github.io/scikit-opt/#/docs/zh)  
 
+# [scikit-opt](https://github.com/guofei9987/scikit-opt)
 
+[![release](https://img.shields.io/github/v/release/guofei9987/scikit-opt)](https://github.com/guofei9987/scikit-opt)
 [![Stars](https://img.shields.io/github/stars/guofei9987/scikit-opt.svg?label=Stars&style=social)](https://github.com/guofei9987/scikit-opt/stargazers)
 [![Forks](https://img.shields.io/github/forks/guofei9987/scikit-opt.svg?label=Fork&style=social)](https://github.com/guofei9987/scikit-opt/network/members)
 
-# [scikit-opt](https://github.com/guofei9987/scikit-opt)
+
 Heuristic Algorithms in Python  
-Genetic Algorithm, Particle Swarm Optimization, Simulated Annealing, Ant Colony Algorithm in Python
+(Genetic Algorithm, Particle Swarm Optimization, Simulated Annealing, Ant Colony Algorithm, Immune Algorithm,Artificial Fish Swarm Algorithm in Python)  
+
+
+- **Documentation:** [https://scikit-opt.github.io/scikit-opt/#/docs/en](https://scikit-opt.github.io/scikit-opt/#/docs/en),
+- **文档：** [https://scikit-opt.github.io/scikit-opt/#/docs/zh](https://scikit-opt.github.io/scikit-opt/#/docs/zh)  
 
 # install
 ```bash
@@ -15,12 +19,12 @@ pip install scikit-opt
 ```
 
 ## News:
-All algorithms will be available on **TensorFlow/Spark** on version 0.3 or version 0.4, getting parallel performance. 
+All algorithms will be available on **TensorFlow/Spark** on version 0.4, getting parallel performance.
 
 
 # feature: UDF
 
-**UDF** (user defined function) is available in version 0.2 release! 
+**UDF** (user defined function) is available now!
 
 For example, you just worked out a new type of `selection` function.  
 Now, your `selection` function is like this:
@@ -96,7 +100,7 @@ ax[2].set_title('best fitness of every generation')
 plt.show()
 ```
 
-![Figure_1-1](https://i.imgur.com/yT7lm8a.png)
+![Figure_1-1](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/ga_1.png?raw=true)
 
 ### 1.1 Genetic Algorithm for TSP(Travelling Salesman Problem)
 Just import the `GA_TSP`, it overloads the `crossover`, `mutation` to solve the TSP
