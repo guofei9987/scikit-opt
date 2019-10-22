@@ -66,3 +66,5 @@ class ACA_TSP:
         self.best_x = self.x_best_history[best_generation]
         self.best_y = self.y_best_history[best_generation]
         return self.best_x, self.best_y
+
+    run = fit

@@ -83,6 +83,8 @@ class SA:
             T = T * q  # 降温
         return self.x_star, self.f_star
 
+    run = fit
+
 
 class SA_TSP(SA):
     def new_x(self, x):

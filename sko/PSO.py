@@ -45,6 +45,7 @@ class PSO:
     >>> print('best_x is ', pso.gbest_x, 'best_y is ', pso.gbest_y)
     >>> pso.plot_history()
     """
+
     def __init__(self, func, dim, pop=40, max_iter=150):
         self.func = func_transformer(func)
         self.w = 0.8  # 惯性权重
@@ -96,3 +97,5 @@ class PSO:
     def plot_history(self):
         plt.plot(self.gbest_y_hist)
         plt.show()
+
+    run = fit

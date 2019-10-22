@@ -170,6 +170,8 @@ class GA:
             self.generation_best_X[general_best_index], self.generation_best_Y[general_best_index]
         return general_best_X, general_best_Y
 
+    run = fit
+
 
 class GA_TSP(GA):
     """
