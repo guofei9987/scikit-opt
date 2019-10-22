@@ -11,7 +11,6 @@ from sko.tools import func_transformer
 class GA:
     """
     Do genetic algorithm
-
     Parameters
     ----------------
     func : function
@@ -30,7 +29,6 @@ class GA:
         Max of iter
     prob_mut : float between 0 and 1
         Probability of mutation
-
     Attributes
     ----------------------
     Lind : array_like
@@ -39,8 +37,6 @@ class GA:
         Best X of every generation
     generation_best_ranking : array_like. Size if max_iter.
         Best ranking of every generation
-
-
     Examples
     -------------
     >>> demo_func=lambda x: x[0]**2 + x[1]**2 + x[2]**2
@@ -73,7 +69,7 @@ class GA:
     def define_chrom(self, kwargs):
         # define the types of Chrom
         self.lb = kwargs.get('lb', [-1] * self.n_dim)
-        self.ub = kwargs.get('ub', [-1] * self.n_dim)
+        self.ub = kwargs.get('ub', [1] * self.n_dim)
         self.precision = kwargs.get('precision', [1e-7] * self.n_dim)
 
         # Lind is the num of genes of every variable of func（segments）
@@ -178,7 +174,6 @@ class GA:
 class GA_TSP(GA):
     """
     Do genetic algorithm to solve the TSP (Travelling Salesman Problem)
-
     Parameters
     ----------------
     func : function
@@ -190,7 +185,6 @@ class GA_TSP(GA):
         Max of iter
     prob_mut : float between 0 and 1
         Probability of mutation
-
     Attributes
     ----------------------
     Lind : array_like
@@ -199,24 +193,18 @@ class GA_TSP(GA):
         Best X of every generation
     generation_best_ranking : array_like. Size if max_iter.
         Best ranking of every generation
-
-
     Examples
     -------------
     Firstly, your data (the distance matrix). Here I generate the data randomly as a demo:
     ```py
     num_points = 8
-
     points_coordinate = np.random.rand(num_points, 2)  # generate coordinate of points
     distance_matrix = spatial.distance.cdist(points_coordinate, points_coordinate, metric='euclidean')
     print('distance_matrix is: \n', distance_matrix)
-
-
     def cal_total_distance(routine):
         num_points, = routine.shape
         return sum([distance_matrix[routine[i % num_points], routine[(i + 1) % num_points]] for i in range(num_points)])
     ```
-
     Do GA
     ```py
     from sko.GA import GA_TSP
@@ -274,7 +262,7 @@ def ranking_raw(self):
 
 def ranking_linear(self):
     '''
-    This comes from Sheffield' Matlab toolbox, with lots of changes
+    This comes from Sheffield's Matlab toolbox, with some changes
     :param self:
     :return:
     '''
@@ -432,8 +420,7 @@ def ga_with_udf(GA_class, options):
 
 def ga_register_udf(udf_func_dict):
     '''
-
-
+    will
     :param udf_func_dict:
     :return:
     '''
