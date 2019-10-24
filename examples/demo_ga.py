@@ -2,7 +2,7 @@ from sko.GA import GA
 
 demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
 ga = GA(func=demo_func, n_dim=3, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2])
-best_x, best_y = ga.fit()
+best_x, best_y = ga.run()
 
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 

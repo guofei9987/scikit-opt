@@ -6,6 +6,9 @@
 
 import numpy as np
 from sko.tools import func_transformer
+from abc import ABCMeta, abstractmethod
+import types
+
 
 
 class GA:
@@ -139,7 +142,7 @@ class GA:
             n1, n2 = np.random.randint(0, self.len_chrom, 2)
             if n1 > n2:
                 n1, n2 = n2, n1
-            # crossover at the point n1 to n2
+            # crossover at the points n1 to n2
             Chrom1[n1:n2], Chrom2[n1:n2] = Chrom2[n1:n2], Chrom1[n1:n2]
         return self.Chrom
 
@@ -149,7 +152,7 @@ class GA:
         self.Chrom = (mask + self.Chrom) % 2
         return self.Chrom
 
-    def fit(self):
+    def run(self):
         # func = self.func
         for i in range(self.max_iter):
             self.X = self.chrom2x()
@@ -170,7 +173,18 @@ class GA:
             self.generation_best_X[general_best_index], self.generation_best_Y[general_best_index]
         return general_best_X, general_best_Y
 
-    run = fit
+    fit = run
+
+    def register(self, operator_name, operator, *args, **kwargs):
+        valid_operator_name = {'crossover', 'mutation', 'selection', 'ranking'}
+        if operator_name not in valid_operator_name:
+            raise NameError(operator_name + "is not a valid operator name, should be in " + str(valid_operator_name))
+
+        def operator_wapper(*wrapper_args):
+            return operator(*(wrapper_args + args), **kwargs)
+
+        setattr(self, operator_name, types.MethodType(operator_wapper, self))
+        return self
 
 
 class GA_TSP(GA):
@@ -336,8 +350,8 @@ def crossover_2point(self):
 #     return self.Chrom
 
 
-def mutation_rv_1(self):
-    # mutation
+def mutation(self):
+    # mutation of 0/1 type chromosome
     mask = (np.random.rand(self.size_pop, self.len_chrom) < self.prob_mut) * 1
     self.Chrom = (mask + self.Chrom) % 2
     return self.Chrom
@@ -384,12 +398,14 @@ from copy import deepcopy
 
 def ga_with_udf(GA_class, options):
     '''
+    will be deprecated
     options = {'selection': {'udf': selection_tournament, 'kwargs': {'tourn_size': 5}},
            'mutation': {'udf': mutation_TSP_type3}}
     GA_TSP2 = ga_register_udf(options)
     :param options:
     :return:
     '''
+    print(ga_with_udf.__name__ + 'will be deprecated. Use ga.register instead')
     options = deepcopy(options)
 
     class GAUdf(GA_class):
@@ -422,11 +438,11 @@ def ga_with_udf(GA_class, options):
 
 def ga_register_udf(udf_func_dict):
     '''
-    will
+    will be deprecated
     :param udf_func_dict:
     :return:
     '''
-
+    print(ga_register_udf.__name__+'will be deprecated. Use ga.register instead')
     class GAUdf(GA):
         pass
 
