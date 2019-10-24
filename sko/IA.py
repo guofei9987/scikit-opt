@@ -26,13 +26,9 @@ def immune_ranking(self, T=0.7, alpha=0.95):
     similiar_matrix1 = dist_matrix1 < 1 - T  # 是否与其他抗体的相似度多于T
     similiar_matrix2 = similiar_matrix1.sum(axis=1)  # 每个抗体与其他抗体相似，计数
     S = (similiar_matrix2 - 1) / (self.size_pop - 1)  # 抗体浓度。减一是因为自己与自己一定相似，应当排除
-    self.FitV = alpha * A / A.sum() + (1 - alpha) * S / (S.sum()+1e-5)
+    self.FitV = alpha * A / A.sum() + (1 - alpha) * S / (S.sum() + 1e-5)
     return self.FitV
 
 
-def IA_TSP_g(**kwargs):
-    T, alpha = kwargs['T'], kwargs['alpha']
-    options = {'ranking': {'udf': immune_ranking, 'args': {'T': T, 'alpha': alpha}}
-               }
-    IA_TSP = ga_with_udf(GA_TSP, options)
-    return IA_TSP(**kwargs)
+class IA_TSP(GA_TSP):
+    ranking = immune_ranking

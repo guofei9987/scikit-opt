@@ -77,7 +77,7 @@ class PSO:
             self.gbest_x = self.X[self.Y.argmin(), :]
             self.gbest_y = self.Y.min()
 
-    def fit(self):
+    def run(self):
         for iter_num in range(self.max_iter):
             # self.dim
             r1 = np.random.rand(self.pop, self.dim)
@@ -98,4 +98,4 @@ class PSO:
         plt.plot(self.gbest_y_hist)
         plt.show()
 
-    run = fit
+    fit = run

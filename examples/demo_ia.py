@@ -5,11 +5,11 @@ num_points, points_coordinate, distance_matrix, cal_total_distance = function_fo
 
 # %%
 
-from sko.IA import IA_TSP_g as IA_TSP
+from sko.IA import IA_TSP
 
 ia_tsp = IA_TSP(func=cal_total_distance, n_dim=num_points, pop=500, max_iter=2000, Pm=0.2,
                 T=0.7, alpha=0.95)
-best_points, best_distance = ia_tsp.fit()
+best_points, best_distance = ia_tsp.run()
 print('best routine:', best_points, 'best_distance:', best_distance)
 
 # %%
