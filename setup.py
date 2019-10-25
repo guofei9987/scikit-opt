@@ -19,7 +19,7 @@ def read_requirements(filename):
 
 setup(name='scikit-opt',
       python_requires='>=3.4.0',
-      version='0.3.1',
+      version='0.3.2',
       description='Heuristic Algorithms in Python',
       long_description=read_file('README.md'),
       long_description_content_type="text/markdown",

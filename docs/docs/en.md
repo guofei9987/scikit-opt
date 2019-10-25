@@ -24,43 +24,40 @@ best_x, best_y = ga.run()
 For example, if you just worked out a new type of `selection` function.  
 Your `selection` function is like this:
 ```python
-def selection_elite(self):
-    '''
-    A new selection strategy.
-    This strategy makes the elite (defined as the best one for a generation)
-    100% survive the selection
-    '''
+def selection_tournament(self, tourn_size):
     FitV = self.FitV
-    FitV = (FitV - FitV.min()) / (FitV.max() - FitV.min() + 1e-10) + 0.2
-    # the worst one should still has a chance to be selected
-    # the elite(defined as the best one for a generation) must survive the selection
-    elite_index = np.array([FitV.argmax()])
-
-    # do Roulette to select the next generation
-    sel_prob = FitV / FitV.sum()
-    roulette_index = np.random.choice(range(self.size_pop), size=self.size_pop - 1, p=sel_prob)
-    sel_index = np.concatenate([elite_index, roulette_index])
+    sel_index = []
+    for i in range(self.size_pop):
+        aspirants_index = np.random.choice(range(self.size_pop), size=tourn_size)
+        sel_index.append(max(aspirants_index, key=lambda i: FitV[i]))
     self.Chrom = self.Chrom[sel_index, :]  # next generation
     return self.Chrom
 ```
 
-Regist your udf to GA
+Regist your udf to GA (Here we also provide some operators)
 ```python
-from sko.GA import GA, GA_TSP, ga_with_udf
-options = {'selection': {'udf': selection_elite}}
-GA_1 = ga_with_udf(GA, options)
+from sko.GA import GA, GA_TSP
+from sko.GA import ranking_linear, ranking_raw, crossover_2point, selection_roulette_2, mutation
+
+
+demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
+ga = GA(func=demo_func, n_dim=3, size_pop=100, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2])
+
+#
+ga.register(operator_name='ranking', operator=ranking_linear). \
+    register(operator_name='crossover', operator=crossover_2point). \
+    register(operator_name='mutation', operator=mutation). \
+    register(operator_name='selection', operator=selection_tournament, tourn_size=3)
 ```
 
 Now do GA as usual
 ```python
-demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
-ga = GA_1(func=demo_func, n_dim=3, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2])
-best_x, best_y = ga.fit()
-#
+best_x, best_y = ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 ```
 >Until Now, the **udf** surport `crossover`, `mutation`, `selection`, `ranking` of GA
 
+> We provide a dozen of operators see [here](https://github.com/guofei9987/scikit-opt/blob/master/sko/GA.py)
 
 ## 1. Genetic Algorithm
 ### 1. Genetic Algorithm for multiple function

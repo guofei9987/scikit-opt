@@ -7,14 +7,14 @@ num_points, points_coordinate, distance_matrix, cal_total_distance = function_fo
 
 
 
-# %%
+# %% do GA
 
 from sko.GA import GA_TSP
 
 ga_tsp = GA_TSP(func=cal_total_distance, n_dim=num_points, size_pop=300, max_iter=800, Pm=0.3)
 best_points, best_distance = ga_tsp.run()
 
-# %%
+# %% plot
 fig, ax = plt.subplots(1, 1)
 best_points_ = np.concatenate([best_points, [best_points[0]]])
 best_points_coordinate = points_coordinate[best_points_, :]
