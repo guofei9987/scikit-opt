@@ -26,8 +26,7 @@ ga.register(operator_name='ranking', operator=ranking_linear). \
     register(operator_name='mutation', operator=mutation). \
     register(operator_name='selection', operator=selection_tournament, tourn_size=3)
 
-# best_x, best_y = ga.run()
-best_x, best_y = ga.fit()
+best_x, best_y = ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 
 # %%

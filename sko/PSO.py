@@ -69,17 +69,24 @@ class PSO:
         return self.Y
 
     def update_pbest(self):
+        '''
+        Best for individual
+        :return:
+        '''
         self.pbest_x = np.where(self.pbest_y > self.Y, self.X, self.pbest_x)
         self.pbest_y = np.where(self.pbest_y > self.Y, self.Y, self.pbest_y)
 
     def update_gbest(self):
+        '''
+        Best for the population
+        :return:
+        '''
         if self.gbest_y > self.Y.min():
             self.gbest_x = self.X[self.Y.argmin(), :]
             self.gbest_y = self.Y.min()
 
     def run(self):
         for iter_num in range(self.max_iter):
-            # self.dim
             r1 = np.random.rand(self.pop, self.dim)
             r2 = np.random.rand(self.pop, self.dim)
             self.V = self.w * self.V + \

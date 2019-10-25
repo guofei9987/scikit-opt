@@ -4,7 +4,7 @@
 # @Author  : github.com/guofei9987
 
 import numpy as np
-
+import types
 
 class SA:
     """
@@ -84,6 +84,25 @@ class SA:
         return self.x_star, self.f_star
 
     run = fit
+
+    def register(self, operator_name, operator, *args, **kwargs):
+        '''
+        regeister udf to the class
+        :param operator_name: string in {'crossover', 'mutation', 'selection', 'ranking'}
+        :param operator: a function
+        :param args: arg of operator
+        :param kwargs: kwargs of operator
+        :return:
+        '''
+        valid_operator_name = {'new_x'}
+        if operator_name not in valid_operator_name:
+            raise NameError(operator_name + "is not a valid operator name, should be in " + str(valid_operator_name))
+
+        def operator_wapper(*wrapper_args):
+            return operator(*(wrapper_args + args), **kwargs)
+
+        setattr(self, operator_name, types.MethodType(operator_wapper, self))
+        return self
 
 
 class SA_TSP(SA):
