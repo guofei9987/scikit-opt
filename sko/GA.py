@@ -57,7 +57,14 @@ def ranking_raw(self):
 
 def ranking_linear(self):
     '''
-    This comes from Sheffield's Matlab toolbox, with some changes
+    For more details see [Baker1985]_.
+
+    :param self:
+    :return:
+
+    .. [Baker1985] Baker J E, "Adaptive selection methods for genetic
+    algorithms, 1985.
+
     :param self:
     :return:
     '''
@@ -66,6 +73,13 @@ def ranking_linear(self):
 
 
 def selection_tournament(self, tourn_size=3):
+    '''
+    Select the best individual among *tournsize* randomly chosen
+    individuals,
+    :param self:
+    :param tourn_size:
+    :return:
+    '''
     FitV = self.FitV
     sel_index = []
     for i in range(self.size_pop):
@@ -76,25 +90,32 @@ def selection_tournament(self, tourn_size=3):
 
 
 def selection_roulette_1(self):
-    # do Roulette to select the next generation
+    '''
+    Select the next generation using roulette
+    :param self:
+    :return:
+    '''
     FitV = self.FitV
     FitV = FitV - FitV.min() + 1e-10
     # the worst one should still has a chance to be selected
     sel_prob = FitV / FitV.sum()
     sel_index = np.random.choice(range(self.size_pop), size=self.size_pop, p=sel_prob)
-    self.Chrom = self.Chrom[sel_index, :]  # next generation
+    self.Chrom = self.Chrom[sel_index, :]
     return self.Chrom
 
 
 def selection_roulette_2(self):
-    # do Roulette to select the next generation
+    '''
+    Select the next generation using roulette
+    :param self:
+    :return:
+    '''
     FitV = self.FitV
-    # FitV = FitV - FitV.min() + 1e-10
     FitV = (FitV - FitV.min()) / (FitV.max() - FitV.min() + 1e-10) + 0.2
     # the worst one should still has a chance to be selected
     sel_prob = FitV / FitV.sum()
     sel_index = np.random.choice(range(self.size_pop), size=self.size_pop, p=sel_prob)
-    self.Chrom = self.Chrom[sel_index, :]  # next generation
+    self.Chrom = self.Chrom[sel_index, :]
     return self.Chrom
 
 
@@ -136,10 +157,19 @@ def mutation(self):
     return self.Chrom
 
 
-def crossover_TSP_1(self):
+def crossover_pmx(self):
+    '''
+    Executes a partially matched crossover (PMX) on Chrom.
+    For more details see [Goldberg1985]_.
+
+    :param self:
+    :return:
+
+    .. [Goldberg1985] Goldberg and Lingel, "Alleles, loci, and the traveling
+   salesman problem", 1985.
+    '''
     Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
     for i in range(0, size_pop, 2):
-        # Chrom1, Chrom2 = self.Chrom[i, :], self.Chrom[i + 1, :]
         Chrom1, Chrom2 = self.Chrom[i], self.Chrom[i + 1]
         n1, n2 = np.random.randint(0, self.len_chrom, 2)
         if n1 > n2:
@@ -158,7 +188,6 @@ def mutation_TSP_1(self):
     for i in range(self.size_pop):
         for j in range(self.n_dim):
             if np.random.rand() < self.prob_mut:
-                # n1, n2 = np.random.randint(0, self.len_chrom, 2)
                 n = np.random.randint(0, self.len_chrom, 1)
                 self.Chrom[i, j], self.Chrom[i, n] = self.Chrom[i, n], self.Chrom[i, j]
     return self.Chrom
@@ -367,7 +396,7 @@ class GA_TSP(GA):
         self.Chrom = tmp.argsort(axis=1)
         return self.Chrom
 
-    crossover = crossover_TSP_1
+    crossover = crossover_pmx
     mutation = mutation_TSP_1
 
 
