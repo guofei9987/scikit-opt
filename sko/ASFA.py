@@ -204,3 +204,5 @@ class ASFA:
                 self.follow(idx_individual)
             self.visual *= self.q
         return self.best_X, self.best_Y
+
+    run = fit

@@ -15,7 +15,7 @@ pip install scikit-opt
 ```python
 demo_func=lambda x: x[0]**2 + x[1]**2 + x[2]**2
 ga = GA(func=demo_func,n_dim=3, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2])
-best_x, best_y = ga.fit()
+best_x, best_y = ga.run()
 ```
 
 ## do with UDF
@@ -24,43 +24,40 @@ best_x, best_y = ga.fit()
 For example, if you just worked out a new type of `selection` function.  
 Your `selection` function is like this:
 ```python
-def selection_elite(self):
-    '''
-    A new selection strategy.
-    This strategy makes the elite (defined as the best one for a generation)
-    100% survive the selection
-    '''
+def selection_tournament(self, tourn_size):
     FitV = self.FitV
-    FitV = (FitV - FitV.min()) / (FitV.max() - FitV.min() + 1e-10) + 0.2
-    # the worst one should still has a chance to be selected
-    # the elite(defined as the best one for a generation) must survive the selection
-    elite_index = np.array([FitV.argmax()])
-
-    # do Roulette to select the next generation
-    sel_prob = FitV / FitV.sum()
-    roulette_index = np.random.choice(range(self.size_pop), size=self.size_pop - 1, p=sel_prob)
-    sel_index = np.concatenate([elite_index, roulette_index])
+    sel_index = []
+    for i in range(self.size_pop):
+        aspirants_index = np.random.choice(range(self.size_pop), size=tourn_size)
+        sel_index.append(max(aspirants_index, key=lambda i: FitV[i]))
     self.Chrom = self.Chrom[sel_index, :]  # next generation
     return self.Chrom
 ```
 
-Regist your udf to GA
+Regist your udf to GA (Here we also provide some operators)
 ```python
-from sko.GA import GA, GA_TSP, ga_with_udf
-options = {'selection': {'udf': selection_elite}}
-GA_1 = ga_with_udf(GA, options)
+from sko.GA import GA, GA_TSP
+from sko.GA import ranking_linear, ranking_raw, crossover_2point, selection_roulette_2, mutation
+
+
+demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
+ga = GA(func=demo_func, n_dim=3, size_pop=100, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2])
+
+#
+ga.register(operator_name='ranking', operator=ranking_linear). \
+    register(operator_name='crossover', operator=crossover_2point). \
+    register(operator_name='mutation', operator=mutation). \
+    register(operator_name='selection', operator=selection_tournament, tourn_size=3)
 ```
 
 Now do GA as usual
 ```python
-demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
-ga = GA_1(func=demo_func, n_dim=3, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2])
-best_x, best_y = ga.fit()
-#
+best_x, best_y = ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 ```
 >Until Now, the **udf** surport `crossover`, `mutation`, `selection`, `ranking` of GA
 
+> We provide a dozen of operators see [here](https://github.com/guofei9987/scikit-opt/blob/master/sko/GA.py)
 
 ## 1. Genetic Algorithm
 ### 1. Genetic Algorithm for multiple function
@@ -75,7 +72,7 @@ def demo_func(x):
 
 
 ga = GA(func=demo_func, lb=[-1, -10, -5], ub=[2, 10, 2], max_iter=500)
-best_x, best_y = ga.fit()
+best_x, best_y = ga.run()
 ```
 plot the result using matplotlib:
 ```py
@@ -129,7 +126,7 @@ Do GA
 ```py
 from GA import GA_TSP
 ga_tsp = GA_TSP(func=cal_total_distance, points=points, pop=50, max_iter=200, Pm=0.001)
-best_points, best_distance = ga_tsp.fit()
+best_points, best_distance = ga_tsp.run()
 ```
 
 Plot the result:
@@ -155,7 +152,7 @@ def demo_func(x):
     return x1 ** 2 + (x2 - 0.05) ** 2 + x3 ** 2
 
 pso = PSO(func=demo_func, dim=3)
-fitness = pso.fit()
+fitness = pso.run()
 print('best_x is ',pso.gbest_x)
 print('best_y is ',pso.gbest_y)
 pso.plot_history()
@@ -176,7 +173,7 @@ def demo_func(x):
     return x1 ** 2 + (x2 - 0.05) ** 2 + x3 ** 2
 
 sa = SA(func=demo_func, x0=[1, 1, 1])
-x_star, y_star = sa.fit()
+x_star, y_star = sa.run()
 print(x_star, y_star)
 
 ```
@@ -197,7 +194,7 @@ DO SA for TSP
 ```python
 from sko.SA import SA_TSP
 sa_tsp = SA_TSP(func=demo_func, x0=range(num_points))
-best_points, best_distance = sa_tsp.fit()
+best_points, best_distance = sa_tsp.run()
 ```
 
 plot the result
@@ -222,7 +219,7 @@ aca = ACA_TSP(func=cal_total_distance, n_dim=8,
               size_pop=10, max_iter=20,
               distance_matrix=distance_matrix)
 
-best_x, best_y = aca.fit()
+best_x, best_y = aca.run()
 ```
 ![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/aca_tsp.png?raw=true)
 
@@ -235,7 +232,7 @@ from sko.IA import IA_TSP_g as IA_TSP
 
 ia_tsp = IA_TSP(func=cal_total_distance, n_dim=num_points, pop=500, max_iter=2000, Pm=0.2,
                 T=0.7, alpha=0.95)
-best_points, best_distance = ia_tsp.fit()
+best_points, best_distance = ia_tsp.run()
 print('best routine:', best_points, 'best_distance:', best_distance)
 ```
 
@@ -254,6 +251,6 @@ from sko.ASFA import ASFA
 asfa = ASFA(func, n_dim=2, size_pop=50, max_iter=300,
             max_try_num=100, step=0.5, visual=0.3,
             q=0.98, delta=0.5)
-best_x, best_y = asfa.fit()
+best_x, best_y = asfa.run()
 print(best_x, best_y)
 ```

@@ -6,12 +6,206 @@
 
 import numpy as np
 from sko.tools import func_transformer
+from abc import ABCMeta, abstractmethod
+import types
 
 
-class GA:
+class GA_base(metaclass=ABCMeta):
+    @abstractmethod
+    def ranking(self):
+        pass
+
+    @abstractmethod
+    def selection(self):
+        pass
+
+    @abstractmethod
+    def crossover(self):
+        pass
+
+    @abstractmethod
+    def mutation(self):
+        pass
+
+    def register(self, operator_name, operator, *args, **kwargs):
+        '''
+        regeister udf to the class
+        :param operator_name: string in {'crossover', 'mutation', 'selection', 'ranking'}
+        :param operator: a function
+        :param args: arg of operator
+        :param kwargs: kwargs of operator
+        :return:
+        '''
+        valid_operator_name = {'crossover', 'mutation', 'selection', 'ranking'}
+        if operator_name not in valid_operator_name:
+            raise NameError(operator_name + "is not a valid operator name, should be in " + str(valid_operator_name))
+
+        def operator_wapper(*wrapper_args):
+            return operator(*(wrapper_args + args), **kwargs)
+
+        setattr(self, operator_name, types.MethodType(operator_wapper, self))
+        return self
+
+
+# %% operators:
+
+def ranking_raw(self):
+    # GA select the biggest one, but we want to minimize func, so we put a negative here
+    self.FitV = -self.Y
+    return self.FitV
+
+
+def ranking_linear(self):
+    '''
+    For more details see [Baker1985]_.
+
+    :param self:
+    :return:
+
+    .. [Baker1985] Baker J E, "Adaptive selection methods for genetic
+    algorithms, 1985.
+
+    :param self:
+    :return:
+    '''
+    self.FitV = np.argsort(np.argsort(-self.Y))
+    return self.FitV
+
+
+def selection_tournament(self, tourn_size=3):
+    '''
+    Select the best individual among *tournsize* randomly chosen
+    individuals,
+    :param self:
+    :param tourn_size:
+    :return:
+    '''
+    FitV = self.FitV
+    sel_index = []
+    for i in range(self.size_pop):
+        aspirants_index = np.random.choice(range(self.size_pop), size=tourn_size)
+        sel_index.append(max(aspirants_index, key=lambda i: FitV[i]))
+    self.Chrom = self.Chrom[sel_index, :]  # next generation
+    return self.Chrom
+
+
+def selection_roulette_1(self):
+    '''
+    Select the next generation using roulette
+    :param self:
+    :return:
+    '''
+    FitV = self.FitV
+    FitV = FitV - FitV.min() + 1e-10
+    # the worst one should still has a chance to be selected
+    sel_prob = FitV / FitV.sum()
+    sel_index = np.random.choice(range(self.size_pop), size=self.size_pop, p=sel_prob)
+    self.Chrom = self.Chrom[sel_index, :]
+    return self.Chrom
+
+
+def selection_roulette_2(self):
+    '''
+    Select the next generation using roulette
+    :param self:
+    :return:
+    '''
+    FitV = self.FitV
+    FitV = (FitV - FitV.min()) / (FitV.max() - FitV.min() + 1e-10) + 0.2
+    # the worst one should still has a chance to be selected
+    sel_prob = FitV / FitV.sum()
+    sel_index = np.random.choice(range(self.size_pop), size=self.size_pop, p=sel_prob)
+    self.Chrom = self.Chrom[sel_index, :]
+    return self.Chrom
+
+
+def crossover_1point(self):
+    Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
+    for i in range(0, size_pop, 2):
+        Chrom1, Chrom2 = self.Chrom[i], self.Chrom[i + 1]
+        n1 = np.random.randint(0, self.len_chrom, 1)
+        # crossover at the point n1
+        Chrom1[n1:], Chrom2[n1:] = Chrom2[n1:], Chrom1[n1:]
+    return self.Chrom
+
+
+def crossover_2point(self):
+    Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
+    for i in range(0, size_pop, 2):
+        Chrom1, Chrom2 = self.Chrom[i], self.Chrom[i + 1]
+        n1, n2 = np.random.randint(0, self.len_chrom, 2)
+        if n1 > n2:
+            n1, n2 = n2, n1
+        # crossover at the points n1 to n2
+        Chrom1[n1:n2], Chrom2[n1:n2] = Chrom2[n1:n2], Chrom1[n1:n2]
+    return self.Chrom
+
+
+# def crossover_rv_3(self):
+#     Chrom, size_pop = self.Chrom, self.size_pop
+#     i = np.random.randint(1, self.len_chrom)  # crossover at the point i
+#     Chrom1 = np.concatenate([Chrom[::2, :i], Chrom[1::2, i:]], axis=1)
+#     Chrom2 = np.concatenate([Chrom[1::2, :i], Chrom[0::2, i:]], axis=1)
+#     self.Chrom = np.concatenate([Chrom1, Chrom2], axis=0)
+#     return self.Chrom
+
+
+def mutation(self):
+    # mutation of 0/1 type chromosome
+    mask = (np.random.rand(self.size_pop, self.len_chrom) < self.prob_mut) * 1
+    self.Chrom = (mask + self.Chrom) % 2
+    return self.Chrom
+
+
+def crossover_pmx(self):
+    '''
+    Executes a partially matched crossover (PMX) on Chrom.
+    For more details see [Goldberg1985]_.
+
+    :param self:
+    :return:
+
+    .. [Goldberg1985] Goldberg and Lingel, "Alleles, loci, and the traveling
+   salesman problem", 1985.
+    '''
+    Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
+    for i in range(0, size_pop, 2):
+        Chrom1, Chrom2 = self.Chrom[i], self.Chrom[i + 1]
+        n1, n2 = np.random.randint(0, self.len_chrom, 2)
+        if n1 > n2:
+            n1, n2 = n2, n1
+        # crossover at the point n1 to n2
+        for j in range(n1, n2):
+            x = np.argwhere(Chrom1 == Chrom2[j])
+            y = np.argwhere(Chrom2 == Chrom1[j])
+            Chrom1[j], Chrom2[j] = Chrom2[j], Chrom1[j]
+            Chrom1[x], Chrom2[y] = Chrom2[y], Chrom1[x]
+        self.Chrom[i], self.Chrom[i + 1] = Chrom1, Chrom2
+    return self.Chrom
+
+
+def mutation_TSP_1(self):
+    for i in range(self.size_pop):
+        for j in range(self.n_dim):
+            if np.random.rand() < self.prob_mut:
+                n = np.random.randint(0, self.len_chrom, 1)
+                self.Chrom[i, j], self.Chrom[i, n] = self.Chrom[i, n], self.Chrom[i, j]
+    return self.Chrom
+
+
+def mutation_TSP_3(self):
+    for i in range(self.size_pop):
+        if np.random.rand() < self.prob_mut:
+            n1, n2 = np.random.randint(0, self.len_chrom, 2)
+            self.Chrom[i, n1], self.Chrom[i, n2] = self.Chrom[i, n2], self.Chrom[i, n1]
+    return self.Chrom
+
+
+# %%
+
+class GA(GA_base):
     """
     Do genetic algorithm
-
     Parameters
     ----------------
     func : function
@@ -30,7 +224,6 @@ class GA:
         Max of iter
     prob_mut : float between 0 and 1
         Probability of mutation
-
     Attributes
     ----------------------
     Lind : array_like
@@ -39,8 +232,6 @@ class GA:
         Best X of every generation
     generation_best_ranking : array_like. Size if max_iter.
         Best ranking of every generation
-
-
     Examples
     -------------
     >>> demo_func=lambda x: x[0]**2 + x[1]**2 + x[2]**2
@@ -73,7 +264,7 @@ class GA:
     def define_chrom(self, kwargs):
         # define the types of Chrom
         self.lb = kwargs.get('lb', [-1] * self.n_dim)
-        self.ub = kwargs.get('ub', [-1] * self.n_dim)
+        self.ub = kwargs.get('ub', [1] * self.n_dim)
         self.precision = kwargs.get('precision', [1e-7] * self.n_dim)
 
         # Lind is the num of genes of every variable of func（segments）
@@ -122,39 +313,12 @@ class GA:
         self.Y = np.array([self.func(x) for x in self.X])
         return self.Y
 
-    def ranking(self):
-        # GA select the biggest one, but we want to minimize func, so we put a negative here
-        self.FitV = -self.Y
-        return self.FitV
+    ranking = ranking_raw
+    selection = selection_tournament
+    crossover = crossover_2point
+    mutation = mutation
 
-    def selection(self, tourn_size=3):
-        FitV = self.FitV
-        sel_index = []
-        for i in range(self.size_pop):
-            aspirants_index = np.random.choice(range(self.size_pop), size=tourn_size)
-            sel_index.append(max(aspirants_index, key=lambda i: FitV[i]))
-        self.Chrom = self.Chrom[sel_index, :]  # next generation
-        return self.Chrom
-
-    def crossover(self):
-        Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
-        for i in range(0, int(size_pop / 2), 2):
-            Chrom1, Chrom2 = self.Chrom[i], self.Chrom[i + 1]
-            n1, n2 = np.random.randint(0, self.len_chrom, 2)
-            if n1 > n2:
-                n1, n2 = n2, n1
-            # crossover at the point n1 to n2
-            Chrom1[n1:n2], Chrom2[n1:n2] = Chrom2[n1:n2], Chrom1[n1:n2]
-        return self.Chrom
-
-    def mutation(self):
-        # mutation
-        mask = (np.random.rand(self.size_pop, self.len_chrom) < self.prob_mut) * 1
-        self.Chrom = (mask + self.Chrom) % 2
-        return self.Chrom
-
-    def fit(self):
-        # func = self.func
+    def run(self):
         for i in range(self.max_iter):
             self.X = self.chrom2x()
             self.x2y()
@@ -174,11 +338,12 @@ class GA:
             self.generation_best_X[general_best_index], self.generation_best_Y[general_best_index]
         return general_best_X, general_best_Y
 
+    fit = run
+
 
 class GA_TSP(GA):
     """
     Do genetic algorithm to solve the TSP (Travelling Salesman Problem)
-
     Parameters
     ----------------
     func : function
@@ -190,7 +355,6 @@ class GA_TSP(GA):
         Max of iter
     prob_mut : float between 0 and 1
         Probability of mutation
-
     Attributes
     ----------------------
     Lind : array_like
@@ -199,24 +363,18 @@ class GA_TSP(GA):
         Best X of every generation
     generation_best_ranking : array_like. Size if max_iter.
         Best ranking of every generation
-
-
     Examples
     -------------
     Firstly, your data (the distance matrix). Here I generate the data randomly as a demo:
     ```py
     num_points = 8
-
     points_coordinate = np.random.rand(num_points, 2)  # generate coordinate of points
     distance_matrix = spatial.distance.cdist(points_coordinate, points_coordinate, metric='euclidean')
     print('distance_matrix is: \n', distance_matrix)
-
-
     def cal_total_distance(routine):
         num_points, = routine.shape
         return sum([distance_matrix[routine[i % num_points], routine[(i + 1) % num_points]] for i in range(num_points)])
     ```
-
     Do GA
     ```py
     from sko.GA import GA_TSP
@@ -238,168 +396,24 @@ class GA_TSP(GA):
         self.Chrom = tmp.argsort(axis=1)
         return self.Chrom
 
-    def crossover(self):
-        Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
-        for i in range(0, int(size_pop / 2), 2):
-            Chrom1, Chrom2 = self.Chrom[i], self.Chrom[i + 1]
-            n1, n2 = np.random.randint(0, self.len_chrom, 2)
-            if n1 > n2:
-                n1, n2 = n2, n1
-            # crossover at the point n1 to n2
-            for j in range(n1, n2):
-                x = np.argwhere(Chrom1 == Chrom2[j])
-                y = np.argwhere(Chrom2 == Chrom1[j])
-                Chrom1[j], Chrom2[j] = Chrom2[j], Chrom1[j]
-                Chrom1[x], Chrom2[y] = Chrom2[y], Chrom1[x]
-            self.Chrom[i], self.Chrom[i + 1] = Chrom1, Chrom2
-        return self.Chrom
-
-    def mutation(self):
-        for i in range(self.size_pop):
-            for j in range(self.n_dim):
-                if np.random.rand() < self.prob_mut:
-                    # n1, n2 = np.random.randint(0, self.len_chrom, 2)
-                    n = np.random.randint(0, self.len_chrom, 1)
-                    self.Chrom[i, j], self.Chrom[i, n] = self.Chrom[i, n], self.Chrom[i, j]
-        return self.Chrom
+    crossover = crossover_pmx
+    mutation = mutation_TSP_1
 
 
-# %% functions:
-
-def ranking_raw(self):
-    # GA select the biggest one, but we want to minimize func, so we put a negative here
-    self.FitV = -self.Y
-    return self.FitV
-
-
-def ranking_linear(self):
-    '''
-    This comes from Sheffield' Matlab toolbox, with lots of changes
-    :param self:
-    :return:
-    '''
-    self.FitV = np.argsort(np.argsort(-self.Y))
-    return self.FitV
-
-
-def selection_tournament(self, tourn_size=3):
-    FitV = self.FitV
-    sel_index = []
-    for i in range(self.size_pop):
-        aspirants_index = np.random.choice(range(self.size_pop), size=tourn_size)
-        sel_index.append(max(aspirants_index, key=lambda i: FitV[i]))
-    self.Chrom = self.Chrom[sel_index, :]  # next generation
-    return self.Chrom
-
-
-def selection_roulette_1(self):
-    # do Roulette to select the next generation
-    FitV = self.FitV
-    FitV = FitV - FitV.min() + 1e-10
-    # the worst one should still has a chance to be selected
-    sel_prob = FitV / FitV.sum()
-    sel_index = np.random.choice(range(self.size_pop), size=self.size_pop, p=sel_prob)
-    self.Chrom = self.Chrom[sel_index, :]  # next generation
-    return self.Chrom
-
-
-def selection_roulette_2(self):
-    # do Roulette to select the next generation
-    FitV = self.FitV
-    # FitV = FitV - FitV.min() + 1e-10
-    FitV = (FitV - FitV.min()) / (FitV.max() - FitV.min() + 1e-10) + 0.2
-    # the worst one should still has a chance to be selected
-    sel_prob = FitV / FitV.sum()
-    sel_index = np.random.choice(range(self.size_pop), size=self.size_pop, p=sel_prob)
-    self.Chrom = self.Chrom[sel_index, :]  # next generation
-    return self.Chrom
-
-
-def crossover_1point(self):
-    Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
-    for i in range(0, int(size_pop / 2), 2):
-        Chrom1, Chrom2 = self.Chrom[i], self.Chrom[i + 1]
-        n1 = np.random.randint(0, self.len_chrom, 1)
-        # crossover at the point n1
-        Chrom1[n1:], Chrom2[n1:] = Chrom2[n1:], Chrom1[n1:]
-    return self.Chrom
-
-
-def crossover_2point(self):
-    Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
-    for i in range(0, int(size_pop / 2), 2):
-        Chrom1, Chrom2 = self.Chrom[i], self.Chrom[i + 1]
-        n1, n2 = np.random.randint(0, self.len_chrom, 2)
-        if n1 > n2:
-            n1, n2 = n2, n1
-        # crossover at the point n1 to n2
-        Chrom1[n1:n2], Chrom2[n1:n2] = Chrom2[n1:n2], Chrom1[n1:n2]
-    return self.Chrom
-
-
-# def crossover_rv_3(self):
-#     Chrom, size_pop = self.Chrom, self.size_pop
-#     i = np.random.randint(1, self.len_chrom)  # crossover at the point i
-#     Chrom1 = np.concatenate([Chrom[::2, :i], Chrom[1::2, i:]], axis=1)
-#     Chrom2 = np.concatenate([Chrom[1::2, :i], Chrom[0::2, i:]], axis=1)
-#     self.Chrom = np.concatenate([Chrom1, Chrom2], axis=0)
-#     return self.Chrom
-
-
-def mutation_rv_1(self):
-    # mutation
-    mask = (np.random.rand(self.size_pop, self.len_chrom) < self.prob_mut) * 1
-    self.Chrom = (mask + self.Chrom) % 2
-    return self.Chrom
-
-
-def crossover_TSP_1(self):
-    Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
-    for i in range(0, int(size_pop / 2), 2):
-        Chrom1, Chrom2 = self.Chrom[i, :], self.Chrom[i + 1, :]
-        n1, n2 = np.random.randint(0, self.len_chrom, 2)
-        if n1 > n2:
-            n1, n2 = n2, n1
-        # crossover at the point n1 to n2
-        for j in range(n1, n2):
-            x = np.argwhere(Chrom1 == Chrom2[j])
-            y = np.argwhere(Chrom2 == Chrom1[j])
-            Chrom1[j], Chrom2[j] = Chrom2[j], Chrom1[j]
-            Chrom1[x], Chrom2[y] = Chrom2[y], Chrom1[x]
-        self.Chrom[i], self.Chrom[i + 1] = Chrom1, Chrom2
-    return self.Chrom
-
-
-def mutation_TSP_1(self):
-    for i in range(self.size_pop):
-        for j in range(self.n_dim):
-            if np.random.rand() < self.prob_mut:
-                # n1, n2 = np.random.randint(0, self.len_chrom, 2)
-                n = np.random.randint(0, self.len_chrom, 1)
-                self.Chrom[i, j], self.Chrom[i, n] = self.Chrom[i, n], self.Chrom[i, j]
-    return self.Chrom
-
-
-def mutation_TSP_3(self):
-    for i in range(self.size_pop):
-        if np.random.rand() < self.prob_mut:
-            n1, n2 = np.random.randint(0, self.len_chrom, 2)
-            self.Chrom[i, n1], self.Chrom[i, n2] = self.Chrom[i, n2], self.Chrom[i, n1]
-    return self.Chrom
-
-
-# %%
+# %% will be deprecated
 from copy import deepcopy
 
 
 def ga_with_udf(GA_class, options):
     '''
+    will be deprecated
     options = {'selection': {'udf': selection_tournament, 'kwargs': {'tourn_size': 5}},
            'mutation': {'udf': mutation_TSP_type3}}
     GA_TSP2 = ga_register_udf(options)
     :param options:
     :return:
     '''
+    print(ga_with_udf.__name__ + 'will be deprecated. Use GA.register instead')
     options = deepcopy(options)
 
     class GAUdf(GA_class):
@@ -432,11 +446,11 @@ def ga_with_udf(GA_class, options):
 
 def ga_register_udf(udf_func_dict):
     '''
-
-
+    will be deprecated
     :param udf_func_dict:
     :return:
     '''
+    print(ga_register_udf.__name__ + 'will be deprecated. Use ga.register instead')
 
     class GAUdf(GA):
         pass
