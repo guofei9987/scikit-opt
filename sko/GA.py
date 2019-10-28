@@ -80,7 +80,8 @@ def selection_tournament(self, tourn_size=3):
     FitV = self.FitV
     sel_index = []
     for i in range(self.size_pop):
-        aspirants_index = np.random.choice(range(self.size_pop), size=tourn_size)
+        # aspirants_index = np.random.choice(range(self.size_pop), size=tourn_size)
+        aspirants_index = np.random.randint(self.size_pop, size=tourn_size)
         sel_index.append(max(aspirants_index, key=lambda i: FitV[i]))
     self.Chrom = self.Chrom[sel_index, :]  # next generation
     return self.Chrom
@@ -168,15 +169,20 @@ def crossover_pmx(self):
     Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
     for i in range(0, size_pop, 2):
         Chrom1, Chrom2 = self.Chrom[i], self.Chrom[i + 1]
-        n1, n2 = np.random.randint(0, self.len_chrom, 2)
-        if n1 > n2:
-            n1, n2 = n2, n1
-        # crossover at the point n1 to n2
-        for j in range(n1, n2):
-            x = np.argwhere(Chrom1 == Chrom2[j])
-            y = np.argwhere(Chrom2 == Chrom1[j])
-            Chrom1[j], Chrom2[j] = Chrom2[j], Chrom1[j]
-            Chrom1[x], Chrom2[y] = Chrom2[y], Chrom1[x]
+        cxpoint1, cxpoint2 = np.random.randint(0, self.len_chrom - 1, 2)
+        if cxpoint1 >= cxpoint2:
+            cxpoint1, cxpoint2 = cxpoint2, cxpoint1 + 1
+        # crossover at the point cxpoint1 to cxpoint2
+        pos1_recorder = {value: idx for idx, value in enumerate(Chrom1)}
+        pos2_recorder = {value: idx for idx, value in enumerate(Chrom2)}
+        for j in range(cxpoint1, cxpoint2):
+            value1, value2 = Chrom1[j], Chrom2[j]
+            pos1, pos2 = pos1_recorder[value1], pos2_recorder[value2]
+            Chrom1[j], Chrom1[pos1] = Chrom1[pos1], Chrom1[j]
+            Chrom2[j], Chrom2[pos2] = Chrom2[pos2], Chrom2[j]
+            pos1_recorder[value1], pos1_recorder[value2] = pos1, j
+            pos2_recorder[value1], pos2_recorder[value2] = j, pos2
+
         self.Chrom[i], self.Chrom[i + 1] = Chrom1, Chrom2
     return self.Chrom
 
