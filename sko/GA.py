@@ -64,9 +64,6 @@ def ranking_linear(self):
 
     .. [Baker1985] Baker J E, "Adaptive selection methods for genetic
     algorithms, 1985.
-
-    :param self:
-    :return:
     '''
     self.FitV = np.argsort(np.argsort(-self.Y))
     return self.FitV
@@ -122,22 +119,22 @@ def selection_roulette_2(self):
 def crossover_1point(self):
     Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
     for i in range(0, size_pop, 2):
-        Chrom1, Chrom2 = self.Chrom[i], self.Chrom[i + 1]
-        n1 = np.random.randint(0, self.len_chrom, 1)
-        # crossover at the point n1
-        Chrom1[n1:], Chrom2[n1:] = Chrom2[n1:], Chrom1[n1:]
+        n = np.random.randint(0, self.len_chrom, 1)
+        # crossover at the point n
+        seg1, seg2 = self.Chrom[i, n:].copy(), self.Chrom[i + 1, n:].copy()
+        self.Chrom[i, n:], self.Chrom[i + 1, n:] = seg2, seg1
     return self.Chrom
 
 
 def crossover_2point(self):
     Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
     for i in range(0, size_pop, 2):
-        Chrom1, Chrom2 = self.Chrom[i], self.Chrom[i + 1]
         n1, n2 = np.random.randint(0, self.len_chrom, 2)
         if n1 > n2:
             n1, n2 = n2, n1
         # crossover at the points n1 to n2
-        Chrom1[n1:n2], Chrom2[n1:n2] = Chrom2[n1:n2], Chrom1[n1:n2]
+        seg1, seg2 = self.Chrom[i, n1:n2].copy(), self.Chrom[i + 1, n1:n2].copy()
+        self.Chrom[i, n1:n2], self.Chrom[i + 1, n1:n2] = seg2, seg1
     return self.Chrom
 
 
@@ -236,7 +233,7 @@ class GA(GA_base):
     -------------
     >>> demo_func=lambda x: x[0]**2 + x[1]**2 + x[2]**2
     >>> ga = GA(func=demo_func,n_dim=3, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2])
-    >>> best_x, best_y = ga.fit()
+    >>> best_x, best_y = ga.run()
     """
 
     def __init__(self, func, n_dim,
