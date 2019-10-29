@@ -1,7 +1,18 @@
+import numpy as np
 from sko.GA import GA
 
-demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
-ga = GA(func=demo_func, n_dim=3, size_pop=50, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2], precision=1e-7)
+
+def schaffer(p):
+    '''
+    此函数具有无数个极小值点、强烈的震荡形态，所以很难找到全局最优值
+    在(0,0)处取的最值0
+    '''
+    x1, x2 = p
+    x = np.square(x1) + np.square(x2)
+    return 0.5 + (np.sin(x) - 0.5) / np.square(1 + 0.001 * x)
+
+
+ga = GA(func=schaffer, n_dim=2, size_pop=50, max_iter=800, lb=[-1, -1], ub=[1, 1], precision=1e-7)
 best_x, best_y = ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 

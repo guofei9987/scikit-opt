@@ -63,16 +63,23 @@ print('best_x:', best_x, '\n', 'best_y:', best_y)
 ### 1. Genetic Algorithm for multiple function
 
 ```py
+import numpy as np
 from sko.GA import GA
 
 
-def demo_func(x):
-    x1, x2, x3 = x
-    return x1 ** 2 + (x2 - 0.05) ** 2 + x3 ** 2
+def schaffer(p):
+    '''
+    This function has plenty of local minimum, with strong shocks
+    global minimum at (0,0) with value 0
+    '''
+    x1, x2 = p
+    x = np.square(x1) + np.square(x2)
+    return 0.5 + (np.sin(x) - 0.5) / np.square(1 + 0.001 * x)
 
 
-ga = GA(func=demo_func, lb=[-1, -10, -5], ub=[2, 10, 2], max_iter=500)
+ga = GA(func=schaffer, n_dim=3, size_pop=100, max_iter=800, lb=[-1, -1], ub=[1, 1], precision=1e-7)
 best_x, best_y = ga.run()
+print('best_x:', best_x, '\n', 'best_y:', best_y)
 ```
 plot the result using matplotlib:
 ```py
@@ -93,7 +100,7 @@ ax[2].set_title('best fitness of every generation')
 plt.show()
 ```
 
-![Figure_1-1](https://i.imgur.com/yT7lm8a.png)
+![Figure_1-1](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/ga_1.png?raw=true)
 
 ### 1.2. Genetic Algorithm for TSP(Travelling Salesman Problem)
 Just import the `GA_TSP`, it overloads the `crossover`, `mutation` to solve the TSP
