@@ -87,6 +87,23 @@ def selection_tournament(self, tourn_size=3):
     return self.Chrom
 
 
+def selection_tournament_faster(self, tourn_size=3):
+    '''
+    Select the best individual among *tournsize* randomly chosen
+    Same with `selection_tournament` but much faster using numpy
+    individuals,
+    :param self:
+    :param tourn_size:
+    :return:
+    '''
+    aspirants_idx = np.random.randint(self.size_pop, size=(self.size_pop, tourn_size))
+    aspirants_values = self.FitV[aspirants_idx]
+    winner = aspirants_values.argmax(axis=1)  # winner index in every team
+    sel_index = [aspirants_idx[i, j] for i, j in enumerate(winner)]
+    self.Chrom = self.Chrom[sel_index, :]
+    return self.Chrom
+
+
 def selection_roulette_1(self):
     '''
     Select the next generation using roulette
@@ -139,6 +156,27 @@ def crossover_2point(self):
     return self.Chrom
 
 
+def crossover_2point_bit(self):
+    '''
+    3 times faster than `crossover_2point`, but only use for 0/1 type of Chrom
+    :param self:
+    :return:
+    '''
+    Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
+    half_size_pop = int(size_pop / 2)
+    Chrom1, Chrom2 = Chrom[:half_size_pop], Chrom[half_size_pop:]
+    mask = np.zeros(shape=(half_size_pop, len_chrom), dtype=int)
+    for i in range(half_size_pop):
+        n1, n2 = np.random.randint(0, self.len_chrom, 2)
+        if n1 > n2:
+            n1, n2 = n2, n1
+        mask[i, n1:n2] = 1
+    mask2 = (Chrom1 ^ Chrom2) & mask
+    Chrom1 ^= mask2
+    Chrom2 ^= mask2
+    return self.Chrom
+
+
 # def crossover_rv_3(self):
 #     Chrom, size_pop = self.Chrom, self.size_pop
 #     i = np.random.randint(1, self.len_chrom)  # crossover at the point i
@@ -149,9 +187,15 @@ def crossover_2point(self):
 
 
 def mutation(self):
-    # mutation of 0/1 type chromosome
-    mask = (np.random.rand(self.size_pop, self.len_chrom) < self.prob_mut) * 1
-    self.Chrom = (mask + self.Chrom) % 2
+    '''
+    mutation of 0/1 type chromosome
+    faster than `self.Chrom = (mask + self.Chrom) % 2`
+    :param self:
+    :return:
+    '''
+    #
+    mask = (np.random.rand(self.size_pop, self.len_chrom) < self.prob_mut)
+    self.Chrom ^= mask
     return self.Chrom
 
 
@@ -317,8 +361,8 @@ class GA(GA_base):
         return self.Y
 
     ranking = ranking_raw
-    selection = selection_tournament
-    crossover = crossover_2point
+    selection = selection_tournament_faster
+    crossover = crossover_2point_bit
     mutation = mutation
 
     def run(self):
