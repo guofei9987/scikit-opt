@@ -312,7 +312,8 @@ class GA(GA_base):
         # define the types of Chrom
         self.lb = kwargs.get('lb', [-1] * self.n_dim)
         self.ub = kwargs.get('ub', [1] * self.n_dim)
-        self.precision = kwargs.get('precision', [1e-7] * self.n_dim)
+        self.precision = kwargs.get('precision', 1e-7)
+        self.precision = self.precision if isinstance(self.precision, list) else [self.precision] * self.n_dim
 
         # Lind is the num of genes of every variable of func（segments）
         Lind = np.ceil(np.log2((np.array(self.ub) - np.array(self.lb)) / np.array(self.precision))) + 1
