@@ -12,6 +12,8 @@ Heuristic Algorithms in Python
 
 - **Documentation:** [https://scikit-opt.github.io/scikit-opt/#/docs/en](https://scikit-opt.github.io/scikit-opt/#/docs/en),
 - **文档：** [https://scikit-opt.github.io/scikit-opt/#/docs/zh](https://scikit-opt.github.io/scikit-opt/#/docs/zh)  
+- **Source code:** [https://github.com/guofei9987/scikit-opt](https://github.com/guofei9987/scikit-opt)
+
 
 # install
 ```bash
@@ -70,16 +72,23 @@ print('best_x:', best_x, '\n', 'best_y:', best_y)
 ## 1. Genetic Algorithm
 
 ```python
+import numpy as np
 from sko.GA import GA
 
 
-def demo_func(x):
-    x1, x2, x3 = x
-    return x1 ** 2 + (x2 - 0.05) ** 2 + x3 ** 2
+def schaffer(p):
+    '''
+    This function has plenty of local minimum, with strong shocks
+    global minimum at (0,0) with value 0
+    '''
+    x1, x2 = p
+    x = np.square(x1) + np.square(x2)
+    return 0.5 + (np.sin(x) - 0.5) / np.square(1 + 0.001 * x)
 
 
-ga = GA(func=demo_func, lb=[-1, -10, -5], ub=[2, 10, 2], max_iter=500)
-best_x, best_y = ga.fit()
+ga = GA(func=schaffer, n_dim=3, size_pop=100, max_iter=800, lb=[-1, -1], ub=[1, 1], precision=1e-7)
+best_x, best_y = ga.run()
+print('best_x:', best_x, '\n', 'best_y:', best_y)
 ```
 plot the result using matplotlib:
 ```py

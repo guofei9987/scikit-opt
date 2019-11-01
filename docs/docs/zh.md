@@ -10,20 +10,22 @@
 ```bash
 pip install scikit-opt
 ```
-如果嫌麻烦，直接把源代码中的 `sko` 文件夹下载下来调用即可
+或者直接把源代码中的 `sko` 文件夹下载下来放本地也调用可以
 
 ## 0.2 第一个遗传算法
 ```python
 demo_func=lambda x: x[0]**2 + x[1]**2 + x[2]**2
 ga = GA(func=demo_func,n_dim=3, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2])
 best_x, best_y = ga.run()
+print('best_x:', best_x, '\n', 'best_y:', best_y)
 ```
 恭喜，你已经跑完了第一个遗传算法！
 
 ## 0.3 自定义算子UDF
 **UDF** (用户自定义算子, user defined function) 会在0.2版本可用。  
 
-例如，如果你想到一种 `选择算子`(`selection`)，你的算子是这样的：（简单地说，就是保证最优的精英一定生存而不是经典遗传算法的大概率生存）  
+例如，如果你构造了一种 `选择算子`(`selection`)，你的算子是这样的：  
+  
 改进的
 ```python
 def selection_tournament(self, tourn_size):
@@ -36,7 +38,7 @@ def selection_tournament(self, tourn_size):
     return self.Chrom
 ```
 
-把你的 UDF 自定义算子注册到遗传算法对象上：
+把你的 UDF 自定义算子注册到遗传算法对象上：（这里为了还展示了我们提供的算子的注册）
 ```python
 from sko.GA import GA, GA_TSP
 from sko.GA import ranking_linear, ranking_raw, crossover_2point, selection_roulette_2, mutation
@@ -45,7 +47,7 @@ from sko.GA import ranking_linear, ranking_raw, crossover_2point, selection_roul
 demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
 ga = GA(func=demo_func, n_dim=3, size_pop=100, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2])
 
-#
+
 ga.register(operator_name='ranking', operator=ranking_linear). \
     register(operator_name='crossover', operator=crossover_2point). \
     register(operator_name='mutation', operator=mutation). \
@@ -71,16 +73,27 @@ print('best_x:', best_x, '\n', 'best_y:', best_y)
 
 定义目标函数
 ```python
-def demo_func(x):
-    x1, x2, x3 = x
-    return x1 ** 2 + (x2 - 0.05) ** 2 + x3 ** 2
+import numpy as np
+
+
+def schaffer(p):
+    '''
+    此函数具有无数个极小值点、强烈的震荡形态，所以很难找到全局最优值
+    在(0,0)处取的最值0
+    '''
+    x1, x2 = p
+    x = np.square(x1) + np.square(x2)
+    return 0.5 + (np.sin(x) - 0.5) / np.square(1 + 0.001 * x)
+
+
 ```
 
 调入遗传算法求解器
 ```python
 from sko.GA import GA
-ga = GA(func=demo_func, lb=[-1, -10, -5], ub=[2, 10, 2], max_iter=500)
+ga = GA(func=schaffer, n_dim=2, size_pop=50, max_iter=800, lb=[-1, -1], ub=[1, 1], precision=1e-7)
 best_x, best_y = ga.run()
+print('best_x:', best_x, '\n', 'best_y:', best_y)
 ```
 
 用 matplotlib 画出结果
@@ -102,12 +115,12 @@ ax[2].set_title('best fitness of every generation')
 plt.show()
 ```
 
-![Figure_1-1](https://i.imgur.com/yT7lm8a.png)
+![Figure_1-1](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/ga_1.png?raw=true)
 
 ### 1.2 遗传算法用于旅行商问题
 `GA_TSP` 针对TSP问题重载了 `交叉(crossover)`、`变异(mutation)` 两个算子
 
-这里作为demo，随机生成距离矩阵. 实战中，从数据源中读取。
+这里作为demo，随机生成距离矩阵. 实战中从真实数据源中读取。
 
 ```python
 import numpy as np
@@ -148,6 +161,7 @@ ax.plot(best_points_coordinate[:, 0], best_points_coordinate[:, 1],'o-r')
 plt.show()
 ```
 
+![GA_TPS](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/ga_tsp.png?raw=true)
 
 ## 2. 粒子群算法
 
@@ -235,7 +249,7 @@ aca = ACA_TSP(func=cal_total_distance, n_dim=8,
 
 best_x, best_y = aca.run()
 ```
-![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/aca_tsp.png?raw=true)
+![aca_tsp](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/aca_tsp.png?raw=true)
 
 
 

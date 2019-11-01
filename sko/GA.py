@@ -64,9 +64,6 @@ def ranking_linear(self):
 
     .. [Baker1985] Baker J E, "Adaptive selection methods for genetic
     algorithms, 1985.
-
-    :param self:
-    :return:
     '''
     self.FitV = np.argsort(np.argsort(-self.Y))
     return self.FitV
@@ -83,9 +80,27 @@ def selection_tournament(self, tourn_size=3):
     FitV = self.FitV
     sel_index = []
     for i in range(self.size_pop):
-        aspirants_index = np.random.choice(range(self.size_pop), size=tourn_size)
+        # aspirants_index = np.random.choice(range(self.size_pop), size=tourn_size)
+        aspirants_index = np.random.randint(self.size_pop, size=tourn_size)
         sel_index.append(max(aspirants_index, key=lambda i: FitV[i]))
     self.Chrom = self.Chrom[sel_index, :]  # next generation
+    return self.Chrom
+
+
+def selection_tournament_faster(self, tourn_size=3):
+    '''
+    Select the best individual among *tournsize* randomly chosen
+    Same with `selection_tournament` but much faster using numpy
+    individuals,
+    :param self:
+    :param tourn_size:
+    :return:
+    '''
+    aspirants_idx = np.random.randint(self.size_pop, size=(self.size_pop, tourn_size))
+    aspirants_values = self.FitV[aspirants_idx]
+    winner = aspirants_values.argmax(axis=1)  # winner index in every team
+    sel_index = [aspirants_idx[i, j] for i, j in enumerate(winner)]
+    self.Chrom = self.Chrom[sel_index, :]
     return self.Chrom
 
 
@@ -122,22 +137,43 @@ def selection_roulette_2(self):
 def crossover_1point(self):
     Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
     for i in range(0, size_pop, 2):
-        Chrom1, Chrom2 = self.Chrom[i], self.Chrom[i + 1]
-        n1 = np.random.randint(0, self.len_chrom, 1)
-        # crossover at the point n1
-        Chrom1[n1:], Chrom2[n1:] = Chrom2[n1:], Chrom1[n1:]
+        n = np.random.randint(0, self.len_chrom, 1)
+        # crossover at the point n
+        seg1, seg2 = self.Chrom[i, n:].copy(), self.Chrom[i + 1, n:].copy()
+        self.Chrom[i, n:], self.Chrom[i + 1, n:] = seg2, seg1
     return self.Chrom
 
 
 def crossover_2point(self):
     Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
     for i in range(0, size_pop, 2):
-        Chrom1, Chrom2 = self.Chrom[i], self.Chrom[i + 1]
         n1, n2 = np.random.randint(0, self.len_chrom, 2)
         if n1 > n2:
             n1, n2 = n2, n1
         # crossover at the points n1 to n2
-        Chrom1[n1:n2], Chrom2[n1:n2] = Chrom2[n1:n2], Chrom1[n1:n2]
+        seg1, seg2 = self.Chrom[i, n1:n2].copy(), self.Chrom[i + 1, n1:n2].copy()
+        self.Chrom[i, n1:n2], self.Chrom[i + 1, n1:n2] = seg2, seg1
+    return self.Chrom
+
+
+def crossover_2point_bit(self):
+    '''
+    3 times faster than `crossover_2point`, but only use for 0/1 type of Chrom
+    :param self:
+    :return:
+    '''
+    Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
+    half_size_pop = int(size_pop / 2)
+    Chrom1, Chrom2 = Chrom[:half_size_pop], Chrom[half_size_pop:]
+    mask = np.zeros(shape=(half_size_pop, len_chrom), dtype=int)
+    for i in range(half_size_pop):
+        n1, n2 = np.random.randint(0, self.len_chrom, 2)
+        if n1 > n2:
+            n1, n2 = n2, n1
+        mask[i, n1:n2] = 1
+    mask2 = (Chrom1 ^ Chrom2) & mask
+    Chrom1 ^= mask2
+    Chrom2 ^= mask2
     return self.Chrom
 
 
@@ -151,9 +187,15 @@ def crossover_2point(self):
 
 
 def mutation(self):
-    # mutation of 0/1 type chromosome
-    mask = (np.random.rand(self.size_pop, self.len_chrom) < self.prob_mut) * 1
-    self.Chrom = (mask + self.Chrom) % 2
+    '''
+    mutation of 0/1 type chromosome
+    faster than `self.Chrom = (mask + self.Chrom) % 2`
+    :param self:
+    :return:
+    '''
+    #
+    mask = (np.random.rand(self.size_pop, self.len_chrom) < self.prob_mut)
+    self.Chrom ^= mask
     return self.Chrom
 
 
@@ -171,15 +213,20 @@ def crossover_pmx(self):
     Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
     for i in range(0, size_pop, 2):
         Chrom1, Chrom2 = self.Chrom[i], self.Chrom[i + 1]
-        n1, n2 = np.random.randint(0, self.len_chrom, 2)
-        if n1 > n2:
-            n1, n2 = n2, n1
-        # crossover at the point n1 to n2
-        for j in range(n1, n2):
-            x = np.argwhere(Chrom1 == Chrom2[j])
-            y = np.argwhere(Chrom2 == Chrom1[j])
-            Chrom1[j], Chrom2[j] = Chrom2[j], Chrom1[j]
-            Chrom1[x], Chrom2[y] = Chrom2[y], Chrom1[x]
+        cxpoint1, cxpoint2 = np.random.randint(0, self.len_chrom - 1, 2)
+        if cxpoint1 >= cxpoint2:
+            cxpoint1, cxpoint2 = cxpoint2, cxpoint1 + 1
+        # crossover at the point cxpoint1 to cxpoint2
+        pos1_recorder = {value: idx for idx, value in enumerate(Chrom1)}
+        pos2_recorder = {value: idx for idx, value in enumerate(Chrom2)}
+        for j in range(cxpoint1, cxpoint2):
+            value1, value2 = Chrom1[j], Chrom2[j]
+            pos1, pos2 = pos1_recorder[value1], pos2_recorder[value2]
+            Chrom1[j], Chrom1[pos1] = Chrom1[pos1], Chrom1[j]
+            Chrom2[j], Chrom2[pos2] = Chrom2[pos2], Chrom2[j]
+            pos1_recorder[value1], pos1_recorder[value2] = pos1, j
+            pos2_recorder[value1], pos2_recorder[value2] = j, pos2
+
         self.Chrom[i], self.Chrom[i + 1] = Chrom1, Chrom2
     return self.Chrom
 
@@ -236,7 +283,7 @@ class GA(GA_base):
     -------------
     >>> demo_func=lambda x: x[0]**2 + x[1]**2 + x[2]**2
     >>> ga = GA(func=demo_func,n_dim=3, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2])
-    >>> best_x, best_y = ga.fit()
+    >>> best_x, best_y = ga.run()
     """
 
     def __init__(self, func, n_dim,
@@ -265,7 +312,8 @@ class GA(GA_base):
         # define the types of Chrom
         self.lb = kwargs.get('lb', [-1] * self.n_dim)
         self.ub = kwargs.get('ub', [1] * self.n_dim)
-        self.precision = kwargs.get('precision', [1e-7] * self.n_dim)
+        self.precision = kwargs.get('precision', 1e-7)
+        self.precision = self.precision if isinstance(self.precision, list) else [self.precision] * self.n_dim
 
         # Lind is the num of genes of every variable of func（segments）
         Lind = np.ceil(np.log2((np.array(self.ub) - np.array(self.lb)) / np.array(self.precision))) + 1
@@ -314,8 +362,8 @@ class GA(GA_base):
         return self.Y
 
     ranking = ranking_raw
-    selection = selection_tournament
-    crossover = crossover_2point
+    selection = selection_tournament_faster
+    crossover = crossover_2point_bit
     mutation = mutation
 
     def run(self):
