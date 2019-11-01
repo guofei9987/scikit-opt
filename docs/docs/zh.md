@@ -10,13 +10,14 @@
 ```bash
 pip install scikit-opt
 ```
-如果嫌麻烦，直接把源代码中的 `sko` 文件夹下载下来调用即可
+或者直接把源代码中的 `sko` 文件夹下载下来放本地也调用可以
 
 ## 0.2 第一个遗传算法
 ```python
 demo_func=lambda x: x[0]**2 + x[1]**2 + x[2]**2
 ga = GA(func=demo_func,n_dim=3, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2])
 best_x, best_y = ga.run()
+print('best_x:', best_x, '\n', 'best_y:', best_y)
 ```
 恭喜，你已经跑完了第一个遗传算法！
 
@@ -37,7 +38,7 @@ def selection_tournament(self, tourn_size):
     return self.Chrom
 ```
 
-把你的 UDF 自定义算子注册到遗传算法对象上：
+把你的 UDF 自定义算子注册到遗传算法对象上：（这里为了还展示了我们提供的算子的注册）
 ```python
 from sko.GA import GA, GA_TSP
 from sko.GA import ranking_linear, ranking_raw, crossover_2point, selection_roulette_2, mutation
@@ -119,7 +120,7 @@ plt.show()
 ### 1.2 遗传算法用于旅行商问题
 `GA_TSP` 针对TSP问题重载了 `交叉(crossover)`、`变异(mutation)` 两个算子
 
-这里作为demo，随机生成距离矩阵. 实战中，从数据源中读取。
+这里作为demo，随机生成距离矩阵. 实战中从真实数据源中读取。
 
 ```python
 import numpy as np

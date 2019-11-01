@@ -12,6 +12,8 @@ Heuristic Algorithms in Python
 
 - **Documentation:** [https://scikit-opt.github.io/scikit-opt/#/docs/en](https://scikit-opt.github.io/scikit-opt/#/docs/en),
 - **文档：** [https://scikit-opt.github.io/scikit-opt/#/docs/zh](https://scikit-opt.github.io/scikit-opt/#/docs/zh)  
+- **Source code:** [https://github.com/guofei9987/scikit-opt](https://github.com/guofei9987/scikit-opt)
+
 
 # install
 ```bash

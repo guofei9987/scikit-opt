@@ -16,10 +16,12 @@ pip install scikit-opt
 demo_func=lambda x: x[0]**2 + x[1]**2 + x[2]**2
 ga = GA(func=demo_func,n_dim=3, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2])
 best_x, best_y = ga.run()
+print('best_x:', best_x, '\n', 'best_y:', best_y)
 ```
+Congratulations! you've done the first genetic algorithm! 
 
 ## do with UDF
-**UDF** (user defined function) will be available in the next release! (version 0.2)
+**UDF** (user defined function) is available.
 
 For example, if you just worked out a new type of `selection` function.  
 Your `selection` function is like this:
@@ -34,7 +36,7 @@ def selection_tournament(self, tourn_size):
     return self.Chrom
 ```
 
-Regist your udf to GA (Here we also provide some operators)
+Regist your udf to GA (The repository provide some operators, which is also shown here. You don't have to register all operators, default is available)
 ```python
 from sko.GA import GA, GA_TSP
 from sko.GA import ranking_linear, ranking_raw, crossover_2point, selection_roulette_2, mutation
