@@ -148,12 +148,13 @@ def cal_total_distance(points):
 然后调用遗传算法进行求解
 ```py
 from sko.GA import GA_TSP
-ga_tsp = GA_TSP(func=cal_total_distance, points=points, pop=50, max_iter=200, Pm=0.001)
+ga_tsp = GA_TSP(func=cal_total_distance, n_dim=num_points, size_pop=300, max_iter=800, Pm=0.3)
 best_points, best_distance = ga_tsp.run()
 ```
 
 画出结果
 ```py
+import matplotlib.pyplot as plt
 fig, ax = plt.subplots(1, 1)
 best_points_ = np.concatenate([best_points, [best_points[0]]])
 best_points_coordinate = points_coordinate[best_points_, :]
