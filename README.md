@@ -40,10 +40,12 @@ pip install scikit-opt
 ```
 
 ## News:
-All algorithms will be available on **TensorFlow/Spark** on version 0.4, getting parallel performance.
+All algorithms will be available on ~~TensorFlow/Spark~~ **pytorch** on version 0.4, getting parallel performance.  
+DE(Differential Evolution Algorithm) will be complete on version 0.5  
+Have fun!
 
 
-# feature: UDF
+## feature: UDF
 
 **UDF** (user defined function) is available now!
 
