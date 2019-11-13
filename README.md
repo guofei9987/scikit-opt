@@ -6,7 +6,7 @@
   </tr>
   <tr>
     <td><img src="https://github.com/guofei9987/pictures_for_blog/blob/master/tmp/4.jpg?raw=true" height="80" width="82"></td>
-    <td><img src="https://img.shields.io/github/stars/guofei9987/scikit-opt.svg?label=Stars&style=social"></td>
+    <td><img src="https://img.shields.io/github/stars/guofei9987/scikit-opt.svg?style=social"></td>
     <td><img src="https://github.com/guofei9987/pictures_for_blog/blob/master/tmp/6.jpg?raw=true" height="82" width="82"></td>
   </tr>
    <tr>
@@ -20,9 +20,12 @@
 
 # [scikit-opt](https://github.com/guofei9987/scikit-opt)
 
+[![PyPI](https://img.shields.io/pypi/v/scikit-opt)](https://pypi.org/project/scikit-opt/)
 [![release](https://img.shields.io/github/v/release/guofei9987/scikit-opt)](https://github.com/guofei9987/scikit-opt)
-[![Stars](https://img.shields.io/github/stars/guofei9987/scikit-opt.svg?label=Stars&style=social)](https://github.com/guofei9987/scikit-opt/stargazers)
-[![Forks](https://img.shields.io/github/forks/guofei9987/scikit-opt.svg?label=Fork&style=social)](https://github.com/guofei9987/scikit-opt/network/members)
+[![PyPI_downloads](https://img.shields.io/pypi/dm/scikit-opt)](https://pypi.org/project/scikit-opt/)
+[![Stars](https://img.shields.io/github/stars/guofei9987/scikit-opt?style=social)](https://github.com/guofei9987/scikit-opt/stargazers)
+[![Forks](https://img.shields.io/github/forks/guofei9987/scikit-opt.svg?style=social)](https://github.com/guofei9987/scikit-opt/network/members)
+
 
 
 Heuristic Algorithms in Python  
