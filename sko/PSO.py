@@ -83,15 +83,18 @@ class PSO:
         self.dim = dim  # dimension of particles, which is the number of variables of func
         self.max_iter = max_iter  # max iter
 
-        if lb is None and ub is None:
-            self.is_bounded = False
-        else:
-            self.is_bounded = True
-            self.lb = lb or [-np.inf] * dim  # lower bound
-            self.ub = ub or [np.inf] * dim  # upper bound
+        self.has_constraints=not(lb is None and ub is None)
+        self.lb = -np.ones(self.dim) if lb is None else np.array(lb)
+        self.ub = np.ones(self.dim) if ub is None else np.array(ub)
 
-        self.X = np.random.rand(self.pop, self.dim)  # location of particles, which is the value of variables of func
-        self.V = np.random.rand(self.pop, self.dim)  # speed of particles
+        assert self.dim == len(self.lb) == len(self.ub), 'dim == len(lb) == len(ub) must holds'
+        assert np.all(self.ub > self.lb), 'All upper-bound values must be greater than lower-bound values'
+
+        # self.X = np.random.rand(self.pop, self.dim) * (self.ub - self.lb) + self.lb  # location of particles
+        self.X = np.random.uniform(low=self.lb, high=self.ub, size=(self.pop, self.dim))
+        # self.V = np.random.rand(self.pop, self.dim)  # speed of particles
+        v_high = self.ub - self.lb
+        self.V = np.random.uniform(low=-v_high, high=v_high, size=(self.pop, self.dim))  # speed of particles
         self.Y = self.cal_y()  # image of function corresponding to every particles for one generation
         self.pbest_x = self.X.copy()  # personal best location of every particle in history
         self.pbest_y = self.Y.copy()  # best image of every particle in history
@@ -131,7 +134,7 @@ class PSO:
                      self.cg * r2 * (self.gbest_x - self.X)
             self.X = self.X + self.V
 
-            if self.is_bounded:  # with constraints
+            if self.has_constraints:
                 self.X = np.clip(self.X, self.lb, self.ub)
 
             self.cal_y()

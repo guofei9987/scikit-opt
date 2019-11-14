@@ -4,9 +4,17 @@ def demo_func(x):
 
 
 from sko.PSO import PSO
+
 pso = PSO(func=demo_func, dim=3)
-fitness = pso.fit()
+fitness = pso.run()
 print('best_x is ', pso.gbest_x, 'best_y is', pso.gbest_y)
 pso.plot_history()
 
 # from test_func import sphere as obj_func
+
+# %% PSO with constrain:
+print('*' * 50, '\n PSO with constrain:')
+
+pso = PSO(func=demo_func, dim=3, lb=[0, -1, 0.5], ub=[1, 1, 1])
+pso.run()
+print('best_x is ', pso.gbest_x, 'best_y is', pso.gbest_y)
