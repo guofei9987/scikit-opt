@@ -223,7 +223,7 @@ plt.show()
 
 
 
-## 4. Ant Colony Algorithm(ASA) for TSP
+## 4. Ant Colony Algorithm (ACA) for TSP
 ASA for tsp (Ant Colony Algorithm)  
 
 
