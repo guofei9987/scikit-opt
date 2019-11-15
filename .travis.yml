@@ -12,4 +12,18 @@ install:
 
 # command to run tests
 script:
-  - python examples/demo_ga.py
+  - coverage run -p examples/demo_ga.py
+  - coverage run -p examples/demo_ga_tsp.py
+  - coverage run -p examples/demo_ga_udf.py
+  - coverage run -p examples/demo_ga_udf_tsp.py
+  - coverage run -p examples/demo_pso.py
+  - coverage run -p examples/demo_sa.py
+  - coverage run -p examples/demo_sa_tsp.py
+  - coverage run -p examples/demo_aca_tsp.py
+  - coverage run -p examples/demo_ia.py
+  - coverage run -p examples/demo_asfs.py
+
+# Push the results back to codecov
+after_success:
+  - coverage combine
+  - codecov
