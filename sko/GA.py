@@ -251,8 +251,8 @@ def mutation_TSP_3(self):
 # %%
 
 class GA(GA_base):
-    """
-    Do genetic algorithm
+    """Do genetic algorithm
+
     Parameters
     ----------------
     func : function
