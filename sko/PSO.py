@@ -146,6 +146,7 @@ class PSO:
         return self
 
     def plot_history(self):
+        print('plot_history will be deprecated.')
         plt.plot(self.gbest_y_hist)
         plt.show()
 

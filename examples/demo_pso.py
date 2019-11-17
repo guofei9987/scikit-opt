@@ -8,10 +8,11 @@ from sko.PSO import PSO
 pso = PSO(func=demo_func, dim=3)
 fitness = pso.run()
 print('best_x is ', pso.gbest_x, 'best_y is', pso.gbest_y)
-pso.plot_history()
 
-# from test_func import sphere as obj_func
+import matplotlib.pyplot as plt
 
+plt.plot(pso.gbest_y_hist)
+plt.show()
 # %% PSO with constrain:
 print('*' * 50, '\n PSO with constrain:')
 

@@ -30,21 +30,11 @@ best_x, best_y = ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 
 # %%
-
 import pandas as pd
 import matplotlib.pyplot as plt
 
-Y_history = ga.all_history_Y
-Y_history = pd.DataFrame(Y_history)
-fig, ax = plt.subplots(3, 1)
+Y_history = pd.DataFrame(ga.all_history_Y)
+fig, ax = plt.subplots(2, 1)
 ax[0].plot(Y_history.index, Y_history.values, '.', color='red')
-plt_mean = Y_history.mean(axis=1)
-plt_max = Y_history.min(axis=1)
-ax[1].plot(plt_mean.index, plt_mean, label='mean')
-ax[1].plot(plt_max.index, plt_max, label='min')
-ax[1].set_title('mean and all Y of every generation')
-ax[1].legend()
-
-ax[2].plot(plt_max.index, plt_max.cummin())
-ax[2].set_title('best fitness of every generation')
+Y_history.min(axis=1).cummin().plot(kind='line')
 plt.show()
