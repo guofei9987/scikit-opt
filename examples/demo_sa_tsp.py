@@ -16,6 +16,7 @@ def cal_total_distance(routine):
     return sum([distance_matrix[routine[i % num_points], routine[(i + 1) % num_points]] for i in range(num_points)])
 
 
+# %%
 from sko.SA import SA_TSP
 
 sa_tsp = SA_TSP(func=cal_total_distance, x0=range(num_points))
