@@ -189,7 +189,7 @@ plt.show()
 ## 2. PSO(Particle swarm optimization)
 
 ### 2.1 PSO with constraint
--> Source Code: [examples/demo_pso.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L1)
+-> Demo code: [examples/demo_pso.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L1)
 ```python
 def demo_func(x):
     x1, x2, x3 = x
@@ -213,7 +213,7 @@ plt.show()
 ![PSO_TPS](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/pso.png?raw=true)
 
 ### 2.2 PSO without constraint
--> Source Code: [examples/demo_pso.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L16)
+-> Demo code: [examples/demo_pso.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L16)
 ```python
 # %% PSO without constraint:
 pso = PSO(func=demo_func, dim=3)
@@ -222,6 +222,7 @@ print('best_x is ', pso.gbest_x, 'best_y is', pso.gbest_y)
 ```
 
 ## 3. SA(Simulated Annealing)
+-> Demo code: [examples/demo_sa.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L1)
 ```python
 def demo_func(x):
     x1, x2, x3 = x
@@ -233,7 +234,7 @@ x_star, y_star = sa.run()
 print(x_star, y_star)
 
 ```
-
+-> Demo code: [examples/demo_sa.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L1)
 ```python
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -246,14 +247,16 @@ plt.show()
 ### 3.1 SA for TSP
 Firstly, your data (the distance matrix). Here I generate the data randomly as a demo (find it in GA for TSP above)
 
-DO SA for TSP
+DO SA for TSP  
+-> Demo code: [examples/demo_sa_tsp.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L1)
 ```python
 from sko.SA import SA_TSP
 sa_tsp = SA_TSP(func=demo_func, x0=range(num_points))
 best_points, best_distance = sa_tsp.run()
 ```
 
-plot the result
+plot the result  
+-> Demo code: [examples/demo_sa_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L1)
 ```python
 fig, ax = plt.subplots(1, 1)
 best_points_ = np.concatenate([best_points, [best_points[0]]])

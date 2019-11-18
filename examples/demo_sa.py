@@ -2,9 +2,10 @@ from sko.SA import SA
 
 demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
 sa = SA(func=demo_func, x0=[1, 1, 1])
-x_star, y_star = sa.fit()
+x_star, y_star = sa.run()
 print(x_star, y_star)
 
+# %% Plot the result
 import matplotlib.pyplot as plt
 import pandas as pd
 

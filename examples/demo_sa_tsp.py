@@ -16,14 +16,13 @@ def cal_total_distance(routine):
     return sum([distance_matrix[routine[i % num_points], routine[(i + 1) % num_points]] for i in range(num_points)])
 
 
-# %%
 from sko.SA import SA_TSP
 
 sa_tsp = SA_TSP(func=cal_total_distance, x0=range(num_points))
 
 best_points, best_distance = sa_tsp.fit()
 print(best_points, best_distance, cal_total_distance(best_points))
-
+# %% Plot the best routine
 fig, ax = plt.subplots(1, 1)
 best_points_ = np.concatenate([best_points, [best_points[0]]])
 best_points_coordinate = points_coordinate[best_points_, :]

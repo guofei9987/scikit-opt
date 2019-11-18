@@ -17,7 +17,6 @@ best_x, best_y = ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 
 # %% Plot the result
-
 import pandas as pd
 import matplotlib.pyplot as plt
 
