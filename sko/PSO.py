@@ -10,7 +10,36 @@ from sko.tools import func_transformer
 
 class PSO:
     """
-    Do PSO(Particle swarm optimization)
+    Do PSO (Particle swarm optimization) algorithm.
+
+    This algorithm was adapted from the earlier works of J. Kennedy and
+    R.C. Eberhart in Particle Swarm Optimization [IJCNN1995]_.
+
+    The position update can be defined as:
+
+    .. math::
+
+       x_{i}(t+1) = x_{i}(t) + v_{i}(t+1)
+
+    Where the position at the current step :math:`t` is updated using
+    the computed velocity at :math:`t+1`. Furthermore, the velocity update
+    is defined as:
+
+    .. math::
+
+       v_{ij}(t + 1) = w * v_{ij}(t) + c_{p}r_{1j}(t)[y_{ij}(t) − x_{ij}(t)]
+                       + c_{g}r_{2j}(t)[\hat{y}_{j}(t) − x_{ij}(t)]
+
+    Here, :math:`cp` and :math:`cg` are the cognitive and social parameters
+    respectively. They control the particle's behavior given two choices: (1) to
+    follow its *personal best* or (2) follow the swarm's *global best* position.
+    Overall, this dictates if the swarm is explorative or exploitative in nature.
+    In addition, a parameter :math:`w` controls the inertia of the swarm's
+    movement.
+
+    .. [IJCNN1995] J. Kennedy and R.C. Eberhart, "Particle Swarm Optimization,"
+    Proceedings of the IEEE International Joint Conference on Neural
+    Networks, 1995, pp. 1942-1948.
 
     Parameters
     --------------------
@@ -19,9 +48,9 @@ class PSO:
     dim : int
         Number of dimension, which is number of parameters of func.
     pop : int
-        Size of population, which is the number of Particles. We use 'pop' to keep pace with GA
+        Size of population, which is the number of Particles. We use 'pop' to keep accordance with GA
     max_iter : int
-        Max of iter
+        Max of iter iterations
 
     Attributes
     ----------------------
@@ -46,19 +75,30 @@ class PSO:
     >>> pso.plot_history()
     """
 
-    def __init__(self, func, dim, pop=40, max_iter=150):
+    def __init__(self, func, dim, pop=40, max_iter=150, lb=None, ub=None):
         self.func = func_transformer(func)
-        self.w = 0.8  # 惯性权重
-        self.cp, self.cg = 2, 2  # 加速常数，一般取2附近. p代表个体记忆，g代表集体记忆
+        self.w = 0.8  # inertia
+        self.cp, self.cg = 0.5, 0.5  # parameters to control personal best,global best respectively
         self.pop = pop  # number of particles
         self.dim = dim  # dimension of particles, which is the number of variables of func
         self.max_iter = max_iter  # max iter
-        self.X = np.random.rand(self.pop, self.dim)  # location of particles, which is the value of variables of func
-        self.V = np.random.rand(self.pop, self.dim)  # speed of particles
+
+        self.has_constraints=not(lb is None and ub is None)
+        self.lb = -np.ones(self.dim) if lb is None else np.array(lb)
+        self.ub = np.ones(self.dim) if ub is None else np.array(ub)
+
+        assert self.dim == len(self.lb) == len(self.ub), 'dim == len(lb) == len(ub) must holds'
+        assert np.all(self.ub > self.lb), 'All upper-bound values must be greater than lower-bound values'
+
+        # self.X = np.random.rand(self.pop, self.dim) * (self.ub - self.lb) + self.lb  # location of particles
+        self.X = np.random.uniform(low=self.lb, high=self.ub, size=(self.pop, self.dim))
+        # self.V = np.random.rand(self.pop, self.dim)  # speed of particles
+        v_high = self.ub - self.lb
+        self.V = np.random.uniform(low=-v_high, high=v_high, size=(self.pop, self.dim))  # speed of particles
         self.Y = self.cal_y()  # image of function corresponding to every particles for one generation
-        self.pbest_x = self.X.copy()  # best location of every particle in history
+        self.pbest_x = self.X.copy()  # personal best location of every particle in history
         self.pbest_y = self.Y.copy()  # best image of every particle in history
-        self.gbest_x = np.zeros((1, self.dim))  # general best location for all particles in history
+        self.gbest_x = np.zeros((1, self.dim))  # global best location for all particles in history
         self.gbest_y = np.inf  # general best image  for all particles in history
         self.gbest_y_hist = []  # gbest_y of every iteration
         self.update_gbest()
@@ -93,6 +133,10 @@ class PSO:
                      self.cp * r1 * (self.pbest_x - self.X) + \
                      self.cg * r2 * (self.gbest_x - self.X)
             self.X = self.X + self.V
+
+            if self.has_constraints:
+                self.X = np.clip(self.X, self.lb, self.ub)
+
             self.cal_y()
 
             self.update_pbest()
@@ -102,6 +146,7 @@ class PSO:
         return self
 
     def plot_history(self):
+        print('plot_history will be deprecated.')
         plt.plot(self.gbest_y_hist)
         plt.show()
 

@@ -1,107 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>scikit-opt</title>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="description" content="Description">
-  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <link rel="stylesheet" href="vue.css">
+    <meta charset="UTF-8">
+    <title>scikit-opt</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="description" content="Description">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="vue.css">
 </head>
 <body>
 
-  <div id="app"></div>
-  <script>
+<div id="app"></div>
+<script>
     window.$docsify = {
-      name: '',
-      repo: ''
+        name: '',
+        repo: ''
     }
-  </script>
-  <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
-
-
-  <!-- <script>
-    window.$docsify = {
-      loadSidebar: true,
-      // 增加侧边栏
-      subMaxLevel: 3
-    };
-  </script> -->
-  <!-- <script src="//unpkg.com/docsify"></script> -->
+</script>
+<script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
 
 
 <script>
 
-  window.$docsify = {
-    loadSidebar: true,
-    // 增加侧边栏
-    subMaxLevel: 3,
+    window.$docsify = {
+        plugins: [
+            function (hook, vm) {
+                hook.beforeEach(function (html) {
+                    var url = 'https://github.com/guofei9987/scikit-opt/blob/master/docs/' + vm.route.file;
+                    var editHtml = '[:memo: Edit](' + url + ')\n';
 
-    loadNavbar: true,
-    // 右上角的小下拉图标
-
-    //
-    // maxLevel: 3,
-
-    // 封面
-    coverpage: true,
-    homepage: 'docs/en.md',
-
-    // 切换页面后，自动滚动到顶部
-    auto2top: true,
-
-
-    search: 'auto',
-
-    // mermaid支持
-    markdown: {
-      renderer: {
-        code: function(code, lang) {
-          if (lang === "mermaid") {
-            return (
-              '<div class="mermaid">' + mermaid.render(lang, code) + "</div>"
-            );
-          }
-          return this.origin.code.apply(this, arguments);
-        }
-      }
-    },
-
-
-    plugins: [
-      function (hook, vm) {
-        hook.beforeEach(function (html) {
-          var url = 'https://github.com/guofei9987/scikit-opt/blob/master/docs/' + vm.route.file;
-          var editHtml = '[:memo: Edit](' + url + ')\n';
-          var donate = '<iframe src="https://guofei9987.github.io/donate/" style="overflow-x:hidden;overflow-y:hidden; border:0xp none #fff; min-height:240px; width:100%;"  frameborder="0" scrolling="no"></iframe>';
-
-          return editHtml
-            + html
-            + '\n\n----\n\n'
-            // + 'Last modified {docsify-updated} '
-            + ' '
-            + editHtml
-        })
-      }
-    ]
-
-
-  };
+                    return editHtml
+                        + html
+                        + '\n\n----\n\n'
+                        + ' '
+                        + editHtml
+                })
+            }
+        ],
+        auto2top: true,
+        coverpage: ['/', '/en/', '/zh/'],
+        executeScript: true,
+        loadSidebar: true,
+        loadNavbar: true,
+        mergeNavbar: true,
+        maxLevel: 4,
+        subMaxLevel: 2,
+        notFoundPage: 'README.md'
+    };
 </script>
-<!-- <script src="//unpkg.com/docsify"></script> -->
-
 
 <script src="//unpkg.com/docsify/lib/plugins/search.js"></script>
-
-<!-- mermaid支持： -->
-<script src="//cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.css">
 
 
 <!-- 代码高亮 -->
 <script src="//unpkg.com/prismjs/components/prism-python.min.js"></script>
 <script src="//unpkg.com/prismjs/components/prism-bash.min.js"></script>
-<script src="//unpkg.com/prismjs/components/prism-matlab.min.js"></script>
 
 </body>
 </html>

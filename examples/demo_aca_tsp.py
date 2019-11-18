@@ -1,4 +1,3 @@
-from sko.ACA import ACA_TSP
 import numpy as np
 from scipy import spatial
 import pandas as pd
@@ -21,14 +20,16 @@ def cal_total_distance(routine):
 points = np.arange(num_points)  # generate index of points
 cal_total_distance(points)
 
+# %% Do ACA
+from sko.ACA import ACA_TSP
+
 aca = ACA_TSP(func=cal_total_distance, n_dim=8,
               size_pop=10, max_iter=20,
               distance_matrix=distance_matrix)
 
-best_x, best_y = aca.fit()
+best_x, best_y = aca.run()
 
-# %%
-
+# %% Plot
 fig, ax = plt.subplots(1, 1)
 best_points_ = np.concatenate([best_x, [best_x[0]]])
 best_points_coordinate = points_coordinate[best_points_, :]

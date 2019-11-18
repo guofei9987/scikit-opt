@@ -3,7 +3,7 @@ __version__ = '0.3.3'
 
 def start():
     print('''
-    scikit-opt import successful,
+    scikit-opt import successfully,
     version: {version}
     Author: Guo fei,
     Email: guofei9987@foxmail.com

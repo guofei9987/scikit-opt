@@ -2,4 +2,3 @@ numpy
 scipy
 matplotlib
 pandas
-scikit-opt

@@ -1,10 +1,19 @@
 import numpy as np
-import pandas as pd
+from scipy import spatial
 import matplotlib.pyplot as plt
-from sko.demo_func import function_for_TSP
 
-num_points, points_coordinate, distance_matrix, cal_total_distance = function_for_TSP(num_points=20)
+num_points = 8
 
+points_coordinate = np.random.rand(num_points, 2)  # generate coordinate of points
+distance_matrix = spatial.distance.cdist(points_coordinate, points_coordinate, metric='euclidean')
+
+
+def cal_total_distance(routine):
+    '''The objective function. input routine, return total distance.
+    cal_total_distance(np.arange(num_points))
+    '''
+    num_points, = routine.shape
+    return sum([distance_matrix[routine[i % num_points], routine[(i + 1) % num_points]] for i in range(num_points)])
 
 
 # %% do GA
