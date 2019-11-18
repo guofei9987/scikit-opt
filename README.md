@@ -188,22 +188,38 @@ plt.show()
 
 ## 2. PSO(Particle swarm optimization)
 
-
+### 2.1 PSO with constraint
+-> Source Code: [examples/demo_pso.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L1)
 ```python
 def demo_func(x):
     x1, x2, x3 = x
     return x1 ** 2 + (x2 - 0.05) ** 2 + x3 ** 2
 
+
 from sko.PSO import PSO
-pso = PSO(func=demo_func, dim=3)
-fitness = pso.run()
-print('best_x is ',pso.gbest_x)
-print('best_y is ',pso.gbest_y)
-pso.plot_history()
+
+pso = PSO(func=demo_func, dim=3, lb=[0, -1, 0.5], ub=[1, 1, 1])
+pso.run()
+print('best_x is ', pso.gbest_x, 'best_y is', pso.gbest_y)
+
+import matplotlib.pyplot as plt
+
+plt.plot(pso.gbest_y_hist)
+plt.show()
+
 ```
 
 
-![GA_TPS](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/pso.png?raw=true)
+![PSO_TPS](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/pso.png?raw=true)
+
+### 2.2 PSO without constraint
+-> Source Code: [examples/demo_pso.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L16)
+```python
+# %% PSO without constraint:
+pso = PSO(func=demo_func, dim=3)
+fitness = pso.run()
+print('best_x is ', pso.gbest_x, 'best_y is', pso.gbest_y)
+```
 
 ## 3. SA(Simulated Annealing)
 ```python
