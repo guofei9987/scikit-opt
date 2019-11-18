@@ -70,10 +70,13 @@ while readme_idx < len(readme):
         while readme[readme_idx] != '```\n':
             readme_idx += 1
     else:
-        # 如果不需要插入代码，就用原本的
+        # 如果不需要插入代码，就用原本的内容
         readme_new.append(readme_line)
 
     readme_idx += 1
 
-with open('readme_new.md', encoding='utf-8', mode="w") as f_readme:
+with open('../README.md', encoding='utf-8', mode="w") as f_readme:
     f_readme.writelines(readme_new)
+
+with open('en/README.md', encoding='utf-8', mode="w") as f_readme:
+    f_readme.writelines(readme_new[20:])

@@ -1,23 +1,3 @@
-<table border="0" width="10%">
-  <tr>
-    <td><img src="https://github.com/guofei9987/pictures_for_blog/blob/master/tmp/1.jpg?raw=true" height="80" width="82"></td>
-    <td><img src="https://github.com/guofei9987/pictures_for_blog/blob/master/tmp/2.jpg?raw=true" height="80" width="82"></td>
-    <td><img src="https://github.com/guofei9987/pictures_for_blog/blob/master/tmp/3.jpg?raw=true" height="80" width="82"></td>
-  </tr>
-  <tr>
-    <td><img src="https://github.com/guofei9987/pictures_for_blog/blob/master/tmp/4.jpg?raw=true" height="80" width="82"></td>
-    <td><img src="https://img.shields.io/github/stars/guofei9987/scikit-opt.svg?style=social"></td>
-    <td><img src="https://github.com/guofei9987/pictures_for_blog/blob/master/tmp/6.jpg?raw=true" height="82" width="82"></td>
-  </tr>
-   <tr>
-    <td><img src="https://github.com/guofei9987/pictures_for_blog/blob/master/tmp/7.jpg?raw=true" height="82" width="82"></td>
-    <td><img src="https://github.com/guofei9987/pictures_for_blog/blob/master/tmp/8.jpg?raw=true" height="82" width="82"></td>
-    <td><img src="https://github.com/guofei9987/pictures_for_blog/blob/master/tmp/9.jpg?raw=true" height="82" width="82"></td>
-  </tr>
-</table>
-
-
-
 # [scikit-opt](https://github.com/guofei9987/scikit-opt)
 
 [![PyPI](https://img.shields.io/pypi/v/scikit-opt)](https://pypi.org/project/scikit-opt/)
@@ -29,34 +9,19 @@
 [![Forks](https://img.shields.io/github/forks/guofei9987/scikit-opt.svg?style=social)](https://github.com/guofei9987/scikit-opt/network/members)
 [![Join the chat at https://gitter.im/guofei9987/scikit-opt](https://badges.gitter.im/guofei9987/scikit-opt.svg)](https://gitter.im/guofei9987/scikit-opt?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+一个封装了6种启发式算法的 Python 代码库  
+（遗传算法、粒子群算法、模拟退火算法、蚁群算法、鱼群算法、免疫优化算法）
 
+# 安装
 
-Heuristic Algorithms in Python  
-(Genetic Algorithm, Particle Swarm Optimization, Simulated Annealing, Ant Colony Algorithm, Immune Algorithm,Artificial Fish Swarm Algorithm in Python)  
-
-
-- **Documentation:** [https://scikit-opt.github.io/scikit-opt/#/docs/en](https://scikit-opt.github.io/scikit-opt/#/en/)
-- **文档：** [https://scikit-opt.github.io/scikit-opt/#/docs/zh](https://scikit-opt.github.io/scikit-opt/#/zh/)  
-- **Source code:** [https://github.com/guofei9987/scikit-opt](https://github.com/guofei9987/scikit-opt)
-
-
-# install
 ```bash
 pip install scikit-opt
 ```
+或者直接把源代码中的 `sko` 文件夹下载下来放本地也调用可以
 
-## News:
-All algorithms will be available on ~~TensorFlow/Spark~~ **pytorch** on version 0.4, getting parallel performance.  
-DE(Differential Evolution Algorithm) will be complete on version 0.5  
-Have fun!
+## UDF
 
-
-## feature: UDF
-
-**UDF** (user defined function) is available now!
-
-For example, you just worked out a new type of `selection` function.  
-Now, your `selection` function is like this:  
+举例来说，你想出一种新的“选择算子”，如下
 -> Demo code: [examples/demo_ga_udf.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L1)
 ```python
 # step1: define your own operator:
@@ -72,7 +37,7 @@ def selection_tournament(self, tourn_size):
 
 ```
 
-Import and build ga  
+导入包，并且创建遗传算法实例  
 -> Demo code: [examples/demo_ga_udf.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L12)
 ```python
 import numpy as np
@@ -82,13 +47,13 @@ demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
 ga = GA(func=demo_func, n_dim=3, size_pop=100, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2])
 
 ```
-Regist your udf to GA  
+把你的算子注册到你创建好的遗传算法实例上  
 -> Demo code: [examples/demo_ga_udf.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L19)
 ```python
 ga.register(operator_name='selection', operator=selection_tournament, tourn_size=3)
 ```
 
-scikit-opt also provide some operators  
+scikit-opt 也提供了十几个算子供你调用  
 -> Demo code: [examples/demo_ga_udf.py#s4](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L21)
 ```python
 from sko.GA import ranking_linear, ranking_raw, crossover_2point, selection_roulette_2, mutation
@@ -98,7 +63,7 @@ ga.register(operator_name='ranking', operator=ranking_linear). \
     register(operator_name='mutation', operator=mutation)
 
 ```
-Now do GA as usual  
+做遗传算法运算 
 -> Demo code: [examples/demo_ga_udf.py#s5](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L28)
 ```python
 best_x, best_y = ga.run()
@@ -106,14 +71,13 @@ print('best_x:', best_x, '\n', 'best_y:', best_y)
 
 ```
 
-> Until Now, the **udf** surport `crossover`, `mutation`, `selection`, `ranking` of GA
+> 现在 **udf** 支持遗传算法的这几个算子：   `crossover`, `mutation`, `selection`, `ranking`
 
-> scikit-opt provide a dozen of operators, see [here](https://github.com/guofei9987/scikit-opt/blob/master/sko/GA.py)
+> 提供了十来个算子 参考[这里](https://github.com/guofei9987/scikit-opt/blob/master/sko/GA.py)
 
 
-
-# Quick start
-## 1. Genetic Algorithm
+# 快速开始
+## 1. 遗传算法
 -> Demo code: [examples/demo_ga.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#L1)
 ```python
 import numpy as np
@@ -135,7 +99,8 @@ best_x, best_y = ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 
 ```
-plot the result using matplotlib  
+
+用 matplotlib 画出结果  
 -> Demo code: [examples/demo_ga.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#L19)
 ```python
 import pandas as pd
@@ -150,10 +115,11 @@ plt.show()
 
 ![Figure_1-1](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/ga_1.png?raw=true)
 
-### 1.1 Genetic Algorithm for TSP(Travelling Salesman Problem)
-Just import the `GA_TSP`, it overloads the `crossover`, `mutation` to solve the TSP
+### 1.2 遗传算法用于旅行商问题
+`GA_TSP` 针对TSP问题重载了 `交叉(crossover)`、`变异(mutation)` 两个算子
 
-Firstly, prepare your data (the distance matrix). Here I generate the data randomly as a demo:  
+这里作为demo，随机生成距离矩阵. 实战中从真实数据源中读取。
+
 -> Demo code: [examples/demo_ga_tsp.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_tsp.py#L1)
 ```python
 import numpy as np
@@ -176,7 +142,7 @@ def cal_total_distance(routine):
 
 ```
 
-Do GA  
+然后调用遗传算法进行求解  
 -> Demo code: [examples/demo_ga_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_tsp.py#L19)
 ```python
 
@@ -187,7 +153,7 @@ best_points, best_distance = ga_tsp.run()
 
 ```
 
-Plot the result:  
+画出结果：   
 -> Demo code: [examples/demo_ga_tsp.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_tsp.py#L26)
 ```python
 fig, ax = plt.subplots(1, 1)
@@ -200,9 +166,9 @@ plt.show()
 ![GA_TPS](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/ga_tsp.png?raw=true)
 
 
-## 2. PSO(Particle swarm optimization)
+## 2. 粒子群算法(PSO, Particle swarm optimization)
 
-### 2.1 PSO with constraint
+### 2.1 带约束的粒子群算法
 -> Demo code: [examples/demo_pso.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L1)
 ```python
 def demo_func(x):
@@ -226,7 +192,7 @@ plt.show()
 
 ![PSO_TPS](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/pso.png?raw=true)
 
-### 2.2 PSO without constraint
+### 2.2 不带约束的粒子群算法
 -> Demo code: [examples/demo_pso.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L17)
 ```python
 pso = PSO(func=demo_func, dim=3)
@@ -234,8 +200,9 @@ fitness = pso.run()
 print('best_x is ', pso.gbest_x, 'best_y is', pso.gbest_y)
 ```
 
-## 3. SA(Simulated Annealing)
-### 3.1 SA for multiple function
+
+## 3. 模拟退火算法(SA, Simulated Annealing)
+### 3.1 模拟退火算法用于多元函数优化
 -> Demo code: [examples/demo_sa.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa.py#L1)
 ```python
 from sko.SA import SA
@@ -256,10 +223,12 @@ plt.show()
 ```
 ![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa.png?raw=true)
 
-### 3.2 SA for TSP
-Firstly, prepare your data (the distance matrix). See GA_TSP.  
+### 3.2 模拟退火算法解决TSP问题（旅行商问题）  
 
-DO SA for TSP  
+
+作为demo，生成模拟数据（代码与遗传算法解决TSP问题一样，这里省略）
+
+调用模拟退火算法  
 -> Demo code: [examples/demo_sa_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py#L19)
 ```python
 from sko.SA import SA_TSP
@@ -270,7 +239,8 @@ best_points, best_distance = sa_tsp.fit()
 print(best_points, best_distance, cal_total_distance(best_points))
 ```
 
-plot the result  
+
+画出结果
 -> Demo code: [examples/demo_sa_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py#L19)
 ```python
 from sko.SA import SA_TSP
@@ -282,21 +252,11 @@ print(best_points, best_distance, cal_total_distance(best_points))
 ```
 ![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa_tsp.png?raw=true)
 
-### 3.2 SA for real function optimization
--> Demo code: [examples/demo_sa.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa.py#L1)
-```python
-from sko.SA import SA
-
-demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
-sa = SA(func=demo_func, x0=[1, 1, 1])
-x_star, y_star = sa.run()
-print(x_star, y_star)
-
-```
 
 
 
-## 4. ACA (Ant Colony Algorithm) for tsp 
+## 4. 蚁群算法(ACA, Ant Colony Algorithm)解决TSP问题
+
 -> Demo code: [examples/demo_aca_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_aca_tsp.py#L23)
 ```python
 from sko.ACA import ACA_TSP
@@ -312,7 +272,9 @@ best_x, best_y = aca.run()
 ![ACA](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/aca_tsp.png?raw=true)
 
 
-## 5. immune algorithm (IA)
+
+
+## 5. 免疫优化算法(immune algorithm, IA)
 -> Demo code: [examples/demo_ia.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ia.py#L6)
 ```python
 
@@ -327,7 +289,9 @@ print('best routine:', best_points, 'best_distance:', best_distance)
 
 ![IA](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/ia2.png?raw=true)
 
-## 6. artificial fish swarm algorithm (AFSA)
+
+## 6. 人工鱼群算法(artificial fish swarm algorithm, AFSA)
+
 -> Demo code: [examples/demo_asfs.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_asfs.py#L1)
 ```python
 def func(x):
@@ -342,4 +306,18 @@ asfa = ASFA(func, n_dim=2, size_pop=50, max_iter=300,
             q=0.98, delta=0.5)
 best_x, best_y = asfa.fit()
 print(best_x, best_y)
+```
+
+# Q&A
+## 如何进行整数规划
+
+在多维优化时，想让哪个变量限制为整数，就设定 `precision` 为 1即可。  
+例如，我想让我的自定义函数 `demo_func` 的第一个变量限制为整数，那么久设定 `precision` 的第一个数为1，例子如下：
+```python
+from sko.GA import GA
+
+demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
+ga = GA(func=demo_func, n_dim=3, max_iter=500, lb=[0, 0, 0], ub=[1, 1, 1], precision=[1, 1e-7, 1e-7])
+best_x, best_y = ga.run()
+print('best_x:', best_x, '\n', 'best_y:', best_y)
 ```
