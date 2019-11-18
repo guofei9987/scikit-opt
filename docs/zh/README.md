@@ -166,7 +166,8 @@ plt.show()
 ![GA_TPS](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/ga_tsp.png?raw=true)
 
 
-## 2. 粒子群算法(PSO, Particle swarm optimization)
+## 2. 粒子群算法
+(PSO, Particle swarm optimization)
 
 ### 2.1 带约束的粒子群算法
 -> Demo code: [examples/demo_pso.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L1)
@@ -192,6 +193,10 @@ plt.show()
 
 ![PSO_TPS](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/pso.png?raw=true)
 
+![pso_ani](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/pso.gif?raw=true)
+↑**see [examples/demo_pso.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso_ani.py)**
+
+
 ### 2.2 不带约束的粒子群算法
 -> Demo code: [examples/demo_pso.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L17)
 ```python
@@ -201,7 +206,8 @@ print('best_x is ', pso.gbest_x, 'best_y is', pso.gbest_y)
 ```
 
 
-## 3. 模拟退火算法(SA, Simulated Annealing)
+## 3. 模拟退火算法
+(SA, Simulated Annealing)
 ### 3.1 模拟退火算法用于多元函数优化
 -> Demo code: [examples/demo_sa.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa.py#L1)
 ```python
@@ -255,7 +261,8 @@ print(best_points, best_distance, cal_total_distance(best_points))
 
 
 
-## 4. 蚁群算法(ACA, Ant Colony Algorithm)解决TSP问题
+## 4. 蚁群算法
+蚁群算法(ACA, Ant Colony Algorithm)解决TSP问题
 
 -> Demo code: [examples/demo_aca_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_aca_tsp.py#L23)
 ```python
@@ -274,7 +281,8 @@ best_x, best_y = aca.run()
 
 
 
-## 5. 免疫优化算法(immune algorithm, IA)
+## 5. 免疫优化算法
+(immune algorithm, IA)
 -> Demo code: [examples/demo_ia.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ia.py#L6)
 ```python
 

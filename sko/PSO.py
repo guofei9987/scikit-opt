@@ -83,7 +83,7 @@ class PSO:
         self.dim = dim  # dimension of particles, which is the number of variables of func
         self.max_iter = max_iter  # max iter
 
-        self.has_constraints=not(lb is None and ub is None)
+        self.has_constraints = not (lb is None and ub is None)
         self.lb = -np.ones(self.dim) if lb is None else np.array(lb)
         self.ub = np.ones(self.dim) if ub is None else np.array(ub)
 
@@ -102,6 +102,10 @@ class PSO:
         self.gbest_y = np.inf  # general best image  for all particles in history
         self.gbest_y_hist = []  # gbest_y of every iteration
         self.update_gbest()
+
+        # record verbose values
+        self.record_mode = False
+        self.record_value = {'X': [], 'V': [], 'Y': []}
 
     def cal_y(self):
         # calculate y for every x in X
@@ -125,6 +129,14 @@ class PSO:
             self.gbest_x = self.X[self.Y.argmin(), :]
             self.gbest_y = self.Y.min()
 
+    def recorder(self):
+        if not self.record_mode:
+            return
+        self.record_value['X'].append(self.X)
+        self.record_value['V'].append(self.V)
+        self.record_value['Y'].append(self.Y)
+
+
     def run(self):
         for iter_num in range(self.max_iter):
             r1 = np.random.rand(self.pop, self.dim)
@@ -132,6 +144,7 @@ class PSO:
             self.V = self.w * self.V + \
                      self.cp * r1 * (self.pbest_x - self.X) + \
                      self.cg * r2 * (self.gbest_x - self.X)
+            self.recorder()
             self.X = self.X + self.V
 
             if self.has_constraints:

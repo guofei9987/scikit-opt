@@ -35,8 +35,8 @@ Heuristic Algorithms in Python
 (Genetic Algorithm, Particle Swarm Optimization, Simulated Annealing, Ant Colony Algorithm, Immune Algorithm,Artificial Fish Swarm Algorithm in Python)  
 
 
-- **Documentation:** [https://scikit-opt.github.io/scikit-opt/#/docs/en](https://scikit-opt.github.io/scikit-opt/#/en/)
-- **文档：** [https://scikit-opt.github.io/scikit-opt/#/docs/zh](https://scikit-opt.github.io/scikit-opt/#/zh/)  
+- **Documentation:** [https://scikit-opt.github.io/scikit-opt/#/en/](https://scikit-opt.github.io/scikit-opt/#/en/)
+- **文档：** [https://scikit-opt.github.io/scikit-opt/#/zh/](https://scikit-opt.github.io/scikit-opt/#/zh/)  
 - **Source code:** [https://github.com/guofei9987/scikit-opt](https://github.com/guofei9987/scikit-opt)
 
 
@@ -212,7 +212,7 @@ def demo_func(x):
 
 from sko.PSO import PSO
 
-pso = PSO(func=demo_func, dim=3, lb=[0, -1, 0.5], ub=[1, 1, 1])
+pso = PSO(func=demo_func, dim=3, pop=40, max_iter=150, lb=[0, -1, 0.5], ub=[1, 1, 1])
 pso.run()
 print('best_x is ', pso.gbest_x, 'best_y is', pso.gbest_y)
 
@@ -225,6 +225,10 @@ plt.show()
 
 
 ![PSO_TPS](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/pso.png?raw=true)
+
+
+![pso_ani](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/pso.gif?raw=true)
+↑**see [examples/demo_pso.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso_ani.py)**
 
 ### 2.2 PSO without constraint
 -> Demo code: [examples/demo_pso.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L17)

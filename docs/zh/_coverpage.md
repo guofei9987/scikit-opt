@@ -8,6 +8,8 @@
 * 粒子群算法
 * 模拟退火算法
 * 蚁群算法
+* 免疫优化算法
+* 鱼群算法
 
 [GitHub](https://github.com/guofei9987/scikit-opt/)
-[开始](zh/zh)
+[开始](zh/README)

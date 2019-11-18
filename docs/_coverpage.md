@@ -8,7 +8,8 @@
 * Particle Swarm Optimization
 * Simulated Annealing
 * Ant Colony Algorithm
+* Immune Algorithm
+* Artificial Fish Swarm Algorithm
 
 [GitHub](https://github.com/guofei9987/scikit-opt/)
-[Get Started](docs/en.md)
-[开始](docs/zh.md)
+[Get Started](/en/README)
