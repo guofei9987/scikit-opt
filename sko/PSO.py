@@ -78,7 +78,7 @@ class PSO:
     def __init__(self, func, dim, pop=40, max_iter=150, lb=None, ub=None):
         self.func = func_transformer(func)
         self.w = 0.8  # inertia
-        self.cp, self.cg = 0.5, 0.5  # parameters to control personal best,global best respectively
+        self.cp, self.cg = 0.5, 0.5  # parameters to control personal best, global best respectively
         self.pop = pop  # number of particles
         self.dim = dim  # dimension of particles, which is the number of variables of func
         self.max_iter = max_iter  # max iter
@@ -90,9 +90,7 @@ class PSO:
         assert self.dim == len(self.lb) == len(self.ub), 'dim == len(lb) == len(ub) must holds'
         assert np.all(self.ub > self.lb), 'All upper-bound values must be greater than lower-bound values'
 
-        # self.X = np.random.rand(self.pop, self.dim) * (self.ub - self.lb) + self.lb  # location of particles
         self.X = np.random.uniform(low=self.lb, high=self.ub, size=(self.pop, self.dim))
-        # self.V = np.random.rand(self.pop, self.dim)  # speed of particles
         v_high = self.ub - self.lb
         self.V = np.random.uniform(low=-v_high, high=v_high, size=(self.pop, self.dim))  # speed of particles
         self.Y = self.cal_y()  # image of function corresponding to every particles for one generation
@@ -114,7 +112,7 @@ class PSO:
 
     def update_pbest(self):
         '''
-        Best for individual
+        personal best
         :return:
         '''
         self.pbest_x = np.where(self.pbest_y > self.Y, self.X, self.pbest_x)
@@ -122,7 +120,7 @@ class PSO:
 
     def update_gbest(self):
         '''
-        Best for the population
+        global best
         :return:
         '''
         if self.gbest_y > self.Y.min():
