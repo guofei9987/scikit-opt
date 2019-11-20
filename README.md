@@ -212,7 +212,7 @@ def demo_func(x):
 
 from sko.PSO import PSO
 
-pso = PSO(func=demo_func, dim=3, pop=40, max_iter=150, lb=[0, -1, 0.5], ub=[1, 1, 1])
+pso = PSO(func=demo_func, dim=3, pop=40, max_iter=150, lb=[0, -1, 0.5], ub=[1, 1, 1], w=0.8, c1=0.5, c2=0.5)
 pso.run()
 print('best_x is ', pso.gbest_x, 'best_y is', pso.gbest_y)
 
@@ -250,6 +250,8 @@ x_star, y_star = sa.run()
 print(x_star, y_star)
 
 ```
+
+Plot the result  
 -> Demo code: [examples/demo_sa.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa.py#L8)
 ```python
 import matplotlib.pyplot as plt

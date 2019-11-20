@@ -6,7 +6,7 @@ def function_for_TSP(num_points, seed=None):
     if seed:
         np.random.seed(seed=seed)
 
-    points_coordinate = np.random.rand(num_points, 2)  # generate coordinate of points
+    points_coordinate = np.random.rand(num_points, 2)  # generate coordinate of points randomly
     distance_matrix = spatial.distance.cdist(points_coordinate, points_coordinate, metric='euclidean')
     # print('distance_matrix is: \n', distance_matrix)
 
@@ -27,9 +27,8 @@ def sphere(p):
 
 def schaffer(p):
     '''
-    这个函数是二维的复杂函数，具有无数个极小值点
+    此函数具有无数个极小值点、强烈的震荡形态。很难找到全局最优值
     在(0,0)处取的最值0
-    这个函数具有强烈的震荡形态，所以很难找到全局最优质值
     :param p:
     :return:
     '''

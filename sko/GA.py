@@ -5,12 +5,13 @@
 
 
 import numpy as np
+from .base import Base
 from sko.tools import func_transformer
 from abc import ABCMeta, abstractmethod
 import types
 
 
-class GA_base(metaclass=ABCMeta):
+class GA_base(Base, metaclass=ABCMeta):
     @abstractmethod
     def ranking(self):
         pass
@@ -27,24 +28,24 @@ class GA_base(metaclass=ABCMeta):
     def mutation(self):
         pass
 
-    def register(self, operator_name, operator, *args, **kwargs):
-        '''
-        regeister udf to the class
-        :param operator_name: string in {'crossover', 'mutation', 'selection', 'ranking'}
-        :param operator: a function
-        :param args: arg of operator
-        :param kwargs: kwargs of operator
-        :return:
-        '''
-        valid_operator_name = {'crossover', 'mutation', 'selection', 'ranking'}
-        if operator_name not in valid_operator_name:
-            raise NameError(operator_name + "is not a valid operator name, should be in " + str(valid_operator_name))
-
-        def operator_wapper(*wrapper_args):
-            return operator(*(wrapper_args + args), **kwargs)
-
-        setattr(self, operator_name, types.MethodType(operator_wapper, self))
-        return self
+    # def register(self, operator_name, operator, *args, **kwargs):
+    #     '''
+    #     regeister udf to the class
+    #     :param operator_name: string in {'crossover', 'mutation', 'selection', 'ranking'}
+    #     :param operator: a function
+    #     :param args: arg of operator
+    #     :param kwargs: kwargs of operator
+    #     :return:
+    #     '''
+    #     valid_operator_name = {'crossover', 'mutation', 'selection', 'ranking'}
+    #     if operator_name not in valid_operator_name:
+    #         raise NameError(operator_name + "is not a valid operator name, should be in " + str(valid_operator_name))
+    #
+    #     def operator_wapper(*wrapper_args):
+    #         return operator(*(wrapper_args + args), **kwargs)
+    #
+    #     setattr(self, operator_name, types.MethodType(operator_wapper, self))
+    #     return self
 
 
 # %% operators:
@@ -251,7 +252,7 @@ def mutation_TSP_3(self):
 # %%
 
 class GA(GA_base):
-    """Do genetic algorithm
+    """genetic algorithm
 
     Parameters
     ----------------
@@ -449,67 +450,67 @@ class GA_TSP(GA):
 
 
 # %% will be deprecated
-from copy import deepcopy
-
-
-def ga_with_udf(GA_class, options):
-    '''
-    will be deprecated
-    options = {'selection': {'udf': selection_tournament, 'kwargs': {'tourn_size': 5}},
-           'mutation': {'udf': mutation_TSP_type3}}
-    GA_TSP2 = ga_register_udf(options)
-    :param options:
-    :return:
-    '''
-    print(ga_with_udf.__name__ + 'will be deprecated. Use GA.register instead')
-    options = deepcopy(options)
-
-    class GAUdf(GA_class):
-        if 'crossover' in options:
-            def crossover(self):
-                crossover_udf = options['crossover']['udf']
-                kwargs = options['crossover'].get('kwargs', dict())
-                self.Chrom = crossover_udf(self, **kwargs)
-
-        if 'mutation' in options:
-            def mutation(self):
-                mutation_udf = options['mutation']['udf']
-                kwargs = options['mutation'].get('kwargs', dict())
-                self.Chrom = mutation_udf(self, **kwargs)
-
-        if 'selection' in options:
-            def selection(self):
-                selection_udf = options['selection']['udf']
-                kwargs = options['selection'].get('kwargs', dict())
-                self.Chrom = selection_udf(self, **kwargs)
-
-        if 'ranking' in options:
-            def ranking(self):
-                ranking_udf = options['ranking']['udf']
-                kwargs = options['ranking'].get('kwargs', dict())
-                self.FitV = ranking_udf(self, **kwargs)
-
-    return GAUdf
-
-
-def ga_register_udf(udf_func_dict):
-    '''
-    will be deprecated
-    :param udf_func_dict:
-    :return:
-    '''
-    print(ga_register_udf.__name__ + 'will be deprecated. Use ga.register instead')
-
-    class GAUdf(GA):
-        pass
-
-    for udf_name, udf in udf_func_dict.items():
-        if udf_name == 'crossover':
-            GAUdf.crossover = udf
-        elif udf_name == 'mutation':
-            GAUdf.mutation = udf
-        elif udf_name == 'selection':
-            GAUdf.selection = udf
-        elif udf_name == 'ranking':
-            GAUdf.ranking = udf
-    return GAUdf
+# from copy import deepcopy
+#
+#
+# def ga_with_udf(GA_class, options):
+#     '''
+#     will be deprecated
+#     options = {'selection': {'udf': selection_tournament, 'kwargs': {'tourn_size': 5}},
+#            'mutation': {'udf': mutation_TSP_type3}}
+#     GA_TSP2 = ga_register_udf(options)
+#     :param options:
+#     :return:
+#     '''
+#     print(ga_with_udf.__name__ + 'will be deprecated. Use GA.register instead')
+#     options = deepcopy(options)
+#
+#     class GAUdf(GA_class):
+#         if 'crossover' in options:
+#             def crossover(self):
+#                 crossover_udf = options['crossover']['udf']
+#                 kwargs = options['crossover'].get('kwargs', dict())
+#                 self.Chrom = crossover_udf(self, **kwargs)
+#
+#         if 'mutation' in options:
+#             def mutation(self):
+#                 mutation_udf = options['mutation']['udf']
+#                 kwargs = options['mutation'].get('kwargs', dict())
+#                 self.Chrom = mutation_udf(self, **kwargs)
+#
+#         if 'selection' in options:
+#             def selection(self):
+#                 selection_udf = options['selection']['udf']
+#                 kwargs = options['selection'].get('kwargs', dict())
+#                 self.Chrom = selection_udf(self, **kwargs)
+#
+#         if 'ranking' in options:
+#             def ranking(self):
+#                 ranking_udf = options['ranking']['udf']
+#                 kwargs = options['ranking'].get('kwargs', dict())
+#                 self.FitV = ranking_udf(self, **kwargs)
+#
+#     return GAUdf
+#
+#
+# def ga_register_udf(udf_func_dict):
+#     '''
+#     will be deprecated
+#     :param udf_func_dict:
+#     :return:
+#     '''
+#     print(ga_register_udf.__name__ + 'will be deprecated. Use ga.register instead')
+#
+#     class GAUdf(GA):
+#         pass
+#
+#     for udf_name, udf in udf_func_dict.items():
+#         if udf_name == 'crossover':
+#             GAUdf.crossover = udf
+#         elif udf_name == 'mutation':
+#             GAUdf.mutation = udf
+#         elif udf_name == 'selection':
+#             GAUdf.selection = udf
+#         elif udf_name == 'ranking':
+#             GAUdf.ranking = udf
+#     return GAUdf

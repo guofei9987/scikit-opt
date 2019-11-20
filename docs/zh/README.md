@@ -298,7 +298,8 @@ print('best routine:', best_points, 'best_distance:', best_distance)
 ![IA](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/ia2.png?raw=true)
 
 
-## 6. 人工鱼群算法(artificial fish swarm algorithm, AFSA)
+## 6. 人工鱼群算法
+人工鱼群算法(artificial fish swarm algorithm, AFSA)
 
 -> Demo code: [examples/demo_asfs.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_asfs.py#L1)
 ```python
@@ -316,16 +317,3 @@ best_x, best_y = asfa.fit()
 print(best_x, best_y)
 ```
 
-# Q&A
-## 如何进行整数规划
-
-在多维优化时，想让哪个变量限制为整数，就设定 `precision` 为 1即可。  
-例如，我想让我的自定义函数 `demo_func` 的第一个变量限制为整数，那么久设定 `precision` 的第一个数为1，例子如下：
-```python
-from sko.GA import GA
-
-demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
-ga = GA(func=demo_func, n_dim=3, max_iter=500, lb=[0, 0, 0], ub=[1, 1, 1], precision=[1, 1e-7, 1e-7])
-best_x, best_y = ga.run()
-print('best_x:', best_x, '\n', 'best_y:', best_y)
-```

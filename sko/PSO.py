@@ -75,10 +75,10 @@ class PSO:
     >>> pso.plot_history()
     """
 
-    def __init__(self, func, dim, pop=40, max_iter=150, lb=None, ub=None):
+    def __init__(self, func, dim, pop=40, max_iter=150, lb=None, ub=None, w=0.8, c1=0.5, c2=0.5):
         self.func = func_transformer(func)
-        self.w = 0.8  # inertia
-        self.cp, self.cg = 0.5, 0.5  # parameters to control personal best, global best respectively
+        self.w = w  # inertia
+        self.cp, self.cg = c1, c2  # parameters to control personal best, global best respectively
         self.pop = pop  # number of particles
         self.dim = dim  # dimension of particles, which is the number of variables of func
         self.max_iter = max_iter  # max iter
@@ -134,7 +134,6 @@ class PSO:
         self.record_value['V'].append(self.V)
         self.record_value['Y'].append(self.Y)
 
-
     def run(self):
         for iter_num in range(self.max_iter):
             r1 = np.random.rand(self.pop, self.dim)
@@ -156,9 +155,9 @@ class PSO:
             self.gbest_y_hist.append(self.gbest_y)
         return self
 
-    def plot_history(self):
-        print('plot_history will be deprecated.')
-        plt.plot(self.gbest_y_hist)
-        plt.show()
+    # def plot_history(self):
+    #     print('plot_history will be deprecated.')
+    #     plt.plot(self.gbest_y_hist)
+    #     plt.show()
 
     fit = run

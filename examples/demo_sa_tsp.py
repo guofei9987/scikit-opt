@@ -21,7 +21,7 @@ from sko.SA import SA_TSP
 
 sa_tsp = SA_TSP(func=cal_total_distance, x0=range(num_points))
 
-best_points, best_distance = sa_tsp.fit()
+best_points, best_distance = sa_tsp.run()
 print(best_points, best_distance, cal_total_distance(best_points))
 # %% Plot the best routine
 fig, ax = plt.subplots(1, 1)

@@ -1,7 +1,6 @@
+# Plot particle history as animation
 import numpy as np
-import matplotlib.pyplot as plt
 from sko.PSO import PSO
-from matplotlib.animation import FuncAnimation
 
 
 def demo_func(x):
@@ -14,7 +13,10 @@ pso.record_mode = True
 pso.run()
 print('best_x is ', pso.gbest_x, 'best_y is', pso.gbest_y)
 
-# %%
+# %% Now Plot the animation
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+
 record_value = pso.record_value
 X_list, V_list = record_value['X'], record_value['V']
 

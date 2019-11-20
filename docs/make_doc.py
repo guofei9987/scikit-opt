@@ -85,7 +85,10 @@ with open('en/README.md', encoding='utf-8', mode="w") as f_readme:
     f_readme.writelines(readme_new[20:])
 
 
-docs=['zh/README.md']
+docs = ['zh/README.md',
+        'zh/more_ga.md','zh/more_pso.md',
+        'en/more_ga.md','en/more_pso.md',
+        ]
 for i in docs:
     docs_new = make_doc(origin_file=i)
     with open(i, encoding='utf-8', mode="w") as f:

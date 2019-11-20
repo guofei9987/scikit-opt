@@ -5,8 +5,9 @@
 
 import numpy as np
 import types
+from .base import Base
 
-class SA:
+class SA(Base):
     """
     DO SA(Simulated Annealing)
 
@@ -54,7 +55,7 @@ class SA:
     def new_x(self, x):
         return 0.2 * np.random.randn(len(x)) + x
 
-    def fit(self):
+    def run(self):
         func = self.func
         T = self.T
         T_min = self.T_min
@@ -83,26 +84,26 @@ class SA:
             T = T * q  # 降温
         return self.x_star, self.f_star
 
-    run = fit
+    fit = run
 
-    def register(self, operator_name, operator, *args, **kwargs):
-        '''
-        regeister udf to the class
-        :param operator_name: string in {'crossover', 'mutation', 'selection', 'ranking'}
-        :param operator: a function
-        :param args: arg of operator
-        :param kwargs: kwargs of operator
-        :return:
-        '''
-        valid_operator_name = {'new_x'}
-        if operator_name not in valid_operator_name:
-            raise NameError(operator_name + "is not a valid operator name, should be in " + str(valid_operator_name))
-
-        def operator_wapper(*wrapper_args):
-            return operator(*(wrapper_args + args), **kwargs)
-
-        setattr(self, operator_name, types.MethodType(operator_wapper, self))
-        return self
+    # def register(self, operator_name, operator, *args, **kwargs):
+    #     '''
+    #     regeister udf to the class
+    #     :param operator_name: string in {'crossover', 'mutation', 'selection', 'ranking'}
+    #     :param operator: a function
+    #     :param args: arg of operator
+    #     :param kwargs: kwargs of operator
+    #     :return:
+    #     '''
+    #     valid_operator_name = {'new_x'}
+    #     if operator_name not in valid_operator_name:
+    #         raise NameError(operator_name + "is not a valid operator name, should be in " + str(valid_operator_name))
+    #
+    #     def operator_wapper(*wrapper_args):
+    #         return operator(*(wrapper_args + args), **kwargs)
+    #
+    #     setattr(self, operator_name, types.MethodType(operator_wapper, self))
+    #     return self
 
 
 class SA_TSP(SA):
@@ -113,11 +114,11 @@ class SA_TSP(SA):
         return x
 
 
-def sa_register_udf(udf_func_dict):
-    class SAUdf(SA):
-        pass
-
-    for udf_name in udf_func_dict:
-        if udf_name == 'new_x':
-            SAUdf.new_x = udf_func_dict[udf_name]
-    return SAUdf
+# def sa_register_udf(udf_func_dict):
+#     class SAUdf(SA):
+#         pass
+#
+#     for udf_name in udf_func_dict:
+#         if udf_name == 'new_x':
+#             SAUdf.new_x = udf_func_dict[udf_name]
+#     return SAUdf
