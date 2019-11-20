@@ -5,7 +5,7 @@
 
 
 import numpy as np
-from sko.GA import GA_TSP, ga_with_udf
+from sko.GA import GA_TSP
 from scipy import spatial
 
 
