@@ -35,10 +35,7 @@ class SA(SkoBase):
 
     Examples
     -------------
-    >>> demo_func=lambda x: x[0]**2 + x[1]**2 + x[2]**2
-    >>> from sko.SA import SA
-    >>> sa = SA(func=demo_func, x0=[1, 1, 1])
-    >>> x_star, y_star = sa.fit()
+    See https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa.py
     """
 
     def __init__(self, func, x0, T_max=100, T_min=1e-7, L=300, q=0.9):
@@ -52,11 +49,12 @@ class SA(SkoBase):
         self.L = int(L)  # num of iteration under every temperature（Long of Chain）
         self.q = q  # cool down speed
 
-        self.x_best = np.array(x0)  # initial solution
-        self.y_best = self.func(self.x_best)
+        self.best_x = np.array(x0)  # initial solution
+        self.best_y = self.func(self.best_x)
         self.T = self.T_max
         self.iter_cycle = 0
-        self.y_best_history = [self.y_best]
+        self.best_y_history = [self.best_y]
+        self.best_x_history = [self.best_x]
 
     def get_new_x(self, x):
         return 0.2 * np.random.randn(len(x)) + x
@@ -68,7 +66,7 @@ class SA(SkoBase):
         return abs(a - b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
 
     def run(self):
-        x_current, y_current = self.x_best, self.y_best
+        x_current, y_current = self.best_x, self.best_y
         max_stay_counter = 150
         stay_counter = 0
         while self.T > self.T_min and stay_counter <= max_stay_counter:
@@ -81,20 +79,21 @@ class SA(SkoBase):
                 df = y_new - y_current
                 if df < 0 or np.exp(-df / self.T) > np.random.rand():
                     x_current, y_current = x_new, y_new
-                    if y_new < self.y_best:
-                        self.x_best, self.y_best = x_new, y_new
+                    if y_new < self.best_y:
+                        self.best_x, self.best_y = x_new, y_new
 
             self.iter_cycle += 1
             self.cool_down()
-            self.y_best_history.append(self.y_best)
+            self.best_y_history.append(self.best_y)
+            self.best_x_history.append(self.best_x)
 
             # 连续多少次没有变优，就停止迭代
-            if self.isclose(self.y_best_history[-1], self.y_best_history[-2]):
+            if self.isclose(self.best_y_history[-1], self.best_y_history[-2]):
                 stay_counter += 1
             else:
                 stay_counter = 0
 
-        return self.x_best, self.y_best
+        return self.best_x, self.best_y
 
     fit = run
 

@@ -266,7 +266,7 @@ plt.show()
 Firstly, prepare your data (the distance matrix). See GA_TSP.  
 
 DO SA for TSP  
--> Demo code: [examples/demo_sa_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py#L19)
+-> Demo code: [examples/demo_sa_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py#L20)
 ```python
 from sko.SA import SA_TSP
 
@@ -277,7 +277,7 @@ print(best_points, best_distance, cal_total_distance(best_points))
 ```
 
 plot the result  
--> Demo code: [examples/demo_sa_tsp.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py#L26)
+-> Demo code: [examples/demo_sa_tsp.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py#L27)
 ```python
 from matplotlib.ticker import FormatStrFormatter
 
@@ -285,7 +285,7 @@ fig, ax = plt.subplots(1, 2)
 
 best_points_ = np.concatenate([best_points, [best_points[0]]])
 best_points_coordinate = points_coordinate[best_points_, :]
-ax[0].plot(sa_tsp.y_best_history)
+ax[0].plot(sa_tsp.best_y_history)
 ax[0].set_xlabel("Distance")
 ax[0].set_ylabel("Iteration")
 ax[1].plot(best_points_coordinate[:, 0], best_points_coordinate[:, 1],
@@ -296,21 +296,15 @@ ax[1].set_xlabel("Longitude")
 ax[1].set_ylabel("Latitude")
 plt.show()
 
-
 ```
 ![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa_tsp.png?raw=true)
 
-### 3.2 SA for real function optimization
--> Demo code: [examples/demo_sa.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa.py#L1)
-```python
-from sko.SA import SA
 
-demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
-sa = SA(func=demo_func, x0=[1, 1, 1], T_max=100, T_min=1e-5)
-x_star, y_star = sa.run()
-print(x_star, y_star)
+Plot the animation:  
 
-```
+![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa_tsp1.gif?raw=true)  
+↑**see [examples/demo_sa_tsp.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py)**
+
 
 
 
