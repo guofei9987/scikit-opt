@@ -228,7 +228,7 @@ plt.show()
 
 
 ![pso_ani](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/pso.gif?raw=true)  
-↑**see [examples/demo_pso.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso_ani.py)**
+↑**see [examples/demo_pso_ani.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso_ani.py)**
 
 ### 2.2 PSO without constraint
 -> Demo code: [examples/demo_pso.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L17)

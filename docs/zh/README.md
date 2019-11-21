@@ -235,7 +235,7 @@ plt.show()
 作为demo，生成模拟数据（代码与遗传算法解决TSP问题一样，这里省略）
 
 调用模拟退火算法  
--> Demo code: [examples/demo_sa_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py#L19)
+-> Demo code: [examples/demo_sa_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py#L20)
 ```python
 from sko.SA import SA_TSP
 
@@ -247,7 +247,7 @@ print(best_points, best_distance, cal_total_distance(best_points))
 
 
 画出结果
--> Demo code: [examples/demo_sa_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py#L19)
+-> Demo code: [examples/demo_sa_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py#L20)
 ```python
 from sko.SA import SA_TSP
 

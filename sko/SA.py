@@ -124,7 +124,6 @@ class SA_TSP(SA):
         def transpose(x_new):
             while True:
                 n1, n2, n3 = np.random.randint(0, len(x_new), 3)
-
                 if n1 != n2 != n3 != n1:
                     break
             # Let n1 < n2 < n3

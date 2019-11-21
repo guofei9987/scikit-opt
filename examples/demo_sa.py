@@ -9,5 +9,5 @@ print(x_star, y_star)
 import matplotlib.pyplot as plt
 import pandas as pd
 
-plt.plot(pd.DataFrame(sa.y_best_history).cummin(axis=0))
+plt.plot(pd.DataFrame(sa.best_y_history).cummin(axis=0))
 plt.show()
