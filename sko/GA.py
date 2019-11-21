@@ -5,13 +5,13 @@
 
 
 import numpy as np
-from .base import Base
+from .base import SkoBase
 from sko.tools import func_transformer
 from abc import ABCMeta, abstractmethod
 import types
 
 
-class GA_base(Base, metaclass=ABCMeta):
+class GA_base(SkoBase, metaclass=ABCMeta):
     @abstractmethod
     def ranking(self):
         pass
@@ -27,25 +27,6 @@ class GA_base(Base, metaclass=ABCMeta):
     @abstractmethod
     def mutation(self):
         pass
-
-    # def register(self, operator_name, operator, *args, **kwargs):
-    #     '''
-    #     regeister udf to the class
-    #     :param operator_name: string in {'crossover', 'mutation', 'selection', 'ranking'}
-    #     :param operator: a function
-    #     :param args: arg of operator
-    #     :param kwargs: kwargs of operator
-    #     :return:
-    #     '''
-    #     valid_operator_name = {'crossover', 'mutation', 'selection', 'ranking'}
-    #     if operator_name not in valid_operator_name:
-    #         raise NameError(operator_name + "is not a valid operator name, should be in " + str(valid_operator_name))
-    #
-    #     def operator_wapper(*wrapper_args):
-    #         return operator(*(wrapper_args + args), **kwargs)
-    #
-    #     setattr(self, operator_name, types.MethodType(operator_wapper, self))
-    #     return self
 
 
 # %% operators:
@@ -447,7 +428,6 @@ class GA_TSP(GA):
 
     crossover = crossover_pmx
     mutation = mutation_TSP_1
-
 
 # %% will be deprecated
 # from copy import deepcopy

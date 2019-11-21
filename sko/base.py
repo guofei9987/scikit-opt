@@ -2,7 +2,7 @@ from abc import ABCMeta, abstractmethod
 import types
 
 
-class Base(metaclass=ABCMeta):
+class SkoBase(metaclass=ABCMeta):
     def register(self, operator_name, operator, *args, **kwargs):
         '''
         regeister udf to the class

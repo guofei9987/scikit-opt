@@ -28,7 +28,7 @@ class ACA_TSP:
         self.x_best_history, self.y_best_history = [], []  # 记录各代的最佳情况
         self.best_x, self.best_y = None, None
 
-    def fit(self):
+    def run(self):
         for i in range(self.max_iter):  # 对每次迭代
             prob_matrix = (self.Tau ** self.alpha) * (self.prob_matrix_distance) ** self.beta  # 转移概率，无须归一化。
             for j in range(self.size_pop):  # 对每个蚂蚁
@@ -67,4 +67,4 @@ class ACA_TSP:
         self.best_y = self.y_best_history[best_generation]
         return self.best_x, self.best_y
 
-    run = fit
+    fit = run

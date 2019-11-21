@@ -6,9 +6,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from sko.tools import func_transformer
+from .base import SkoBase
 
 
-class PSO:
+class PSO(SkoBase):
     """
     Do PSO (Particle swarm optimization) algorithm.
 
@@ -86,7 +87,6 @@ class PSO:
         self.has_constraints = not (lb is None and ub is None)
         self.lb = -np.ones(self.dim) if lb is None else np.array(lb)
         self.ub = np.ones(self.dim) if ub is None else np.array(ub)
-
         assert self.dim == len(self.lb) == len(self.ub), 'dim == len(lb) == len(ub) must holds'
         assert np.all(self.ub > self.lb), 'All upper-bound values must be greater than lower-bound values'
 
@@ -104,6 +104,19 @@ class PSO:
         # record verbose values
         self.record_mode = False
         self.record_value = {'X': [], 'V': [], 'Y': []}
+
+    def update_V(self):
+        r1 = np.random.rand(self.pop, self.dim)
+        r2 = np.random.rand(self.pop, self.dim)
+        self.V = self.w * self.V + \
+                 self.cp * r1 * (self.pbest_x - self.X) + \
+                 self.cg * r2 * (self.gbest_x - self.X)
+
+    def update_X(self):
+        self.X = self.X + self.V
+
+        if self.has_constraints:
+            self.X = np.clip(self.X, self.lb, self.ub)
 
     def cal_y(self):
         # calculate y for every x in X
@@ -136,28 +149,14 @@ class PSO:
 
     def run(self):
         for iter_num in range(self.max_iter):
-            r1 = np.random.rand(self.pop, self.dim)
-            r2 = np.random.rand(self.pop, self.dim)
-            self.V = self.w * self.V + \
-                     self.cp * r1 * (self.pbest_x - self.X) + \
-                     self.cg * r2 * (self.gbest_x - self.X)
+            self.update_V()
             self.recorder()
-            self.X = self.X + self.V
-
-            if self.has_constraints:
-                self.X = np.clip(self.X, self.lb, self.ub)
-
+            self.update_X()
             self.cal_y()
-
             self.update_pbest()
             self.update_gbest()
 
             self.gbest_y_hist.append(self.gbest_y)
         return self
-
-    # def plot_history(self):
-    #     print('plot_history will be deprecated.')
-    #     plt.plot(self.gbest_y_hist)
-    #     plt.show()
 
     fit = run
