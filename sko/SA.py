@@ -5,9 +5,10 @@
 
 import numpy as np
 import types
-from .base import Base
+from .base import SkoBase
 
-class SA(Base):
+
+class SA(SkoBase):
     """
     DO SA(Simulated Annealing)
 
@@ -25,7 +26,7 @@ class SA(Base):
         initial temperature
     T_min : float
         end temperature
-    L : float
+    L : int
         num of iteration under every temperature（Long of Chain）
     q : float
         cool down speed
@@ -42,83 +43,108 @@ class SA(Base):
     >>> x_star, y_star = sa.fit()
     """
 
-    def __init__(self, func, x0, T=100, T_min=1e-7, L=300, q=0.9):
+    def __init__(self, func, x0, T_max=100, T_min=1e-7, L=300, q=0.9):
+        assert T_max > 0, 'T_max>0'
+        assert T_min > 0, 'T_min>0'
+        assert 0 < q < 1, '0<q<1'
         self.func = func
-        self.x = np.array(x0)  # initial solution
-        self.T = T  # initial temperature
-        self.T_min = T_min  # end temperature
-        self.L = L  # num of iteration under every temperature（Long of Chain）
-        self.q = q  # cool down speed
-        self.f_list = []  # history
-        self.x_star, self.f_star = None, None
 
-    def new_x(self, x):
+        self.T_max = T_max  # initial temperature
+        self.T_min = T_min  # end temperature
+        self.L = int(L)  # num of iteration under every temperature（Long of Chain）
+        self.q = q  # cool down speed
+
+        self.x_best = np.array(x0)  # initial solution
+        self.y_best = self.func(self.x_best)
+        self.T = self.T_max
+        self.iter_cycle = 0
+        self.y_best_history = [self.y_best]
+
+    def get_new_x(self, x):
         return 0.2 * np.random.randn(len(x)) + x
 
+    def cool_down(self):
+        self.T *= self.q
+
+    def isclose(self, a, b, rel_tol=1e-09, abs_tol=1e-09):
+        return abs(a - b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
+
     def run(self):
-        func = self.func
-        T = self.T
-        T_min = self.T_min
-        L = self.L
-        q = self.q
-        x = self.x
-
-        f1 = func(x)
-        self.x_star, self.f_star = x, f1  # 全局最优
-        while T > T_min:
-            for i in range(L):
+        x_current, y_current = self.x_best, self.y_best
+        max_stay_counter = 150
+        stay_counter = 0
+        while self.T > self.T_min and stay_counter <= max_stay_counter:
+            for i in range(self.L):
                 # 随机扰动
-                x2 = self.new_x(x)
-                f2 = func(x2)
-
-                # 加入到全局列表
-                if f2 < self.f_star:
-                    self.x_star, self.f_star = x2, f2
-                self.f_list.append(f2)
+                x_new = self.get_new_x(x_current)
+                y_new = self.func(x_new)
 
                 # Metropolis
-                df = f2 - f1
-                if df < 0 or np.exp(-df / T) > np.random.rand():
-                    x, f1 = x2, f2
+                df = y_new - y_current
+                if df < 0 or np.exp(-df / self.T) > np.random.rand():
+                    x_current, y_current = x_new, y_new
+                    if y_new < self.y_best:
+                        self.x_best, self.y_best = x_new, y_new
 
-            T = T * q  # 降温
-        return self.x_star, self.f_star
+            self.iter_cycle += 1
+            self.cool_down()
+            self.y_best_history.append(self.y_best)
+
+            # 连续多少次没有变优，就停止迭代
+            if self.isclose(self.y_best_history[-1], self.y_best_history[-2]):
+                stay_counter += 1
+            else:
+                stay_counter = 0
+
+        return self.x_best, self.y_best
 
     fit = run
 
-    # def register(self, operator_name, operator, *args, **kwargs):
-    #     '''
-    #     regeister udf to the class
-    #     :param operator_name: string in {'crossover', 'mutation', 'selection', 'ranking'}
-    #     :param operator: a function
-    #     :param args: arg of operator
-    #     :param kwargs: kwargs of operator
-    #     :return:
-    #     '''
-    #     valid_operator_name = {'new_x'}
-    #     if operator_name not in valid_operator_name:
-    #         raise NameError(operator_name + "is not a valid operator name, should be in " + str(valid_operator_name))
-    #
-    #     def operator_wapper(*wrapper_args):
-    #         return operator(*(wrapper_args + args), **kwargs)
-    #
-    #     setattr(self, operator_name, types.MethodType(operator_wapper, self))
-    #     return self
-
 
 class SA_TSP(SA):
-    def new_x(self, x):
-        x = x.copy()
-        n1, n2 = np.random.randint(0, len(x), 2)
-        x[n1], x[n2] = x[n2], x[n1]
-        return x
+    def cool_down(self):
+        self.T = self.T_max / (1 + np.log(1 + self.iter_cycle))
 
+    def get_new_x(self, x):
+        x_new = x.copy()
+        SWAP, REVERSE, TRANSPOSE = 0, 1, 2
 
-# def sa_register_udf(udf_func_dict):
-#     class SAUdf(SA):
-#         pass
-#
-#     for udf_name in udf_func_dict:
-#         if udf_name == 'new_x':
-#             SAUdf.new_x = udf_func_dict[udf_name]
-#     return SAUdf
+        def swap(x_new):
+            n1, n2 = np.random.randint(0, len(x_new) - 1, 2)
+            if n1 >= n2:
+                n1, n2 = n2, n1 + 1
+            x_new[n1], x_new[n2] = x_new[n2], x_new[n1]
+            return x_new
+
+        def reverse(x_new):
+            n1, n2 = np.random.randint(0, len(x_new) - 1, 2)
+            if n1 >= n2:
+                n1, n2 = n2, n1 + 1
+            x_new[n1:n2] = x_new[n1:n2][::-1]
+
+            return x_new
+
+        def transpose(x_new):
+            while True:
+                n1, n2, n3 = np.random.randint(0, len(x_new), 3)
+
+                if n1 != n2 != n3 != n1:
+                    break
+            # Let n1 < n2 < n3
+            n1, n2, n3 = sorted([n1, n2, n3])
+
+            # Insert data between [n1,n2) after n3
+            tmplist = x_new[n1:n2].copy()
+            x_new[n1: n1 + n3 - n2 + 1] = x_new[n2: n3 + 1].copy()
+            x_new[n3 - n2 + 1 + n1: n3 + 1] = tmplist.copy()
+            return x_new
+
+        new_x_strategy = np.random.randint(3)
+        if new_x_strategy == SWAP:
+            x_new = swap(x_new)
+        elif new_x_strategy == REVERSE:
+            x_new = reverse(x_new)
+        elif new_x_strategy == TRANSPOSE:
+            x_new = transpose(x_new)
+
+        return x_new
