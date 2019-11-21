@@ -1,8 +1,9 @@
 import numpy as np
 from scipy import spatial
 import matplotlib.pyplot as plt
+import sys
 
-file_name = 'data/nctu.csv'
+file_name = sys.argv[1] if len(sys.argv) > 1 else 'data/nctu.csv'
 points_coordinate = np.loadtxt(file_name, delimiter=',')
 num_points = points_coordinate.shape[0]
 distance_matrix = spatial.distance.cdist(points_coordinate, points_coordinate, metric='euclidean') * 111000
@@ -40,5 +41,3 @@ ax[1].yaxis.set_major_formatter(FormatStrFormatter('%.3f'))
 ax[1].set_xlabel("Longitude")
 ax[1].set_ylabel("Latitude")
 plt.show()
-
-

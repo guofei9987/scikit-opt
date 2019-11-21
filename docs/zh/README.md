@@ -179,7 +179,7 @@ def demo_func(x):
 
 from sko.PSO import PSO
 
-pso = PSO(func=demo_func, dim=3, lb=[0, -1, 0.5], ub=[1, 1, 1])
+pso = PSO(func=demo_func, dim=3, pop=40, max_iter=150, lb=[0, -1, 0.5], ub=[1, 1, 1], w=0.8, c1=0.5, c2=0.5)
 pso.run()
 print('best_x is ', pso.gbest_x, 'best_y is', pso.gbest_y)
 
@@ -214,7 +214,7 @@ print('best_x is ', pso.gbest_x, 'best_y is', pso.gbest_y)
 from sko.SA import SA
 
 demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
-sa = SA(func=demo_func, x0=[1, 1, 1])
+sa = SA(func=demo_func, x0=[1, 1, 1], T_max=100, T_min=1e-5)
 x_star, y_star = sa.run()
 print(x_star, y_star)
 
@@ -224,7 +224,7 @@ print(x_star, y_star)
 import matplotlib.pyplot as plt
 import pandas as pd
 
-plt.plot(pd.DataFrame(sa.f_list).cummin(axis=0))
+plt.plot(pd.DataFrame(sa.y_best_history).cummin(axis=0))
 plt.show()
 ```
 ![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa.png?raw=true)
@@ -239,9 +239,9 @@ plt.show()
 ```python
 from sko.SA import SA_TSP
 
-sa_tsp = SA_TSP(func=cal_total_distance, x0=range(num_points))
+sa_tsp = SA_TSP(func=cal_total_distance, x0=range(num_points), T_max=100, T_min=1, L=10 * num_points)
 
-best_points, best_distance = sa_tsp.fit()
+best_points, best_distance = sa_tsp.run()
 print(best_points, best_distance, cal_total_distance(best_points))
 ```
 
@@ -251,9 +251,9 @@ print(best_points, best_distance, cal_total_distance(best_points))
 ```python
 from sko.SA import SA_TSP
 
-sa_tsp = SA_TSP(func=cal_total_distance, x0=range(num_points))
+sa_tsp = SA_TSP(func=cal_total_distance, x0=range(num_points), T_max=100, T_min=1, L=10 * num_points)
 
-best_points, best_distance = sa_tsp.fit()
+best_points, best_distance = sa_tsp.run()
 print(best_points, best_distance, cal_total_distance(best_points))
 ```
 ![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa_tsp.png?raw=true)

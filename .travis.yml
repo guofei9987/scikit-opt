@@ -18,7 +18,7 @@ script:
   - coverage run -p examples/demo_ga_udf_tsp.py
   - coverage run -p examples/demo_pso.py
   - coverage run -p examples/demo_sa.py
-  - coverage run -p examples/demo_sa_tsp.py
+  - coverage run -p examples/demo_sa_tsp.py examples/data/nctu.csv
   - coverage run -p examples/demo_aca_tsp.py
   - coverage run -p examples/demo_ia.py
   - coverage run -p examples/demo_asfs.py

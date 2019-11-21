@@ -20,9 +20,7 @@ class SA(SkoBase):
         number of variables of func
     x0 : array, shape is n_dim
         initial solution
-    max_iter : int
-        Max of iter
-    T :float
+    T_max :float
         initial temperature
     T_min : float
         end temperature
