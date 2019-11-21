@@ -224,7 +224,7 @@ print(x_star, y_star)
 import matplotlib.pyplot as plt
 import pandas as pd
 
-plt.plot(pd.DataFrame(sa.y_best_history).cummin(axis=0))
+plt.plot(pd.DataFrame(sa.best_y_history).cummin(axis=0))
 plt.show()
 ```
 ![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa.png?raw=true)
@@ -259,7 +259,8 @@ print(best_points, best_distance, cal_total_distance(best_points))
 ![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa_tsp.png?raw=true)
 
 
-
+![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa_tsp1.gif?raw=true)  
+↑**参考代码 [examples/demo_sa_tsp.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py)**
 
 ## 4. 蚁群算法
 蚁群算法(ACA, Ant Colony Algorithm)解决TSP问题

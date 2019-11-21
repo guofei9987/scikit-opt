@@ -208,7 +208,7 @@ plt.show()
 
 
 ![pso_ani](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/pso.gif?raw=true)  
-↑**see [examples/demo_pso.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso_ani.py)**
+↑**see [examples/demo_pso_ani.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso_ani.py)**
 
 ### 2.2 PSO without constraint
 -> Demo code: [examples/demo_pso.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L17)
@@ -237,7 +237,7 @@ Plot the result
 import matplotlib.pyplot as plt
 import pandas as pd
 
-plt.plot(pd.DataFrame(sa.y_best_history).cummin(axis=0))
+plt.plot(pd.DataFrame(sa.best_y_history).cummin(axis=0))
 plt.show()
 ```
 ![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa.png?raw=true)
@@ -280,28 +280,11 @@ plt.show()
 ![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa_tsp.png?raw=true)
 
 
-Plot the animation
--> Demo code: [examples/demo_sa_tsp.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py#L27)
-```python
-from matplotlib.ticker import FormatStrFormatter
+Plot the animation:  
 
-fig, ax = plt.subplots(1, 2)
+![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa_tsp1.gif?raw=true)  
+↑**see [examples/demo_sa_tsp.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py)**
 
-best_points_ = np.concatenate([best_points, [best_points[0]]])
-best_points_coordinate = points_coordinate[best_points_, :]
-ax[0].plot(sa_tsp.best_y_history)
-ax[0].set_xlabel("Distance")
-ax[0].set_ylabel("Iteration")
-ax[1].plot(best_points_coordinate[:, 0], best_points_coordinate[:, 1],
-           marker='o', markerfacecolor='b', color='c', linestyle='-')
-ax[1].xaxis.set_major_formatter(FormatStrFormatter('%.3f'))
-ax[1].yaxis.set_major_formatter(FormatStrFormatter('%.3f'))
-ax[1].set_xlabel("Longitude")
-ax[1].set_ylabel("Latitude")
-plt.show()
-
-```
-![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa_tsp1.gif?raw=true)
 
 
 
