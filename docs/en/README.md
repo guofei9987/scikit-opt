@@ -25,6 +25,13 @@ Heuristic Algorithms in Python
 pip install scikit-opt
 ```
 
+For the current developer version:
+```bach
+git clone git@github.com:guofei9987/scikit-opt.git
+cd scikit-opt
+pip install .
+```
+
 ## News:
 All algorithms will be available on ~~TensorFlow/Spark~~ **pytorch** on version 0.4, getting parallel performance.  
 DE(Differential Evolution Algorithm) will be complete on version 0.5  
@@ -94,6 +101,8 @@ print('best_x:', best_x, '\n', 'best_y:', best_y)
 
 # Quick start
 ## 1. Genetic Algorithm
+
+Step1：define your problem  
 -> Demo code: [examples/demo_ga.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#L1)
 ```python
 import numpy as np
@@ -110,13 +119,19 @@ def schaffer(p):
     return 0.5 + (np.sin(x) - 0.5) / np.square(1 + 0.001 * x)
 
 
+```
+
+Step2: do GA  
+-> Demo code: [examples/demo_ga.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#L15)
+```python
 ga = GA(func=schaffer, n_dim=2, size_pop=50, max_iter=800, lb=[-1, -1], ub=[1, 1], precision=1e-7)
 best_x, best_y = ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 
 ```
-plot the result using matplotlib  
--> Demo code: [examples/demo_ga.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#L19)
+
+Step3: plot the result  
+-> Demo code: [examples/demo_ga.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#L20)
 ```python
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -133,7 +148,8 @@ plt.show()
 ### 1.1 Genetic Algorithm for TSP(Travelling Salesman Problem)
 Just import the `GA_TSP`, it overloads the `crossover`, `mutation` to solve the TSP
 
-Firstly, prepare your data (the distance matrix). Here I generate the data randomly as a demo:  
+Step1: define your problem. prepare your data (points coordinate and the distance matrix).  
+Here I generate the data randomly as a demo:  
 -> Demo code: [examples/demo_ga_tsp.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_tsp.py#L1)
 ```python
 import numpy as np
@@ -156,7 +172,7 @@ def cal_total_distance(routine):
 
 ```
 
-Do GA  
+Step2: do GA  
 -> Demo code: [examples/demo_ga_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_tsp.py#L19)
 ```python
 
@@ -167,7 +183,7 @@ best_points, best_distance = ga_tsp.run()
 
 ```
 
-Plot the result:  
+Step3: Plot the result:  
 -> Demo code: [examples/demo_ga_tsp.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_tsp.py#L26)
 ```python
 fig, ax = plt.subplots(1, 1)
@@ -183,6 +199,7 @@ plt.show()
 ## 2. PSO(Particle swarm optimization)
 
 ### 2.1 PSO with constraint
+Step1: define your problem:  
 -> Demo code: [examples/demo_pso.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L1)
 ```python
 def demo_func(x):
@@ -190,12 +207,22 @@ def demo_func(x):
     return x1 ** 2 + (x2 - 0.05) ** 2 + x3 ** 2
 
 
+```
+
+Step2: do PSO  
+-> Demo code: [examples/demo_pso.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L6)
+```python
 from sko.PSO import PSO
 
 pso = PSO(func=demo_func, dim=3, pop=40, max_iter=150, lb=[0, -1, 0.5], ub=[1, 1, 1], w=0.8, c1=0.5, c2=0.5)
 pso.run()
 print('best_x is ', pso.gbest_x, 'best_y is', pso.gbest_y)
 
+```
+
+Step3: Plot the result  
+-> Demo code: [examples/demo_pso.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L13)
+```python
 import matplotlib.pyplot as plt
 
 plt.plot(pso.gbest_y_hist)
@@ -211,7 +238,7 @@ plt.show()
 ↑**see [examples/demo_pso_ani.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso_ani.py)**
 
 ### 2.2 PSO without constraint
--> Demo code: [examples/demo_pso.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L17)
+-> Demo code: [examples/demo_pso.py#s4](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L19)
 ```python
 pso = PSO(func=demo_func, dim=3)
 fitness = pso.run()
@@ -225,9 +252,9 @@ print('best_x is ', pso.gbest_x, 'best_y is', pso.gbest_y)
 from sko.SA import SA
 
 demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
-sa = SA(func=demo_func, x0=[1, 1, 1], T_max=100, T_min=1e-5)
-x_star, y_star = sa.run()
-print(x_star, y_star)
+sa = SA(func=demo_func, x0=[1, 1, 1], T_max=1, T_min=1e-9, q=0.99, L=300, max_stay_counter=150)
+best_x, best_y = sa.run()
+print('best_x:', best_x, 'best_y', best_y)
 
 ```
 
@@ -246,7 +273,7 @@ plt.show()
 Firstly, prepare your data (the distance matrix). See GA_TSP.  
 
 DO SA for TSP  
--> Demo code: [examples/demo_sa_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py#L20)
+-> Demo code: [examples/demo_sa_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py#L21)
 ```python
 from sko.SA import SA_TSP
 
@@ -257,7 +284,7 @@ print(best_points, best_distance, cal_total_distance(best_points))
 ```
 
 plot the result  
--> Demo code: [examples/demo_sa_tsp.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py#L27)
+-> Demo code: [examples/demo_sa_tsp.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py#L28)
 ```python
 from matplotlib.ticker import FormatStrFormatter
 

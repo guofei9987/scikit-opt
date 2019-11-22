@@ -78,6 +78,7 @@ print('best_x:', best_x, '\n', 'best_y:', best_y)
 
 # 快速开始
 ## 1. 遗传算法
+第一步：定义你的问题  
 -> Demo code: [examples/demo_ga.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#L1)
 ```python
 import numpy as np
@@ -94,14 +95,19 @@ def schaffer(p):
     return 0.5 + (np.sin(x) - 0.5) / np.square(1 + 0.001 * x)
 
 
+```
+
+第二步：运行遗传算法  
+-> Demo code: [examples/demo_ga.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#L15)
+```python
 ga = GA(func=schaffer, n_dim=2, size_pop=50, max_iter=800, lb=[-1, -1], ub=[1, 1], precision=1e-7)
 best_x, best_y = ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 
 ```
 
-用 matplotlib 画出结果  
--> Demo code: [examples/demo_ga.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#L19)
+第三步：用 matplotlib 画出结果  
+-> Demo code: [examples/demo_ga.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#L20)
 ```python
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -118,6 +124,7 @@ plt.show()
 ### 1.2 遗传算法用于旅行商问题
 `GA_TSP` 针对TSP问题重载了 `交叉(crossover)`、`变异(mutation)` 两个算子
 
+第一步，定义问题。  
 这里作为demo，随机生成距离矩阵. 实战中从真实数据源中读取。
 
 -> Demo code: [examples/demo_ga_tsp.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_tsp.py#L1)
@@ -142,7 +149,7 @@ def cal_total_distance(routine):
 
 ```
 
-然后调用遗传算法进行求解  
+第二步，调用遗传算法进行求解  
 -> Demo code: [examples/demo_ga_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_tsp.py#L19)
 ```python
 
@@ -153,7 +160,7 @@ best_points, best_distance = ga_tsp.run()
 
 ```
 
-画出结果：   
+第三步，画出结果：   
 -> Demo code: [examples/demo_ga_tsp.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_tsp.py#L26)
 ```python
 fig, ax = plt.subplots(1, 1)
@@ -170,6 +177,7 @@ plt.show()
 (PSO, Particle swarm optimization)
 
 ### 2.1 带约束的粒子群算法
+第一步，定义问题  
 -> Demo code: [examples/demo_pso.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L1)
 ```python
 def demo_func(x):
@@ -177,19 +185,26 @@ def demo_func(x):
     return x1 ** 2 + (x2 - 0.05) ** 2 + x3 ** 2
 
 
+```
+第二步，做粒子群算法  
+-> Demo code: [examples/demo_pso.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L6)
+```python
 from sko.PSO import PSO
 
 pso = PSO(func=demo_func, dim=3, pop=40, max_iter=150, lb=[0, -1, 0.5], ub=[1, 1, 1], w=0.8, c1=0.5, c2=0.5)
 pso.run()
 print('best_x is ', pso.gbest_x, 'best_y is', pso.gbest_y)
 
+```
+第三步，画出结果  
+-> Demo code: [examples/demo_pso.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L13)
+```python
 import matplotlib.pyplot as plt
 
 plt.plot(pso.gbest_y_hist)
 plt.show()
 
 ```
-
 
 ![PSO_TPS](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/pso.png?raw=true)
 
@@ -198,7 +213,7 @@ plt.show()
 
 
 ### 2.2 不带约束的粒子群算法
--> Demo code: [examples/demo_pso.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L17)
+-> Demo code: [examples/demo_pso.py#s4](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L19)
 ```python
 pso = PSO(func=demo_func, dim=3)
 fitness = pso.run()
@@ -214,9 +229,9 @@ print('best_x is ', pso.gbest_x, 'best_y is', pso.gbest_y)
 from sko.SA import SA
 
 demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
-sa = SA(func=demo_func, x0=[1, 1, 1], T_max=100, T_min=1e-5)
-x_star, y_star = sa.run()
-print(x_star, y_star)
+sa = SA(func=demo_func, x0=[1, 1, 1], T_max=1, T_min=1e-9, q=0.99, L=300, max_stay_counter=150)
+best_x, best_y = sa.run()
+print('best_x:', best_x, 'best_y', best_y)
 
 ```
 -> Demo code: [examples/demo_sa.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa.py#L8)
@@ -235,7 +250,7 @@ plt.show()
 作为demo，生成模拟数据（代码与遗传算法解决TSP问题一样，这里省略）
 
 调用模拟退火算法  
--> Demo code: [examples/demo_sa_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py#L20)
+-> Demo code: [examples/demo_sa_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py#L21)
 ```python
 from sko.SA import SA_TSP
 
@@ -247,7 +262,7 @@ print(best_points, best_distance, cal_total_distance(best_points))
 
 
 画出结果
--> Demo code: [examples/demo_sa_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py#L20)
+-> Demo code: [examples/demo_sa_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py#L21)
 ```python
 from sko.SA import SA_TSP
 
