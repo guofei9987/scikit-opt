@@ -45,6 +45,13 @@ Heuristic Algorithms in Python
 pip install scikit-opt
 ```
 
+For the current developer version:
+```bach
+git clone git@github.com:guofei9987/scikit-opt.git
+cd scikit-opt
+pip install .
+```
+
 ## News:
 All algorithms will be available on ~~TensorFlow/Spark~~ **pytorch** on version 0.4, getting parallel performance.  
 DE(Differential Evolution Algorithm) will be complete on version 0.5  
@@ -245,9 +252,9 @@ print('best_x is ', pso.gbest_x, 'best_y is', pso.gbest_y)
 from sko.SA import SA
 
 demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
-sa = SA(func=demo_func, x0=[1, 1, 1], T_max=100, T_min=1e-5)
-x_star, y_star = sa.run()
-print(x_star, y_star)
+sa = SA(func=demo_func, x0=[1, 1, 1], T_max=1, T_min=1e-9, q=0.99, L=300, max_stay_counter=150)
+best_x, best_y = sa.run()
+print('best_x:', best_x, 'best_y', best_y)
 
 ```
 
@@ -266,7 +273,7 @@ plt.show()
 Firstly, prepare your data (the distance matrix). See GA_TSP.  
 
 DO SA for TSP  
--> Demo code: [examples/demo_sa_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py#L20)
+-> Demo code: [examples/demo_sa_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py#L21)
 ```python
 from sko.SA import SA_TSP
 
@@ -277,7 +284,7 @@ print(best_points, best_distance, cal_total_distance(best_points))
 ```
 
 plot the result  
--> Demo code: [examples/demo_sa_tsp.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py#L27)
+-> Demo code: [examples/demo_sa_tsp.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py#L28)
 ```python
 from matplotlib.ticker import FormatStrFormatter
 

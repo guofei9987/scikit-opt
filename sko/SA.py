@@ -38,9 +38,8 @@ class SA(SkoBase):
     See https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa.py
     """
 
-    def __init__(self, func, x0, T_max=100, T_min=1e-7, L=300, q=0.9):
-        assert T_max > 0, 'T_max>0'
-        assert T_min > 0, 'T_min>0'
+    def __init__(self, func, x0, T_max=100, T_min=1e-7, L=300, q=0.9, max_stay_counter=150):
+        assert T_max > T_min > 0, 'T_max > T_min > 0'
         assert 0 < q < 1, '0<q<1'
         self.func = func
 
@@ -48,6 +47,7 @@ class SA(SkoBase):
         self.T_min = T_min  # end temperature
         self.L = int(L)  # num of iteration under every temperature（Long of Chain）
         self.q = q  # cool down speed
+        self.max_stay_counter = max_stay_counter  # stop if best_y stay unchanged over max_stay_counter times
 
         self.best_x = np.array(x0)  # initial solution
         self.best_y = self.func(self.best_x)
@@ -57,19 +57,21 @@ class SA(SkoBase):
         self.best_x_history = [self.best_x]
 
     def get_new_x(self, x):
-        return 0.2 * np.random.randn(len(x)) + x
+        if np.random.rand()>0.1:
+            return 0.2 * self.T * np.random.randn(len(x)) + x
+        else:
+            return  0.2 * self.T * np.random.randn(len(x)) + self.best_x
 
     def cool_down(self):
         self.T *= self.q
 
-    def isclose(self, a, b, rel_tol=1e-09, abs_tol=1e-09):
+    def isclose(self, a, b, rel_tol=1e-09, abs_tol=1e-30):
         return abs(a - b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
 
     def run(self):
         x_current, y_current = self.best_x, self.best_y
-        max_stay_counter = 150
         stay_counter = 0
-        while self.T > self.T_min and stay_counter <= max_stay_counter:
+        while self.T > self.T_min and stay_counter <= self.max_stay_counter:
             for i in range(self.L):
                 # 随机扰动
                 x_new = self.get_new_x(x_current)
@@ -92,7 +94,6 @@ class SA(SkoBase):
                 stay_counter += 1
             else:
                 stay_counter = 0
-
         return self.best_x, self.best_y
 
     fit = run
