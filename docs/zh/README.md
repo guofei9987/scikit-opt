@@ -236,7 +236,7 @@ demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
 ```python
 from sko.SA import SA
 
-sa = SA(func=demo_func, x0=[1, 1, 1], T_max=1, T_min=1e-9, q=0.99, L=300, max_stay_counter=150)
+sa = SA(func=demo_func, x0=[1, 1, 1], T_max=1, T_min=1e-9, L=300, max_stay_counter=150)
 best_x, best_y = sa.run()
 print('best_x:', best_x, 'best_y', best_y)
 
@@ -251,7 +251,10 @@ import pandas as pd
 
 plt.plot(pd.DataFrame(sa.best_y_history).cummin(axis=0))
 plt.show()
+
 ```
+
+另外，scikit-opt 还提供了三种模拟退火流派: Fast, Boltzmann, Cauchy. 更多参见 [more sa](https://scikit-opt.github.io/scikit-opt/#/zh/more_sa)
 
 ### 3.2 模拟退火算法解决TSP问题（旅行商问题）  
 **第一步**，定义问题。（我猜你已经无聊了，所以不黏贴这一步了）  

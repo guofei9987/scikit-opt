@@ -31,7 +31,7 @@
 
 
 
-Heuristic Algorithms in Python  
+Swarm Intelligence in Python  
 (Genetic Algorithm, Particle Swarm Optimization, Simulated Annealing, Ant Colony Algorithm, Immune Algorithm,Artificial Fish Swarm Algorithm in Python)  
 
 
@@ -279,7 +279,7 @@ demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
 ```python
 from sko.SA import SA
 
-sa = SA(func=demo_func, x0=[1, 1, 1], T_max=1, T_min=1e-9, q=0.99, L=300, max_stay_counter=150)
+sa = SA(func=demo_func, x0=[1, 1, 1], T_max=1, T_min=1e-9, L=300, max_stay_counter=150)
 best_x, best_y = sa.run()
 print('best_x:', best_x, 'best_y', best_y)
 
@@ -293,9 +293,12 @@ import pandas as pd
 
 plt.plot(pd.DataFrame(sa.best_y_history).cummin(axis=0))
 plt.show()
+
 ```
 ![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa.png?raw=true)
 
+
+Moreover, scikit-opt provide 3 types of Simulated Annealing: Fast, Boltzmann, Cauchy. See [more sa](https://scikit-opt.github.io/scikit-opt/#/en/more_sa)
 ### 3.2 SA for TSP
 **Step1**: oh, yes, define your problems. To boring to copy this step.  
 
