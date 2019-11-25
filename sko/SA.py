@@ -71,7 +71,7 @@ class SA(SkoBase):
     def run(self):
         x_current, y_current = self.best_x, self.best_y
         stay_counter = 0
-        while self.T > self.T_min and stay_counter <= self.max_stay_counter:
+        while True:
             for i in range(self.L):
                 x_new = self.get_new_x(x_current)
                 y_new = self.func(x_new)
@@ -93,6 +93,14 @@ class SA(SkoBase):
                 stay_counter += 1
             else:
                 stay_counter = 0
+
+            if self.T < self.T_min:
+                stop_code = 'Cooled to final temperature'
+                break
+            if stay_counter > self.max_stay_counter:
+                stop_code = 'Stay unchanged in the last {stay_counter} iterations'.format(stay_counter=stay_counter)
+                break
+
         return self.best_x, self.best_y
 
     fit = run
@@ -122,17 +130,12 @@ class SA_TSP(SA):
             return x_new
 
         def transpose(x_new):
-            while True:
-                n1, n2, n3 = np.random.randint(0, len(x_new), 3)
-                if n1 != n2 != n3 != n1:
-                    break
-            # Let n1 < n2 < n3
-            n1, n2, n3 = sorted([n1, n2, n3])
-
-            # Insert data between [n1,n2) after n3
-            tmplist = x_new[n1:n2].copy()
-            x_new[n1: n1 + n3 - n2 + 1] = x_new[n2: n3 + 1].copy()
-            x_new[n3 - n2 + 1 + n1: n3 + 1] = tmplist.copy()
+            # randomly generate n1 < n2 < n3. Notice: not equal
+            n1, n2, n3 = sorted(np.random.randint(0, len(x_new) - 2, 3))
+            n2 += 1
+            n3 += 2
+            slice1, slice2, slice3, slice4 = x_new[0:n1], x_new[n1:n2], x_new[n2:n3 + 1], x_new[n3 + 1:]
+            x_new = np.concatenate([slice1, slice3, slice2, slice4])
             return x_new
 
         new_x_strategy = np.random.randint(3)
