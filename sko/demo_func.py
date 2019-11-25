@@ -87,6 +87,7 @@ def rosenbrock(p):
 
 
 if __name__ == '__main__':
+    print(sphere((0, 0)))
     print(schaffer((0, 0)))
     print(shubert((-7.08350643, -7.70831395)))
     print(griewank((0, 0, 0)))

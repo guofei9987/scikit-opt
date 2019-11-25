@@ -53,7 +53,10 @@ fig2, ax2 = plt.subplots(1, 1)
 ax2.set_title('title', loc='center')
 line = ax2.plot(points_coordinate[:, 0], points_coordinate[:, 1],
                 marker='o', markerfacecolor='b', color='c', linestyle='-')
-
+ax2.xaxis.set_major_formatter(FormatStrFormatter('%.3f'))
+ax2.yaxis.set_major_formatter(FormatStrFormatter('%.3f'))
+ax2.set_xlabel("Longitude")
+ax2.set_ylabel("Latitude")
 plt.ion()
 p = plt.show()
 
