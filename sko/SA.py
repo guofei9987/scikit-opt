@@ -73,7 +73,6 @@ class SA(SkoBase):
         stay_counter = 0
         while self.T > self.T_min and stay_counter <= self.max_stay_counter:
             for i in range(self.L):
-                # 随机扰动
                 x_new = self.get_new_x(x_current)
                 y_new = self.func(x_new)
 
@@ -89,7 +88,7 @@ class SA(SkoBase):
             self.best_y_history.append(self.best_y)
             self.best_x_history.append(self.best_x)
 
-            # 连续多少次没有变优，就停止迭代
+            # if best_y stay for max_stay_counter times, stop iteration
             if self.isclose(self.best_y_history[-1], self.best_y_history[-2]):
                 stay_counter += 1
             else:

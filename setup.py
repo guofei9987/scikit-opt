@@ -21,7 +21,7 @@ def read_requirements(filename):
 setup(name='scikit-opt',
       python_requires='>=3.4.0',
       version=sko.__version__,
-      description='Heuristic Algorithms in Python',
+      description='Swarm Intelligence in Python',
       long_description=read_file('docs/en/README.md'),
       long_description_content_type="text/markdown",
       url='https://github.com/guofei9987/scikit-opt',
