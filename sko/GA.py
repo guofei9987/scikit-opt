@@ -8,7 +8,6 @@ import numpy as np
 from .base import SkoBase
 from sko.tools import func_transformer
 from abc import ABCMeta, abstractmethod
-import types
 
 
 class GA_base(SkoBase, metaclass=ABCMeta):

@@ -106,6 +106,16 @@ class SimulatedAnnealingBase(SkoBase):
 
 
 class SAFast(SimulatedAnnealingBase):
+    '''
+    u ~ Uniform(0, 1, size = d)
+    y = sgn(u - 0.5) * T * ((1 + 1/T)**abs(2*u - 1) - 1.0)
+
+    xc = y * (upper - lower)
+    x_new = x_old + xc
+
+    c = n * exp(-n * quench)
+    T_new = T0 * exp(-c * k**quench)
+    '''
     def __init__(self, func, x0, T_max=100, T_min=1e-7, L=300, max_stay_counter=150, **kwargs):
         super().__init__(func, x0, T_max, T_min, L, max_stay_counter, **kwargs)
         self.m, self.n, self.quench = kwargs.get('m', 1), kwargs.get('n', 1), kwargs.get('quench', 1)
@@ -123,6 +133,13 @@ class SAFast(SimulatedAnnealingBase):
 
 
 class SABoltzmann(SimulatedAnnealingBase):
+    '''
+    std = minimum(sqrt(T) * ones(d), (upper - lower) / (3*learn_rate))
+    y ~ Normal(0, std, size = d)
+    x_new = x_old + learn_rate * y
+
+    T_new = T0 / log(1 + k)
+    '''
     def __init__(self, func, x0, T_max=100, T_min=1e-7, L=300, max_stay_counter=150, **kwargs):
         super().__init__(func, x0, T_max, T_min, L, max_stay_counter, **kwargs)
         self.upper = kwargs.get('m', 10)
@@ -140,6 +157,13 @@ class SABoltzmann(SimulatedAnnealingBase):
 
 
 class SACauchy(SimulatedAnnealingBase):
+    '''
+    u ~ Uniform(-pi/2, pi/2, size=d)
+    xc = learn_rate * T * tan(u)
+    x_new = x_old + xc
+
+    T_new = T0 / (1 + k)
+    '''
     def __init__(self, func, x0, T_max=100, T_min=1e-7, L=300, max_stay_counter=150, **kwargs):
         super().__init__(func, x0, T_max, T_min, L, max_stay_counter, **kwargs)
         self.learn_rate = kwargs.get('m', 0.5)

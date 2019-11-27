@@ -4,7 +4,6 @@
 # @Author  : github.com/guofei9987
 
 import numpy as np
-import matplotlib.pyplot as plt
 from sko.tools import func_transformer
 from .base import SkoBase
 
