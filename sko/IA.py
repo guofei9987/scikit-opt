@@ -18,6 +18,8 @@ def immune_ranking(self, T=0.7, alpha=0.95):
     :param alpha: float, 多样性评价指数，也就是抗体和抗原的重要性/抗体浓度重要性
     :return: numpy.array 期望繁殖概率
     '''
+    T, alpha = self.T, self.alpha
+
     # part1：抗体与抗原的亲和度
     A = 1 / self.Y
 
@@ -31,4 +33,8 @@ def immune_ranking(self, T=0.7, alpha=0.95):
 
 
 class IA_TSP(GA_TSP):
+    def __init__(self, func, n_dim, size_pop=50, max_iter=200, prob_mut=0.001, T=0.7, alpha=0.95):
+        super().__init__(func, n_dim, size_pop, max_iter, prob_mut)
+        self.T, self.alpha = T, alpha
+
     ranking = immune_ranking

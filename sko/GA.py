@@ -19,15 +19,20 @@ class GeneticAlgorithmBase(SkoBase, metaclass=ABCMeta):
         self.prob_mut = prob_mut  # probability of mutation
         self.n_dim = n_dim
 
+        # constraint:
+        self.has_constraint = constraint_eq is not None or constraint_ueq is not None
+        self.constraint_eq = constraint_eq  # a list of unequal constraint functions with c[i] <= 0
+        self.constraint_ueq = constraint_ueq  # a list of equal functions with ceq[i] = 0
+
         self.Chorm = None
         self.X = None  # shape = (size_pop, n_dim)
-        self.Y = None  # shape = (size_pop,)
+        self.Y_raw = None  # shape = (size_pop,) , f(x)
+        self.Y = None  # shape = (size_pop,) , f(x)+penalty
         self.FitV = None  # shape = (size_pop,)
 
         # self.FitV_history = []
         self.generation_best_X = []
         self.generation_best_Y = []
-        self.generation_best_FitV = []
 
         self.all_history_Y = []
         self.all_history_FitV = []
@@ -37,7 +42,13 @@ class GeneticAlgorithmBase(SkoBase, metaclass=ABCMeta):
         pass
 
     def x2y(self):
-        self.Y = np.array([self.func(x) for x in self.X])
+        self.Y_raw = np.array([self.func(x) for x in self.X])
+        if not self.has_constraint:
+            self.Y = self.Y_raw
+        else:
+            penalty_eq = np.array([np.sum(np.abs([c_i(x) for c_i in self.constraint_eq])) for x in self.X])
+            penalty_ueq = np.array([np.sum(np.abs([max(0, c_i(x)) for c_i in self.constraint_ueq])) for x in self.X])
+            self.Y = self.Y_raw + 1e5 * penalty_eq + 1e5 * penalty_ueq
         return self.Y
 
     @abstractmethod
@@ -56,7 +67,8 @@ class GeneticAlgorithmBase(SkoBase, metaclass=ABCMeta):
     def mutation(self):
         pass
 
-    def run(self):
+    def run(self, max_iter=None):
+        self.max_iter = max_iter or self.max_iter
         for i in range(self.max_iter):
             self.X = self.chrom2x()
             self.x2y()
@@ -69,13 +81,12 @@ class GeneticAlgorithmBase(SkoBase, metaclass=ABCMeta):
             generation_best_index = self.FitV.argmax()
             self.generation_best_X.append(self.X[generation_best_index, :])
             self.generation_best_Y.append(self.Y[generation_best_index])
-            self.generation_best_FitV.append(self.FitV[generation_best_index])
             self.all_history_Y.append(self.Y)
             self.all_history_FitV.append(self.FitV)
 
-        global_best_index = np.array(self.generation_best_FitV).argmax()
-        global_best_X, global_best_Y = \
-            self.generation_best_X[global_best_index], self.generation_best_Y[global_best_index]
+        global_best_index = np.array(self.generation_best_Y).argmin()
+        global_best_X = self.generation_best_X[global_best_index]
+        global_best_Y = self.func(global_best_X)
         return global_best_X, global_best_Y
 
 
@@ -121,7 +132,7 @@ class GA(GeneticAlgorithmBase):
                  lb=-1, ub=1,
                  constraint_eq=None, constraint_ueq=None,
                  precision=1e-7):
-        super().__init__(func, n_dim, size_pop=size_pop, max_iter=max_iter, prob_mut=prob_mut)
+        super().__init__(func, n_dim, size_pop, max_iter, prob_mut, constraint_eq, constraint_ueq)
 
         self.lb, self.ub = np.array(lb) * np.ones(self.n_dim), np.array(ub) * np.ones(self.n_dim)
         self.precision = np.array(precision) * np.ones(self.n_dim)
@@ -130,10 +141,6 @@ class GA(GeneticAlgorithmBase):
         Lind = np.ceil(np.log2((self.ub - self.lb) / self.precision)) + 1
         self.Lind = Lind.astype(int)
         self.len_chrom = sum(self.Lind)
-
-        self.has_constraint = constraint_eq is not None or constraint_ueq is not None
-        self.constraint_eq = constraint_eq  # a list of unequal constraint functions with c[i] <= 0
-        self.constraint_ueq = constraint_ueq  # a list of equal functions with ceq[i] = 0
 
         self.crtbp()
 
@@ -214,7 +221,7 @@ class GA_TSP(GeneticAlgorithmBase):
 
     def __init__(self, func, n_dim, size_pop=50, max_iter=200, prob_mut=0.001):
         super().__init__(func, n_dim, size_pop=size_pop, max_iter=max_iter, prob_mut=prob_mut)
-        self.has_constraint=False
+        self.has_constraint = False
         self.len_chrom = self.n_dim
         self.crtbp()
 
