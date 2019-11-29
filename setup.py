@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 from os import path as os_path
 import sko
 
@@ -28,6 +28,7 @@ setup(name='scikit-opt',
       author='Guo Fei',
       author_email='guofei9987@foxmail.com',
       license='MIT',
-      packages=['sko'],
+      packages=find_packages(),
+      platforms=['linux', 'windows', 'macos'],
       install_requires=['numpy', 'scipy', 'matplotlib', 'pandas'],
       zip_safe=False)
