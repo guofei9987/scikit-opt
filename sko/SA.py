@@ -4,7 +4,6 @@
 # @Author  : github.com/guofei9987
 
 import numpy as np
-import types
 from .base import SkoBase
 
 
@@ -26,8 +25,6 @@ class SimulatedAnnealingBase(SkoBase):
         end temperature
     L : int
         num of iteration under every temperature（Long of Chain）
-    q : float
-        cool down speed
 
     Attributes
     ----------------------

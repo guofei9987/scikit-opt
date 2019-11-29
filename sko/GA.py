@@ -8,6 +8,7 @@ import numpy as np
 from .base import SkoBase
 from sko.tools import func_transformer
 from abc import ABCMeta, abstractmethod
+from .operators import crossover, mutation, ranking, selection
 
 
 class GA_base(SkoBase, metaclass=ABCMeta):
@@ -28,208 +29,6 @@ class GA_base(SkoBase, metaclass=ABCMeta):
         pass
 
 
-# %% operators:
-
-def ranking_raw(self):
-    # GA select the biggest one, but we want to minimize func, so we put a negative here
-    self.FitV = -self.Y
-    return self.FitV
-
-
-def ranking_linear(self):
-    '''
-    For more details see [Baker1985]_.
-
-    :param self:
-    :return:
-
-    .. [Baker1985] Baker J E, "Adaptive selection methods for genetic
-    algorithms, 1985.
-    '''
-    self.FitV = np.argsort(np.argsort(-self.Y))
-    return self.FitV
-
-
-def selection_tournament(self, tourn_size=3):
-    '''
-    Select the best individual among *tournsize* randomly chosen
-    individuals,
-    :param self:
-    :param tourn_size:
-    :return:
-    '''
-    FitV = self.FitV
-    sel_index = []
-    for i in range(self.size_pop):
-        # aspirants_index = np.random.choice(range(self.size_pop), size=tourn_size)
-        aspirants_index = np.random.randint(self.size_pop, size=tourn_size)
-        sel_index.append(max(aspirants_index, key=lambda i: FitV[i]))
-    self.Chrom = self.Chrom[sel_index, :]  # next generation
-    return self.Chrom
-
-
-def selection_tournament_faster(self, tourn_size=3):
-    '''
-    Select the best individual among *tournsize* randomly chosen
-    Same with `selection_tournament` but much faster using numpy
-    individuals,
-    :param self:
-    :param tourn_size:
-    :return:
-    '''
-    aspirants_idx = np.random.randint(self.size_pop, size=(self.size_pop, tourn_size))
-    aspirants_values = self.FitV[aspirants_idx]
-    winner = aspirants_values.argmax(axis=1)  # winner index in every team
-    sel_index = [aspirants_idx[i, j] for i, j in enumerate(winner)]
-    self.Chrom = self.Chrom[sel_index, :]
-    return self.Chrom
-
-
-def selection_roulette_1(self):
-    '''
-    Select the next generation using roulette
-    :param self:
-    :return:
-    '''
-    FitV = self.FitV
-    FitV = FitV - FitV.min() + 1e-10
-    # the worst one should still has a chance to be selected
-    sel_prob = FitV / FitV.sum()
-    sel_index = np.random.choice(range(self.size_pop), size=self.size_pop, p=sel_prob)
-    self.Chrom = self.Chrom[sel_index, :]
-    return self.Chrom
-
-
-def selection_roulette_2(self):
-    '''
-    Select the next generation using roulette
-    :param self:
-    :return:
-    '''
-    FitV = self.FitV
-    FitV = (FitV - FitV.min()) / (FitV.max() - FitV.min() + 1e-10) + 0.2
-    # the worst one should still has a chance to be selected
-    sel_prob = FitV / FitV.sum()
-    sel_index = np.random.choice(range(self.size_pop), size=self.size_pop, p=sel_prob)
-    self.Chrom = self.Chrom[sel_index, :]
-    return self.Chrom
-
-
-def crossover_1point(self):
-    Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
-    for i in range(0, size_pop, 2):
-        n = np.random.randint(0, self.len_chrom, 1)
-        # crossover at the point n
-        seg1, seg2 = self.Chrom[i, n:].copy(), self.Chrom[i + 1, n:].copy()
-        self.Chrom[i, n:], self.Chrom[i + 1, n:] = seg2, seg1
-    return self.Chrom
-
-
-def crossover_2point(self):
-    Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
-    for i in range(0, size_pop, 2):
-        n1, n2 = np.random.randint(0, self.len_chrom, 2)
-        if n1 > n2:
-            n1, n2 = n2, n1
-        # crossover at the points n1 to n2
-        seg1, seg2 = self.Chrom[i, n1:n2].copy(), self.Chrom[i + 1, n1:n2].copy()
-        self.Chrom[i, n1:n2], self.Chrom[i + 1, n1:n2] = seg2, seg1
-    return self.Chrom
-
-
-def crossover_2point_bit(self):
-    '''
-    3 times faster than `crossover_2point`, but only use for 0/1 type of Chrom
-    :param self:
-    :return:
-    '''
-    Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
-    half_size_pop = int(size_pop / 2)
-    Chrom1, Chrom2 = Chrom[:half_size_pop], Chrom[half_size_pop:]
-    mask = np.zeros(shape=(half_size_pop, len_chrom), dtype=int)
-    for i in range(half_size_pop):
-        n1, n2 = np.random.randint(0, self.len_chrom, 2)
-        if n1 > n2:
-            n1, n2 = n2, n1
-        mask[i, n1:n2] = 1
-    mask2 = (Chrom1 ^ Chrom2) & mask
-    Chrom1 ^= mask2
-    Chrom2 ^= mask2
-    return self.Chrom
-
-
-# def crossover_rv_3(self):
-#     Chrom, size_pop = self.Chrom, self.size_pop
-#     i = np.random.randint(1, self.len_chrom)  # crossover at the point i
-#     Chrom1 = np.concatenate([Chrom[::2, :i], Chrom[1::2, i:]], axis=1)
-#     Chrom2 = np.concatenate([Chrom[1::2, :i], Chrom[0::2, i:]], axis=1)
-#     self.Chrom = np.concatenate([Chrom1, Chrom2], axis=0)
-#     return self.Chrom
-
-
-def mutation(self):
-    '''
-    mutation of 0/1 type chromosome
-    faster than `self.Chrom = (mask + self.Chrom) % 2`
-    :param self:
-    :return:
-    '''
-    #
-    mask = (np.random.rand(self.size_pop, self.len_chrom) < self.prob_mut)
-    self.Chrom ^= mask
-    return self.Chrom
-
-
-def crossover_pmx(self):
-    '''
-    Executes a partially matched crossover (PMX) on Chrom.
-    For more details see [Goldberg1985]_.
-
-    :param self:
-    :return:
-
-    .. [Goldberg1985] Goldberg and Lingel, "Alleles, loci, and the traveling
-   salesman problem", 1985.
-    '''
-    Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
-    for i in range(0, size_pop, 2):
-        Chrom1, Chrom2 = self.Chrom[i], self.Chrom[i + 1]
-        cxpoint1, cxpoint2 = np.random.randint(0, self.len_chrom - 1, 2)
-        if cxpoint1 >= cxpoint2:
-            cxpoint1, cxpoint2 = cxpoint2, cxpoint1 + 1
-        # crossover at the point cxpoint1 to cxpoint2
-        pos1_recorder = {value: idx for idx, value in enumerate(Chrom1)}
-        pos2_recorder = {value: idx for idx, value in enumerate(Chrom2)}
-        for j in range(cxpoint1, cxpoint2):
-            value1, value2 = Chrom1[j], Chrom2[j]
-            pos1, pos2 = pos1_recorder[value1], pos2_recorder[value2]
-            Chrom1[j], Chrom1[pos1] = Chrom1[pos1], Chrom1[j]
-            Chrom2[j], Chrom2[pos2] = Chrom2[pos2], Chrom2[j]
-            pos1_recorder[value1], pos1_recorder[value2] = pos1, j
-            pos2_recorder[value1], pos2_recorder[value2] = j, pos2
-
-        self.Chrom[i], self.Chrom[i + 1] = Chrom1, Chrom2
-    return self.Chrom
-
-
-def mutation_TSP_1(self):
-    for i in range(self.size_pop):
-        for j in range(self.n_dim):
-            if np.random.rand() < self.prob_mut:
-                n = np.random.randint(0, self.len_chrom, 1)
-                self.Chrom[i, j], self.Chrom[i, n] = self.Chrom[i, n], self.Chrom[i, j]
-    return self.Chrom
-
-
-def mutation_TSP_3(self):
-    for i in range(self.size_pop):
-        if np.random.rand() < self.prob_mut:
-            n1, n2 = np.random.randint(0, self.len_chrom, 2)
-            self.Chrom[i, n1], self.Chrom[i, n2] = self.Chrom[i, n2], self.Chrom[i, n1]
-    return self.Chrom
-
-
-# %%
 
 class GA(GA_base):
     """genetic algorithm
@@ -269,12 +68,18 @@ class GA(GA_base):
 
     def __init__(self, func, n_dim,
                  size_pop=50, max_iter=200,
-                 prob_mut=0.001, **kwargs):
+                 prob_mut=0.001,
+                 constraint_eq=None, constraint_ueq=None,
+                 **kwargs):
         self.func = func_transformer(func)
         self.size_pop = size_pop  # size of population
         self.max_iter = max_iter
         self.prob_mut = prob_mut  # probability of mutation
         self.n_dim = n_dim
+
+        self.has_constraint = constraint_eq is not None or constraint_ueq is not None
+        self.constraint_eq = constraint_eq  # a list of unequal constraint functions with c[i] <= 0
+        self.constraint_ueq = constraint_ueq  # a list of equal functions with ceq[i] = 0
 
         self.define_chrom(kwargs)
         self.crtbp(self.size_pop, self.len_chrom)
@@ -286,8 +91,10 @@ class GA(GA_base):
         # self.FitV_history = []
         self.generation_best_X = []
         self.generation_best_Y = []
+        self.generation_best_FitV = []
+
         self.all_history_Y = []
-        # self.generation_best_ranking = []
+        self.all_history_FitV = []
 
     def define_chrom(self, kwargs):
         # define the types of Chrom
@@ -342,10 +149,10 @@ class GA(GA_base):
         self.Y = np.array([self.func(x) for x in self.X])
         return self.Y
 
-    ranking = ranking_raw
-    selection = selection_tournament_faster
-    crossover = crossover_2point_bit
-    mutation = mutation
+    ranking = ranking.ranking
+    selection = selection.selection_tournament_faster
+    crossover = crossover.crossover_2point_bit
+    mutation = mutation.mutation
 
     def run(self):
         for i in range(self.max_iter):
@@ -357,15 +164,17 @@ class GA(GA_base):
             self.mutation()
 
             # record the best ones
-            generation_best_index = self.Y.argmin()
+            generation_best_index = self.FitV.argmax()
             self.generation_best_X.append(self.X[generation_best_index, :])
             self.generation_best_Y.append(self.Y[generation_best_index])
+            self.generation_best_FitV.append(self.FitV[generation_best_index])
             self.all_history_Y.append(self.Y)
+            self.all_history_FitV.append(self.FitV)
 
-        general_best_index = (np.array(self.generation_best_Y)).argmin()
-        general_best_X, general_best_Y = \
-            self.generation_best_X[general_best_index], self.generation_best_Y[general_best_index]
-        return general_best_X, general_best_Y
+        global_best_index = np.array(self.generation_best_FitV).argmax()
+        global_best_X, global_best_Y = \
+            self.generation_best_X[global_best_index], self.generation_best_Y[global_best_index]
+        return global_best_X, global_best_Y
 
     fit = run
 
@@ -425,5 +234,5 @@ class GA_TSP(GA):
         self.Chrom = tmp.argsort(axis=1)
         return self.Chrom
 
-    crossover = crossover_pmx
-    mutation = mutation_TSP_1
+    crossover = crossover.crossover_pmx
+    mutation = mutation.mutation_TSP_1

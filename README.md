@@ -21,7 +21,7 @@
 # [scikit-opt](https://github.com/guofei9987/scikit-opt)
 
 [![PyPI](https://img.shields.io/pypi/v/scikit-opt)](https://pypi.org/project/scikit-opt/)
-[![release](https://img.shields.io/github/v/release/guofei9987/scikit-opt)](https://github.com/guofei9987/scikit-opt)
+[![release](https://img.shields.io/github/v/release/guofei9987/scikit-opt)](https://github.com/guofei9987/scikit-opt/releases/)
 [![Build Status](https://travis-ci.com/guofei9987/scikit-opt.svg?branch=master)](https://travis-ci.com/guofei9987/scikit-opt)
 [![codecov](https://codecov.io/gh/guofei9987/scikit-opt/branch/master/graph/badge.svg)](https://codecov.io/gh/guofei9987/scikit-opt)
 [![PyPI_downloads](https://img.shields.io/pypi/dm/scikit-opt)](https://pypi.org/project/scikit-opt/)
@@ -58,7 +58,7 @@ DE(Differential Evolution Algorithm) will be complete on version 0.5
 Have fun!
 
 
-## feature: UDF
+### feature1: UDF
 
 **UDF** (user defined function) is available now!
 

@@ -19,11 +19,11 @@ ga = GA(func=demo_func, n_dim=3, size_pop=100, max_iter=500, lb=[-1, -10, -5], u
 # %% step3: register your own operator
 ga.register(operator_name='selection', operator=selection_tournament, tourn_size=3)
 # %% Or import the operators scikit-opt already defined.
-from sko.GA import ranking_linear, ranking_raw, crossover_2point, selection_roulette_2, mutation
+from sko.operators import ranking, selection, crossover, mutation
 
-ga.register(operator_name='ranking', operator=ranking_linear). \
-    register(operator_name='crossover', operator=crossover_2point). \
-    register(operator_name='mutation', operator=mutation)
+ga.register(operator_name='ranking', operator=ranking.ranking). \
+    register(operator_name='crossover', operator=crossover.crossover_2point). \
+    register(operator_name='mutation', operator=mutation.mutation)
 
 # %% Run ga
 best_x, best_y = ga.run()

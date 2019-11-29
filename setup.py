@@ -19,7 +19,7 @@ def read_requirements(filename):
 
 
 setup(name='scikit-opt',
-      python_requires='>=3.4.0',
+      python_requires='>=3.5',
       version=sko.__version__,
       description='Swarm Intelligence in Python',
       long_description=read_file('docs/en/README.md'),
