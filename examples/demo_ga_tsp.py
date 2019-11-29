@@ -2,7 +2,7 @@ import numpy as np
 from scipy import spatial
 import matplotlib.pyplot as plt
 
-num_points = 8
+num_points = 10
 
 points_coordinate = np.random.rand(num_points, 2)  # generate coordinate of points
 distance_matrix = spatial.distance.cdist(points_coordinate, points_coordinate, metric='euclidean')
@@ -20,7 +20,7 @@ def cal_total_distance(routine):
 
 from sko.GA import GA_TSP
 
-ga_tsp = GA_TSP(func=cal_total_distance, n_dim=num_points, size_pop=300, max_iter=800, Pm=0.3)
+ga_tsp = GA_TSP(func=cal_total_distance, n_dim=num_points, size_pop=300, max_iter=800, prob_mut=0.05)
 best_points, best_distance = ga_tsp.run()
 
 # %% plot

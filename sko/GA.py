@@ -11,7 +11,35 @@ from abc import ABCMeta, abstractmethod
 from .operators import crossover, mutation, ranking, selection
 
 
-class GA_base(SkoBase, metaclass=ABCMeta):
+class GeneticAlgorithmBase(SkoBase, metaclass=ABCMeta):
+    def __init__(self, func, n_dim, size_pop=50, max_iter=200, prob_mut=0.001, **kwargs):
+        self.func = func_transformer(func)
+        self.size_pop = size_pop  # size of population
+        self.max_iter = max_iter
+        self.prob_mut = prob_mut  # probability of mutation
+        self.n_dim = n_dim
+
+        self.Chorm = None
+        self.X = None  # shape = (size_pop, n_dim)
+        self.Y = None  # shape = (size_pop,)
+        self.FitV = None  # shape = (size_pop,)
+
+        # self.FitV_history = []
+        self.generation_best_X = []
+        self.generation_best_Y = []
+        self.generation_best_FitV = []
+
+        self.all_history_Y = []
+        self.all_history_FitV = []
+
+    @abstractmethod
+    def chrom2x(self):
+        pass
+
+    def x2y(self):
+        self.Y = np.array([self.func(x) for x in self.X])
+        return self.Y
+
     @abstractmethod
     def ranking(self):
         pass
@@ -28,9 +56,30 @@ class GA_base(SkoBase, metaclass=ABCMeta):
     def mutation(self):
         pass
 
+    def run(self):
+        for i in range(self.max_iter):
+            self.X = self.chrom2x()
+            self.x2y()
+            self.ranking()
+            self.selection()
+            self.crossover()
+            self.mutation()
+
+            # record the best ones
+            generation_best_index = self.FitV.argmax()
+            self.generation_best_X.append(self.X[generation_best_index, :])
+            self.generation_best_Y.append(self.Y[generation_best_index])
+            self.generation_best_FitV.append(self.FitV[generation_best_index])
+            self.all_history_Y.append(self.Y)
+            self.all_history_FitV.append(self.FitV)
+
+        global_best_index = np.array(self.generation_best_FitV).argmax()
+        global_best_X, global_best_Y = \
+            self.generation_best_X[global_best_index], self.generation_best_Y[global_best_index]
+        return global_best_X, global_best_Y
 
 
-class GA(GA_base):
+class GA(GeneticAlgorithmBase):
     """genetic algorithm
 
     Parameters
@@ -69,117 +118,59 @@ class GA(GA_base):
     def __init__(self, func, n_dim,
                  size_pop=50, max_iter=200,
                  prob_mut=0.001,
+                 lb=-1, ub=1,
                  constraint_eq=None, constraint_ueq=None,
-                 **kwargs):
-        self.func = func_transformer(func)
-        self.size_pop = size_pop  # size of population
-        self.max_iter = max_iter
-        self.prob_mut = prob_mut  # probability of mutation
-        self.n_dim = n_dim
+                 precision=1e-7):
+        super().__init__(func, n_dim, size_pop=size_pop, max_iter=max_iter, prob_mut=prob_mut)
+
+        self.lb, self.ub = np.array(lb) * np.ones(self.n_dim), np.array(ub) * np.ones(self.n_dim)
+        self.precision = np.array(precision) * np.ones(self.n_dim)
+
+        # Lind is the num of genes of every variable of func（segments）
+        Lind = np.ceil(np.log2((self.ub - self.lb) / self.precision)) + 1
+        self.Lind = Lind.astype(int)
+        self.len_chrom = sum(self.Lind)
 
         self.has_constraint = constraint_eq is not None or constraint_ueq is not None
         self.constraint_eq = constraint_eq  # a list of unequal constraint functions with c[i] <= 0
         self.constraint_ueq = constraint_ueq  # a list of equal functions with ceq[i] = 0
 
-        self.define_chrom(kwargs)
-        self.crtbp(self.size_pop, self.len_chrom)
+        self.crtbp()
 
-        self.X = None  # shape is size_pop, n_dim (it is all x of func)
-        self.Y = None  # shape is size_pop,
-        self.FitV = None
-
-        # self.FitV_history = []
-        self.generation_best_X = []
-        self.generation_best_Y = []
-        self.generation_best_FitV = []
-
-        self.all_history_Y = []
-        self.all_history_FitV = []
-
-    def define_chrom(self, kwargs):
-        # define the types of Chrom
-        self.lb = kwargs.get('lb', [-1] * self.n_dim)
-        self.ub = kwargs.get('ub', [1] * self.n_dim)
-        self.precision = kwargs.get('precision', 1e-7)
-        self.precision = self.precision if isinstance(self.precision, list) else [self.precision] * self.n_dim
-
-        # Lind is the num of genes of every variable of func（segments）
-        Lind = np.ceil(np.log2((np.array(self.ub) - np.array(self.lb)) / np.array(self.precision))) + 1
-        self.Lind = np.array([int(i) for i in Lind])
-        self.len_chrom = int(sum(self.Lind))
-
-    def crtbp(self, size_pop=10, len_chrom=30):
+    def crtbp(self):
         # create the population
-        self.Chrom = np.random.randint(low=0, high=2, size=(size_pop, len_chrom))
+        self.Chrom = np.random.randint(low=0, high=2, size=(self.size_pop, self.len_chrom))
         return self.Chrom
 
     def gray2rv(self, gray_code):
         # Gray Code to real value: one piece of a whole chromosome
         # input is a 2-dimensional numpy array of 0 and 1.
         # output is a 1-dimensional numpy array which convert every row of input into a real number.
-        # gray_code = crtbp(4, 2),gray2rv(gray_code)
         _, len_gray_code = gray_code.shape
         b = gray_code.cumsum(axis=1) % 2
         mask = np.logspace(start=1, stop=len_gray_code, base=0.5, num=len_gray_code)
         return (b * mask).sum(axis=1) / mask.sum()
 
     def chrom2x(self):
-        # Chrom to the variables of func
         Chrom = self.Chrom
-        Lind = self.Lind
-        lb = self.lb
-        ub = self.ub
-        cumsum_len_segment = Lind.cumsum()
-        X = np.zeros(shape=(Chrom.shape[0], len(Lind)))
+        cumsum_len_segment = self.Lind.cumsum()
+        X = np.zeros(shape=(self.size_pop, self.n_dim))
         for i, j in enumerate(cumsum_len_segment):
             if i == 0:
                 Chrom_temp = Chrom[:, :cumsum_len_segment[0]]
             else:
                 Chrom_temp = Chrom[:, cumsum_len_segment[i - 1]:cumsum_len_segment[i]]
-            temp1 = self.gray2rv(Chrom_temp)
-            X[:, i] = lb[i] + (ub[i] - lb[i]) * temp1
-        self.X = X
+            X[:, i] = self.gray2rv(Chrom_temp)
+        self.X = self.lb + (self.ub - self.lb) * X
         return self.X
-
-    def x2y(self):
-        '''
-        calculate Y for every X
-        :return:
-        '''
-        self.Y = np.array([self.func(x) for x in self.X])
-        return self.Y
 
     ranking = ranking.ranking
     selection = selection.selection_tournament_faster
     crossover = crossover.crossover_2point_bit
     mutation = mutation.mutation
 
-    def run(self):
-        for i in range(self.max_iter):
-            self.X = self.chrom2x()
-            self.x2y()
-            self.ranking()
-            self.selection()
-            self.crossover()
-            self.mutation()
 
-            # record the best ones
-            generation_best_index = self.FitV.argmax()
-            self.generation_best_X.append(self.X[generation_best_index, :])
-            self.generation_best_Y.append(self.Y[generation_best_index])
-            self.generation_best_FitV.append(self.FitV[generation_best_index])
-            self.all_history_Y.append(self.Y)
-            self.all_history_FitV.append(self.FitV)
-
-        global_best_index = np.array(self.generation_best_FitV).argmax()
-        global_best_X, global_best_Y = \
-            self.generation_best_X[global_best_index], self.generation_best_Y[global_best_index]
-        return global_best_X, global_best_Y
-
-    fit = run
-
-
-class GA_TSP(GA):
+class GA_TSP(GeneticAlgorithmBase):
     """
     Do genetic algorithm to solve the TSP (Travelling Salesman Problem)
     Parameters
@@ -221,18 +212,23 @@ class GA_TSP(GA):
     ```
     """
 
-    def define_chrom(self, kwargs):
+    def __init__(self, func, n_dim, size_pop=50, max_iter=200, prob_mut=0.001):
+        super().__init__(func, n_dim, size_pop=size_pop, max_iter=max_iter, prob_mut=prob_mut)
+        self.has_constraint=False
         self.len_chrom = self.n_dim
+        self.crtbp()
+
+    def crtbp(self):
+        # create the population
+        tmp = np.random.rand(self.size_pop, self.len_chrom)
+        self.Chrom = tmp.argsort(axis=1)
+        return self.Chrom
 
     def chrom2x(self):
         self.X = self.Chrom
         return self.X
 
-    def crtbp(self, size_pop=10, len_chrom=30):
-        # create the population
-        tmp = np.random.rand(size_pop, len_chrom)
-        self.Chrom = tmp.argsort(axis=1)
-        return self.Chrom
-
+    ranking = ranking.ranking
+    selection = selection.selection_tournament_faster
     crossover = crossover.crossover_pmx
     mutation = mutation.mutation_TSP_1

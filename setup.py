@@ -30,5 +30,5 @@ setup(name='scikit-opt',
       license='MIT',
       packages=find_packages(),
       platforms=['linux', 'windows', 'macos'],
-      install_requires=['numpy', 'scipy', 'matplotlib', 'pandas'],
+      install_requires=['numpy', 'scipy'],
       zip_safe=False)

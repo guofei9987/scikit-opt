@@ -9,11 +9,11 @@ num_points, points_coordinate, distance_matrix, cal_total_distance = function_fo
 from sko.GA import GA_TSP
 from sko.operators import ranking, selection, crossover, mutation
 
-ga_tsp = GA_TSP(func=cal_total_distance, n_dim=num_points, size_pop=500, max_iter=800, Pm=0.2)
+ga_tsp = GA_TSP(func=cal_total_distance, n_dim=num_points, size_pop=500, max_iter=800, prob_mut=0.05)
 ga_tsp.register('selection', selection.selection_tournament, tourn_size=3). \
     register('mutation', mutation.mutation_TSP_1)
 
-best_points, best_distance = ga_tsp.fit()
+best_points, best_distance = ga_tsp.run()
 print('best routine:', best_points, 'best_distance:', best_distance)
 # %%
 # step3: plot
