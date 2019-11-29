@@ -70,7 +70,7 @@ class PSO(SkoBase):
     -----------------------------
     >>> demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
     >>> pso = PSO(func=demo_func, dim=3)
-    >>> gbest_x, gbest_y = pso.fit()
+    >>> gbest_x, gbest_y = pso.run()
     >>> print('best_x is ', pso.gbest_x, 'best_y is ', pso.gbest_y)
     >>> pso.plot_history()
     """

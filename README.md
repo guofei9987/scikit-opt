@@ -98,11 +98,11 @@ ga.register(operator_name='selection', operator=selection_tournament, tourn_size
 scikit-opt also provide some operators  
 -> Demo code: [examples/demo_ga_udf.py#s4](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L21)
 ```python
-from sko.GA import ranking_linear, ranking_raw, crossover_2point, selection_roulette_2, mutation
+from sko.operators import ranking, selection, crossover, mutation
 
-ga.register(operator_name='ranking', operator=ranking_linear). \
-    register(operator_name='crossover', operator=crossover_2point). \
-    register(operator_name='mutation', operator=mutation)
+ga.register(operator_name='ranking', operator=ranking.ranking). \
+    register(operator_name='crossover', operator=crossover.crossover_2point). \
+    register(operator_name='mutation', operator=mutation.mutation)
 
 ```
 Now do GA as usual  
@@ -117,7 +117,17 @@ print('best_x:', best_x, '\n', 'best_y:', best_y)
 
 > scikit-opt provide a dozen of operators, see [here](https://github.com/guofei9987/scikit-opt/blob/master/sko/GA.py)
 
+###  feature2: continue to run
+(New in version 0.3.6)  
+Run an algorithm for 10 iterations, and then run another 20 iterations base on the 10 iterations before:
+```python
+from sko.GA import GA
 
+func = lambda x: x[0] ** 2
+ga = GA(func=func, n_dim=1)
+ga.run(10)
+ga.run(20)
+```
 
 # Quick start
 ## 1. Genetic Algorithm
@@ -177,7 +187,7 @@ import numpy as np
 from scipy import spatial
 import matplotlib.pyplot as plt
 
-num_points = 8
+num_points = 10
 
 points_coordinate = np.random.rand(num_points, 2)  # generate coordinate of points
 distance_matrix = spatial.distance.cdist(points_coordinate, points_coordinate, metric='euclidean')
@@ -199,7 +209,7 @@ def cal_total_distance(routine):
 
 from sko.GA import GA_TSP
 
-ga_tsp = GA_TSP(func=cal_total_distance, n_dim=num_points, size_pop=300, max_iter=800, Pm=0.3)
+ga_tsp = GA_TSP(func=cal_total_distance, n_dim=num_points, size_pop=300, max_iter=800, prob_mut=0.05)
 best_points, best_distance = ga_tsp.run()
 
 ```
@@ -367,7 +377,7 @@ best_x, best_y = aca.run()
 
 from sko.IA import IA_TSP
 
-ia_tsp = IA_TSP(func=cal_total_distance, n_dim=num_points, pop=500, max_iter=2000, Pm=0.2,
+ia_tsp = IA_TSP(func=cal_total_distance, n_dim=num_points, size_pop=500, max_iter=2000, prob_mut=0.2,
                 T=0.7, alpha=0.95)
 best_points, best_distance = ia_tsp.run()
 print('best routine:', best_points, 'best_distance:', best_distance)
@@ -389,6 +399,6 @@ from sko.ASFA import ASFA
 asfa = ASFA(func, n_dim=2, size_pop=50, max_iter=300,
             max_try_num=100, step=0.5, visual=0.3,
             q=0.98, delta=0.5)
-best_x, best_y = asfa.fit()
+best_x, best_y = asfa.run()
 print(best_x, best_y)
 ```

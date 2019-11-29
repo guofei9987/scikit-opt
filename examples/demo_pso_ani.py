@@ -44,6 +44,6 @@ def update_scatter(frame):
 
 
 ani = FuncAnimation(fig, update_scatter, blit=True, interval=25, frames=300)
-# plt.show()
+plt.show()
 
-ani.save('pso.gif', writer='pillow')
+# ani.save('pso.gif', writer='pillow')

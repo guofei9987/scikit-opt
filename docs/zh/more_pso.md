@@ -54,9 +54,9 @@ def update_scatter(frame):
 
 
 ani = FuncAnimation(fig, update_scatter, blit=True, interval=25, frames=300)
-# plt.show()
+plt.show()
 
-ani.save('pso.gif', writer='pillow')
+# ani.save('pso.gif', writer='pillow')
 ```
 
 ![pso_ani](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/pso.gif?raw=true)  

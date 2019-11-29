@@ -73,4 +73,4 @@ def update_scatter(frame):
 ani = FuncAnimation(fig2, update_scatter, blit=True, interval=25, frames=len(best_x_history))
 plt.show()
 
-ani.save('sa_tsp.gif', writer='pillow')
+# ani.save('sa_tsp.gif', writer='pillow')

@@ -91,6 +91,8 @@ class GeneticAlgorithmBase(SkoBase, metaclass=ABCMeta):
         global_best_Y = self.func(global_best_X)
         return global_best_X, global_best_Y
 
+    fit = run
+
 
 class GA(GeneticAlgorithmBase):
     """genetic algorithm
@@ -217,7 +219,7 @@ class GA_TSP(GeneticAlgorithmBase):
     ```py
     from sko.GA import GA_TSP
     ga_tsp = GA_TSP(func=cal_total_distance, n_dim=8, pop=50, max_iter=200, Pm=0.001)
-    best_points, best_distance = ga_tsp.fit()
+    best_points, best_distance = ga_tsp.run()
     ```
     """
 
