@@ -146,7 +146,8 @@ class PSO(SkoBase):
         self.record_value['V'].append(self.V)
         self.record_value['Y'].append(self.Y)
 
-    def run(self):
+    def run(self, max_iter=None):
+        self.max_iter = max_iter or self.max_iter
         for iter_num in range(self.max_iter):
             self.update_V()
             self.recorder()

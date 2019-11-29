@@ -12,7 +12,9 @@ from .operators import crossover, mutation, ranking, selection
 
 
 class GeneticAlgorithmBase(SkoBase, metaclass=ABCMeta):
-    def __init__(self, func, n_dim, size_pop=50, max_iter=200, prob_mut=0.001, **kwargs):
+    def __init__(self, func, n_dim,
+                 size_pop=50, max_iter=200, prob_mut=0.001,
+                 constraint_eq=None, constraint_ueq=None):
         self.func = func_transformer(func)
         self.size_pop = size_pop  # size of population
         self.max_iter = max_iter

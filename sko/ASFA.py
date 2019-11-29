@@ -197,7 +197,8 @@ class ASFA:
                 return None
         self.prey(idx_individual)
 
-    def fit(self):
+    def run(self, max_iter=None):
+        self.max_iter = max_iter or self.max_iter
         for epoch in range(self.max_iter):
             for idx_individual in range(self.size_pop):
                 self.swarm(idx_individual)
