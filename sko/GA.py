@@ -14,7 +14,7 @@ from .operators import crossover, mutation, ranking, selection
 class GeneticAlgorithmBase(SkoBase, metaclass=ABCMeta):
     def __init__(self, func, n_dim,
                  size_pop=50, max_iter=200, prob_mut=0.001,
-                 constraint_eq=None, constraint_ueq=None):
+                 constraint_eq=[], constraint_ueq=[]):
         self.func = func_transformer(func)
         self.size_pop = size_pop  # size of population
         self.max_iter = max_iter
@@ -22,7 +22,7 @@ class GeneticAlgorithmBase(SkoBase, metaclass=ABCMeta):
         self.n_dim = n_dim
 
         # constraint:
-        self.has_constraint = constraint_eq is not None or constraint_ueq is not None
+        self.has_constraint = len(constraint_eq) > 0 or len(constraint_ueq) > 0
         self.constraint_eq = constraint_eq  # a list of unequal constraint functions with c[i] <= 0
         self.constraint_ueq = constraint_ueq  # a list of equal functions with ceq[i] = 0
 
@@ -107,6 +107,10 @@ class GA(GeneticAlgorithmBase):
         The lower bound of every variables of func
     ub : array_like
         The upper bound of every vaiiables of func
+    constraint_eq : list
+        equal constraint
+    constraint_ueq : list
+        unequal constraint
     precision : array_like
         The precision of every vaiiables of func
     size_pop : int
@@ -134,7 +138,7 @@ class GA(GeneticAlgorithmBase):
                  size_pop=50, max_iter=200,
                  prob_mut=0.001,
                  lb=-1, ub=1,
-                 constraint_eq=None, constraint_ueq=None,
+                 constraint_eq=[], constraint_ueq=[],
                  precision=1e-7):
         super().__init__(func, n_dim, size_pop, max_iter, prob_mut, constraint_eq, constraint_ueq)
 
