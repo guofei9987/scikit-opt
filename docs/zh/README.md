@@ -90,7 +90,51 @@ ga.run(20)
 
 
 # 快速开始
-## 1. 遗传算法
+
+## 1. 差分进化算法
+**Step1**：定义你的问题，这个demo定义了有约束优化问题  
+-> Demo code: [examples/demo_de.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_de.py#L1)
+```python
+'''
+min f(x1, x2, x3) = x1^2 + x2^2 + x3^2
+s.t.
+    x1x2 >= 1
+    x1x2 <= 5
+    x2+x3 = 1
+    0 <= x1, x2, x3 <= 5
+'''
+
+
+def obj_func(p):
+    x1, x2, x3 = p
+    return x1 ** 2 + x2 ** 2 + x3 ** 2
+
+
+constraint_eq = [
+    lambda x: 1 - x[1] - x[2]
+]
+
+constraint_ueq = [
+    lambda x: 1 - x[0] * x[1],
+    lambda x: x[0] * x[1] - 5
+]
+
+```
+
+**Step2**: 做差分进化算法  
+-> Demo code: [examples/demo_de.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_de.py#L25)
+```python
+from sko.DE import DE
+
+de = DE(func=obj_func, n_dim=3, size_pop=50, max_iter=800, lb=[0, 0, 0], ub=[5, 5, 5],
+        constraint_eq=constraint_eq, constraint_ueq=constraint_ueq)
+
+best_x, best_y = de.run()
+print('best_x:', best_x, '\n', 'best_y:', best_y)
+```
+
+
+## 2. 遗传算法
 **第一步**：定义你的问题  
 -> Demo code: [examples/demo_ga.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#L1)
 ```python
@@ -135,7 +179,7 @@ plt.show()
 
 ![Figure_1-1](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/ga_1.png?raw=true)
 
-### 1.2 遗传算法用于旅行商问题
+### 2.2 遗传算法用于旅行商问题
 `GA_TSP` 针对TSP问题重载了 `交叉(crossover)`、`变异(mutation)` 两个算子
 
 **第一步**，定义问题。  
@@ -187,10 +231,10 @@ plt.show()
 ![GA_TPS](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/ga_tsp.png?raw=true)
 
 
-## 2. 粒子群算法
+## 3. 粒子群算法
 (PSO, Particle swarm optimization)
 
-### 2.1 带约束的粒子群算法
+### 3.1 带约束的粒子群算法
 **第一步**，定义问题  
 -> Demo code: [examples/demo_pso.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L1)
 ```python
@@ -226,7 +270,7 @@ plt.show()
 ↑**see [examples/demo_pso.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso_ani.py)**
 
 
-### 2.2 不带约束的粒子群算法
+### 3.2 不带约束的粒子群算法
 -> Demo code: [examples/demo_pso.py#s4](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L19)
 ```python
 pso = PSO(func=demo_func, dim=3)
@@ -235,9 +279,9 @@ print('best_x is ', pso.gbest_x, 'best_y is', pso.gbest_y)
 ```
 
 
-## 3. 模拟退火算法
+## 4. 模拟退火算法
 (SA, Simulated Annealing)
-### 3.1 模拟退火算法用于多元函数优化
+### 4.1 模拟退火算法用于多元函数优化
 **第一步**：定义问题  
 -> Demo code: [examples/demo_sa.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa.py#L1)
 ```python
@@ -269,7 +313,7 @@ plt.show()
 
 另外，scikit-opt 还提供了三种模拟退火流派: Fast, Boltzmann, Cauchy. 更多参见 [more sa](https://scikit-opt.github.io/scikit-opt/#/zh/more_sa)
 
-### 3.2 模拟退火算法解决TSP问题（旅行商问题）  
+### 4.2 模拟退火算法解决TSP问题（旅行商问题）  
 **第一步**，定义问题。（我猜你已经无聊了，所以不黏贴这一步了）  
 
 **第二步**，调用模拟退火算法  
@@ -300,7 +344,7 @@ print(best_points, best_distance, cal_total_distance(best_points))
 ![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa_tsp1.gif?raw=true)  
 ↑**参考代码 [examples/demo_sa_tsp.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py)**
 
-## 4. 蚁群算法
+## 5. 蚁群算法
 蚁群算法(ACA, Ant Colony Algorithm)解决TSP问题
 
 -> Demo code: [examples/demo_aca_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_aca_tsp.py#L23)
@@ -320,14 +364,14 @@ best_x, best_y = aca.run()
 
 
 
-## 5. 免疫优化算法
+## 6. 免疫优化算法
 (immune algorithm, IA)
 -> Demo code: [examples/demo_ia.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ia.py#L6)
 ```python
 
 from sko.IA import IA_TSP
 
-ia_tsp = IA_TSP(func=cal_total_distance, n_dim=num_points, size_pop=500, max_iter=2000, prob_mut=0.2,
+ia_tsp = IA_TSP(func=cal_total_distance, n_dim=num_points, size_pop=500, max_iter=800, prob_mut=0.2,
                 T=0.7, alpha=0.95)
 best_points, best_distance = ia_tsp.run()
 print('best routine:', best_points, 'best_distance:', best_distance)
@@ -337,7 +381,7 @@ print('best routine:', best_points, 'best_distance:', best_distance)
 ![IA](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/ia2.png?raw=true)
 
 
-## 6. 人工鱼群算法
+## 7. 人工鱼群算法
 人工鱼群算法(artificial fish swarm algorithm, AFSA)
 
 -> Demo code: [examples/demo_asfs.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_asfs.py#L1)
