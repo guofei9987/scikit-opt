@@ -24,6 +24,7 @@ script:
   - coverage run -p examples/demo_asfs.py
   - coverage run -p examples/demo_pso_ani.py
   - coverage run -p sko/demo_func.py
+  - coverage run -p sko/demo_de.py
 
 # Push the results back to codecov
 after_success:
