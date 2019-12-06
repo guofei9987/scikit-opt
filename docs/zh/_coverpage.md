@@ -4,6 +4,7 @@
 
 > Powerful Python module for Heuristic Algorithms
 
+* 差分进化算法
 * 遗传算法
 * 粒子群算法
 * 模拟退火算法

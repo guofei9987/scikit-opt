@@ -4,6 +4,7 @@
 
 > Powerful Python module for Heuristic Algorithms
 
+* Differential Evolution
 * Genetic Algorithm
 * Particle Swarm Optimization
 * Simulated Annealing

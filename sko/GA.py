@@ -28,8 +28,8 @@ class GeneticAlgorithmBase(SkoBase, metaclass=ABCMeta):
 
         self.Chorm = None
         self.X = None  # shape = (size_pop, n_dim)
-        self.Y_raw = None  # shape = (size_pop,) , f(x)
-        self.Y = None  # shape = (size_pop,) , f(x)+penalty
+        self.Y_raw = None  # shape = (size_pop,) , value is f(x)
+        self.Y = None  # shape = (size_pop,) , value is f(x) + penalty for constraint
         self.FitV = None  # shape = (size_pop,)
 
         # self.FitV_history = []
@@ -48,6 +48,7 @@ class GeneticAlgorithmBase(SkoBase, metaclass=ABCMeta):
         if not self.has_constraint:
             self.Y = self.Y_raw
         else:
+            # constraint
             penalty_eq = np.array([np.sum(np.abs([c_i(x) for c_i in self.constraint_eq])) for x in self.X])
             penalty_ueq = np.array([np.sum(np.abs([max(0, c_i(x)) for c_i in self.constraint_ueq])) for x in self.X])
             self.Y = self.Y_raw + 1e5 * penalty_eq + 1e5 * penalty_ueq
@@ -73,7 +74,7 @@ class GeneticAlgorithmBase(SkoBase, metaclass=ABCMeta):
         self.max_iter = max_iter or self.max_iter
         for i in range(self.max_iter):
             self.X = self.chrom2x()
-            self.x2y()
+            self.Y = self.x2y()
             self.ranking()
             self.selection()
             self.crossover()

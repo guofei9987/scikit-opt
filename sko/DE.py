@@ -24,8 +24,7 @@ class DE(GeneticAlgorithmBase):
                          constraint_eq=constraint_eq, constraint_ueq=constraint_ueq)
 
         self.F = F
-        self.V = None
-        self.U = None
+        self.V, self.U = None, None
         self.lb, self.ub = np.array(lb) * np.ones(self.n_dim), np.array(ub) * np.ones(self.n_dim)
         self.crtbp()
 
@@ -46,16 +45,16 @@ class DE(GeneticAlgorithmBase):
         where i, r1, r2, r3 are randomly generated
         '''
         X = self.X
-        random_idx = np.random.randint(0, self.size_pop, size=(self.size_pop, 4))
+        # i is not needed,
+        # and TODO: r1, r2, r3 should not be equal
+        random_idx = np.random.randint(0, self.size_pop, size=(self.size_pop, 3))
 
-        # 这里还少一个逻辑：i, r1, r2, r3各不相等
-        i, r1, r2, r3 = random_idx[:, 0], random_idx[:, 1], random_idx[:, 2], random_idx[:, 3]
+        r1, r2, r3 = random_idx[:, 0], random_idx[:, 1], random_idx[:, 2]
 
-        # 这里少个逻辑，i，但想来应该是差不多的（没细想）
-        # 这里还少一个逻辑，F，这里用固定值，为了防止早熟，可以用自适应值
+        # 这里F用固定值，为了防止早熟，可以换成自适应值
         self.V = X[r1, :] + self.F * (X[r2, :] - X[r3, :])
 
-        # the lower & upper bound still works
+        # the lower & upper bound still works in mutation
         mask = np.random.uniform(low=self.lb, high=self.ub, size=(self.size_pop, self.n_dim))
         self.V = np.where(self.V < self.lb, mask, self.V)
         self.V = np.where(self.V > self.ub, mask, self.V)
@@ -63,7 +62,7 @@ class DE(GeneticAlgorithmBase):
 
     def crossover(self):
         '''
-        if rand < prob_crossover use V, else use X
+        if rand < prob_crossover, use V, else use X
         '''
         mask = np.random.rand(self.size_pop, self.n_dim) < self.prob_mut
         self.U = np.where(mask, self.V, self.X)

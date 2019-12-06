@@ -9,8 +9,8 @@
 [![Forks](https://img.shields.io/github/forks/guofei9987/scikit-opt.svg?style=social)](https://github.com/guofei9987/scikit-opt/network/members)
 [![Join the chat at https://gitter.im/guofei9987/scikit-opt](https://badges.gitter.im/guofei9987/scikit-opt.svg)](https://gitter.im/guofei9987/scikit-opt?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-一个封装了6种启发式算法的 Python 代码库  
-（遗传算法、粒子群算法、模拟退火算法、蚁群算法、鱼群算法、免疫优化算法）
+一个封装了7种启发式算法的 Python 代码库  
+（差分进化算法、遗传算法、粒子群算法、模拟退火算法、蚁群算法、鱼群算法、免疫优化算法）
 
 # 安装
 
