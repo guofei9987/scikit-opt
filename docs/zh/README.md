@@ -74,7 +74,7 @@ print('best_x:', best_x, '\n', 'best_y:', best_y)
 
 > 现在 **udf** 支持遗传算法的这几个算子：   `crossover`, `mutation`, `selection`, `ranking`
 
-> 提供了十来个算子 参考[这里](https://github.com/guofei9987/scikit-opt/blob/master/sko/GA.py)
+> Scikit-opt 也提供了十来个算子，参考[这里](https://github.com/guofei9987/scikit-opt/tree/master/sko/operators)
 
 
 ### 特点2：断点继续运行

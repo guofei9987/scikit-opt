@@ -114,7 +114,7 @@ print('best_x:', best_x, '\n', 'best_y:', best_y)
 
 > Until Now, the **udf** surport `crossover`, `mutation`, `selection`, `ranking` of GA
 
-> scikit-opt provide a dozen of operators, see [here](https://github.com/guofei9987/scikit-opt/blob/master/sko/GA.py)
+> scikit-opt provide a dozen of operators, see [here](https://github.com/guofei9987/scikit-opt/tree/master/sko/operators)
 
 ###  feature2: continue to run
 (New in version 0.3.6)  
