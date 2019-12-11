@@ -53,7 +53,7 @@ pip install .
 ```
 
 ## News:
-All algorithms will be available on ~~TensorFlow/Spark~~ **pytorch** on version ~~0.4~~ **1.0.0**, getting parallel performance.  
+All algorithms will be available on ~~/Spark/Pytorch~~ **TensorFlow** on version ~~0.4~~ **1.x**, getting parallel performance.  
 Have fun!
 
 
