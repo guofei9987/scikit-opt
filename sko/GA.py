@@ -26,7 +26,7 @@ class GeneticAlgorithmBase(SkoBase, metaclass=ABCMeta):
         self.constraint_eq = constraint_eq  # a list of unequal constraint functions with c[i] <= 0
         self.constraint_ueq = constraint_ueq  # a list of equal functions with ceq[i] = 0
 
-        self.Chorm = None
+        self.Chrom = None
         self.X = None  # shape = (size_pop, n_dim)
         self.Y_raw = None  # shape = (size_pop,) , value is f(x)
         self.Y = None  # shape = (size_pop,) , value is f(x) + penalty for constraint
