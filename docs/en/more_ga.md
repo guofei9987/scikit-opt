@@ -1,7 +1,7 @@
 
-## genetic algorithm do 0-1 programming
+## genetic algorithm do integer programming
 
-If you want some variables to be 0/1 type, then you set the corresponding `precision` = 1  
+If you want some variables to be 0/1 type, then you set the corresponding `precision` to an integer
 For example, our objective function is `demo_func`. We want its first variable to be 0/1 type. We do as follows:
 ```python
 from sko.GA import GA
