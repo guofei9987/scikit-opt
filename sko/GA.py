@@ -147,8 +147,18 @@ class GA(GeneticAlgorithmBase):
         self.precision = np.array(precision) * np.ones(self.n_dim)  # works when precision is int, float, list or array
 
         # Lind is the num of genes of every variable of func（segments）
-        Lind = np.ceil(np.log2((self.ub - self.lb) / self.precision)) + 1
-        self.Lind = Lind.astype(int)
+        Lind_raw = np.log2((self.ub - self.lb) / self.precision + 1)
+        self.Lind = np.ceil(Lind_raw).astype(int)
+
+        int_mode = (self.precision % 1 == 0) & (Lind_raw % 1 != 0)
+        # int_mode is an array of True/False. If True, variable is int constraint and need more code to deal with
+        for i in range(self.n_dim):
+            if int_mode[i]:
+                self.constraint_ueq.append(
+                    lambda x: x[i] - self.ub[i]
+                )
+                self.ub[i] = self.lb[i] + np.exp2(self.Lind[i]) - 1
+
         self.len_chrom = sum(self.Lind)
 
         self.crtbp()
