@@ -86,8 +86,8 @@ class PSO(SkoBase):
         self.has_constraints = not (lb is None and ub is None)
         self.lb = -np.ones(self.dim) if lb is None else np.array(lb)
         self.ub = np.ones(self.dim) if ub is None else np.array(ub)
-        assert self.dim == len(self.lb) == len(self.ub), 'dim == len(lb) == len(ub) must holds'
-        assert np.all(self.ub > self.lb), 'All upper-bound values must be greater than lower-bound values'
+        assert self.dim == len(self.lb) == len(self.ub), 'dim == len(lb) == len(ub) is not True'
+        assert np.all(self.ub > self.lb), 'upper-bound must be greater than lower-bound'
 
         self.X = np.random.uniform(low=self.lb, high=self.ub, size=(self.pop, self.dim))
         v_high = self.ub - self.lb
