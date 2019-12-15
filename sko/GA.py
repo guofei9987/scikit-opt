@@ -144,7 +144,7 @@ class GA(GeneticAlgorithmBase):
         super().__init__(func, n_dim, size_pop, max_iter, prob_mut, constraint_eq, constraint_ueq)
 
         self.lb, self.ub = np.array(lb) * np.ones(self.n_dim), np.array(ub) * np.ones(self.n_dim)
-        self.precision = np.array(precision) * np.ones(self.n_dim)
+        self.precision = np.array(precision) * np.ones(self.n_dim)  # works when precision is int, float, list or array
 
         # Lind is the num of genes of every variable of func（segments）
         Lind = np.ceil(np.log2((self.ub - self.lb) / self.precision)) + 1
