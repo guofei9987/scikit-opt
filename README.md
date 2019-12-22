@@ -84,18 +84,19 @@ Import and build ga
 import numpy as np
 from sko.GA import GA, GA_TSP
 
-demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
-ga = GA(func=demo_func, n_dim=3, size_pop=100, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2])
+demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + (x[2] - 0.5) ** 2
+ga = GA(func=demo_func, n_dim=3, size_pop=100, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2],
+        precision=[1e-7, 1e-7, 1])
 
 ```
 Regist your udf to GA  
--> Demo code: [examples/demo_ga_udf.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L19)
+-> Demo code: [examples/demo_ga_udf.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L20)
 ```python
 ga.register(operator_name='selection', operator=selection_tournament, tourn_size=3)
 ```
 
 scikit-opt also provide some operators  
--> Demo code: [examples/demo_ga_udf.py#s4](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L21)
+-> Demo code: [examples/demo_ga_udf.py#s4](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L22)
 ```python
 from sko.operators import ranking, selection, crossover, mutation
 
@@ -105,7 +106,7 @@ ga.register(operator_name='ranking', operator=ranking.ranking). \
 
 ```
 Now do GA as usual  
--> Demo code: [examples/demo_ga_udf.py#s5](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L28)
+-> Demo code: [examples/demo_ga_udf.py#s5](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L29)
 ```python
 best_x, best_y = ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
@@ -137,9 +138,9 @@ ga.run(20)
 '''
 min f(x1, x2, x3) = x1^2 + x2^2 + x3^2
 s.t.
-    x1x2 >= 1
-    x1x2 <= 5
-    x2+x3 = 1
+    x1*x2 >= 1
+    x1*x2 <= 5
+    x2 + x3 = 1
     0 <= x1, x2, x3 <= 5
 '''
 
@@ -170,6 +171,7 @@ de = DE(func=obj_func, n_dim=3, size_pop=50, max_iter=800, lb=[0, 0, 0], ub=[5, 
 
 best_x, best_y = de.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
+
 ```
 
 ## 2. Genetic Algorithm
