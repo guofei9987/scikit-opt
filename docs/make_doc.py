@@ -81,8 +81,8 @@ readme_new = make_doc(origin_file='../README.md')
 with open('../README.md', encoding='utf-8', mode="w") as f_readme:
     f_readme.writelines(readme_new)
 
-with open('en/README.md', encoding='utf-8', mode="w") as f_readme:
-    f_readme.writelines(readme_new[20:])
+with open('en/README.md', encoding='utf-8', mode="w") as f_readme_en:
+    f_readme_en.writelines(readme_new[20:])
 
 docs = ['zh/README.md',
         'zh/more_ga.md', 'en/more_ga.md',
