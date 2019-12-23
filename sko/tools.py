@@ -5,8 +5,7 @@ def func_transformer(func):
     '''
     transform this kind of function:
     ```
-    def demo_func(x):
-        x1, x2, x3 = x
+    def demo_func(x1, x2, x3):
         return x1 ** 2 + (x2 - 0.05) ** 2 + x3 ** 2
     ```
     into this kind of function:
