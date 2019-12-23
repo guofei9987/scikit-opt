@@ -257,4 +257,35 @@ class GA_TSP(GeneticAlgorithmBase):
     ranking = ranking.ranking
     selection = selection.selection_tournament_faster
     crossover = crossover.crossover_pmx
-    mutation = mutation.mutation_TSP_1
+    mutation = mutation.reverse
+
+    def run(self, max_iter=None):
+        self.max_iter = max_iter or self.max_iter
+        for i in range(self.max_iter):
+            Chrom_old = self.Chrom.copy()
+            self.X = self.chrom2x()
+            self.Y = self.x2y()
+            self.ranking()
+            self.selection()
+            self.crossover()
+            self.mutation()
+
+            # put parent and offspring together and select the best size_pop number of population
+            self.Chrom = np.concatenate([Chrom_old, self.Chrom], axis=0)
+            self.X = self.chrom2x()
+            self.Y = self.x2y()
+            self.ranking()
+            selected_idx = np.argsort(self.Y)[:self.size_pop]
+            self.Chrom = self.Chrom[selected_idx, :]
+
+            # record the best ones
+            generation_best_index = self.FitV.argmax()
+            self.generation_best_X.append(self.X[generation_best_index, :])
+            self.generation_best_Y.append(self.Y[generation_best_index])
+            self.all_history_Y.append(self.Y)
+            self.all_history_FitV.append(self.FitV)
+
+        global_best_index = np.array(self.generation_best_Y).argmin()
+        global_best_X = self.generation_best_X[global_best_index]
+        global_best_Y = self.func(global_best_X)
+        return global_best_X, global_best_Y
