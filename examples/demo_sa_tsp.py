@@ -43,7 +43,7 @@ ax[1].set_xlabel("Longitude")
 ax[1].set_ylabel("Latitude")
 plt.show()
 
-# %% Now Plot the animation
+# %% Plot the animation
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 

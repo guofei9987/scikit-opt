@@ -28,7 +28,33 @@ def mutation_TSP_1(self):
     return self.Chrom
 
 
-def reverse(self):
+def swap(individual):
+    n1, n2 = np.random.randint(0, individual.shape[0] - 1, 2)
+    if n1 >= n2:
+        n1, n2 = n2, n1 + 1
+    individual[n1], individual[n2] = individual[n2], individual[n1]
+    return individual
+
+
+def reverse(individual):
+    n1, n2 = np.random.randint(0, individual.shape[0] - 1, 2)
+    if n1 >= n2:
+        n1, n2 = n2, n1 + 1
+    individual[n1:n2] = individual[n1:n2][::-1]
+    return individual
+
+
+def transpose(individual):
+    # randomly generate n1 < n2 < n3. Notice: not equal
+    n1, n2, n3 = sorted(np.random.randint(0, individual.shape[0] - 2, 3))
+    n2 += 1
+    n3 += 2
+    slice1, slice2, slice3, slice4 = individual[0:n1], individual[n1:n2], individual[n2:n3 + 1], individual[n3 + 1:]
+    individual = np.concatenate([slice1, slice3, slice2, slice4])
+    return individual
+
+
+def mutation_reverse(self):
     '''
     Reverse
     :param self:
@@ -36,16 +62,12 @@ def reverse(self):
     '''
     for i in range(self.size_pop):
         if np.random.rand() < self.prob_mut:
-            n1, n2 = np.random.randint(0, self.len_chrom - 1, 2)
-            if n1 >= n2:
-                n1, n2 = n2, n1 + 1
-            self.Chrom[i, n1:n2] = self.Chrom[i, n1:n2][::-1]
+            self.Chrom[i] = reverse(self.Chrom[i])
     return self.Chrom
 
 
-def mutation_TSP_3(self):
+def mutation_swap(self):
     for i in range(self.size_pop):
         if np.random.rand() < self.prob_mut:
-            n1, n2 = np.random.randint(0, self.len_chrom, 2)
-            self.Chrom[i, n1], self.Chrom[i, n2] = self.Chrom[i, n2], self.Chrom[i, n1]
+            self.Chrom[i] = swap(self.Chrom[i])
     return self.Chrom

@@ -5,6 +5,7 @@
 
 import numpy as np
 from .base import SkoBase
+from sko.operators import mutation
 
 
 class SimulatedAnnealingBase(SkoBase):
@@ -113,6 +114,7 @@ class SAFast(SimulatedAnnealingBase):
     c = n * exp(-n * quench)
     T_new = T0 * exp(-c * k**quench)
     '''
+
     def __init__(self, func, x0, T_max=100, T_min=1e-7, L=300, max_stay_counter=150, **kwargs):
         super().__init__(func, x0, T_max, T_min, L, max_stay_counter, **kwargs)
         self.m, self.n, self.quench = kwargs.get('m', 1), kwargs.get('n', 1), kwargs.get('quench', 1)
@@ -137,6 +139,7 @@ class SABoltzmann(SimulatedAnnealingBase):
 
     T_new = T0 / log(1 + k)
     '''
+
     def __init__(self, func, x0, T_max=100, T_min=1e-7, L=300, max_stay_counter=150, **kwargs):
         super().__init__(func, x0, T_max, T_min, L, max_stay_counter, **kwargs)
         self.upper = kwargs.get('m', 10)
@@ -161,6 +164,7 @@ class SACauchy(SimulatedAnnealingBase):
 
     T_new = T0 / (1 + k)
     '''
+
     def __init__(self, func, x0, T_max=100, T_min=1e-7, L=300, max_stay_counter=150, **kwargs):
         super().__init__(func, x0, T_max, T_min, L, max_stay_counter, **kwargs)
         self.learn_rate = kwargs.get('m', 0.5)
@@ -185,38 +189,12 @@ class SA_TSP(SimulatedAnnealingBase):
 
     def get_new_x(self, x):
         x_new = x.copy()
-        SWAP, REVERSE, TRANSPOSE = 0, 1, 2
-
-        def swap(x_new):
-            n1, n2 = np.random.randint(0, len(x_new) - 1, 2)
-            if n1 >= n2:
-                n1, n2 = n2, n1 + 1
-            x_new[n1], x_new[n2] = x_new[n2], x_new[n1]
-            return x_new
-
-        def reverse(x_new):
-            n1, n2 = np.random.randint(0, len(x_new) - 1, 2)
-            if n1 >= n2:
-                n1, n2 = n2, n1 + 1
-            x_new[n1:n2] = x_new[n1:n2][::-1]
-
-            return x_new
-
-        def transpose(x_new):
-            # randomly generate n1 < n2 < n3. Notice: not equal
-            n1, n2, n3 = sorted(np.random.randint(0, len(x_new) - 2, 3))
-            n2 += 1
-            n3 += 2
-            slice1, slice2, slice3, slice4 = x_new[0:n1], x_new[n1:n2], x_new[n2:n3 + 1], x_new[n3 + 1:]
-            x_new = np.concatenate([slice1, slice3, slice2, slice4])
-            return x_new
-
         new_x_strategy = np.random.randint(3)
-        if new_x_strategy == SWAP:
-            x_new = swap(x_new)
-        elif new_x_strategy == REVERSE:
-            x_new = reverse(x_new)
-        elif new_x_strategy == TRANSPOSE:
-            x_new = transpose(x_new)
+        if new_x_strategy == 0:
+            x_new = mutation.swap(x_new)
+        elif new_x_strategy == 1:
+            x_new = mutation.reverse(x_new)
+        elif new_x_strategy == 2:
+            x_new = mutation.transpose(x_new)
 
         return x_new
