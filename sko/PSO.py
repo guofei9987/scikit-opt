@@ -119,7 +119,7 @@ class PSO(SkoBase):
 
     def cal_y(self):
         # calculate y for every x in X
-        self.Y = np.array([self.func(x) for x in self.X]).reshape(-1, 1)
+        self.Y = self.func(self.X).reshape(-1, 1)
         return self.Y
 
     def update_pbest(self):

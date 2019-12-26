@@ -18,3 +18,7 @@ class SkoBase(metaclass=ABCMeta):
 
         setattr(self, operator_name, types.MethodType(operator_wapper, self))
         return self
+
+
+class Problem(object):
+    pass

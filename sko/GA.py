@@ -44,7 +44,8 @@ class GeneticAlgorithmBase(SkoBase, metaclass=ABCMeta):
         pass
 
     def x2y(self):
-        self.Y_raw = np.array([self.func(x) for x in self.X])
+        # self.Y_raw = np.array([self.func(x) for x in self.X])
+        self.Y_raw = self.func(self.X)
         if not self.has_constraint:
             self.Y = self.Y_raw
         else:
@@ -89,7 +90,7 @@ class GeneticAlgorithmBase(SkoBase, metaclass=ABCMeta):
 
         global_best_index = np.array(self.generation_best_Y).argmin()
         global_best_X = self.generation_best_X[global_best_index]
-        global_best_Y = self.func(global_best_X)
+        global_best_Y = self.func(np.array([global_best_X]))
         return global_best_X, global_best_Y
 
     fit = run
@@ -287,5 +288,5 @@ class GA_TSP(GeneticAlgorithmBase):
 
         global_best_index = np.array(self.generation_best_Y).argmin()
         global_best_X = self.generation_best_X[global_best_index]
-        global_best_Y = self.func(global_best_X)
+        global_best_Y = self.func(np.array([global_best_X]))
         return global_best_X, global_best_Y

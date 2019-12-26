@@ -95,5 +95,5 @@ class DE(GeneticAlgorithmBase):
 
         global_best_index = np.array(self.generation_best_Y).argmin()
         global_best_X = self.generation_best_X[global_best_index]
-        global_best_Y = self.func(global_best_X)
+        global_best_Y = self.func(np.array([global_best_X]))
         return global_best_X, global_best_Y

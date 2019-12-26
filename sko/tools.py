@@ -1,40 +1,48 @@
-
+import numpy as np
 
 
 def func_transformer(func):
     '''
     transform this kind of function:
     ```
-    def demo_func(x1, x2, x3):
-        return x1 ** 2 + (x2 - 0.05) ** 2 + x3 ** 2
-    ```
-    into this kind of function:
-    ```
     def demo_func(x):
         x1, x2, x3 = x
         return x1 ** 2 + x2 ** 2 + x3 ** 2
     ```
+    into this kind of function:
+    ```
+    def demo_func(x):
+        x1, x2, x3 = x[:,0], x[:,1], x[:,2]
+        return x1 ** 2 + (x2 - 0.05) ** 2 + x3 ** 2
+    ```
+    getting vectorial performance if possible
     :param func:
     :return:
     '''
 
     prefered_function_format = '''
     def demo_func(x):
-        x1, x2, x3 = x
+        x1, x2, x3 = x[:, 0], x[:, 1], x[:, 2]
         return x1 ** 2 + (x2 - 0.05) ** 2 + x3 ** 2
     '''
-    if func.__code__.co_argcount == 1:
+
+    is_vector = getattr(func, 'is_vector', False)
+    if is_vector:
         return func
-    elif func.__code__.co_argcount > 1:
-
-        def func_transformed(x):
-            args = tuple(x)
-            return func(*args)
-
-        return func_transformed
     else:
-        raise ValueError('''
-        object function error,
-        function should be like this:
-        ''' + prefered_function_format)
+        if func.__code__.co_argcount == 1:
+            def func_transformed(X):
+                return np.array([func(x) for x in X])
 
+            return func_transformed
+        elif func.__code__.co_argcount > 1:
+
+            def func_transformed(X):
+                return np.array([func(*tuple(x)) for x in X])
+
+            return func_transformed
+
+    raise ValueError('''
+    object function error,
+    function should be like this:
+    ''' + prefered_function_format)
