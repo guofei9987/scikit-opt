@@ -44,7 +44,6 @@ class GeneticAlgorithmBase(SkoBase, metaclass=ABCMeta):
         pass
 
     def x2y(self):
-        # self.Y_raw = np.array([self.func(x) for x in self.X])
         self.Y_raw = self.func(self.X)
         if not self.has_constraint:
             self.Y = self.Y_raw
