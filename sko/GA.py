@@ -280,10 +280,10 @@ class GA_TSP(GeneticAlgorithmBase):
 
             # record the best ones
             generation_best_index = self.FitV.argmax()
-            self.generation_best_X.append(self.X[generation_best_index, :])
+            self.generation_best_X.append(self.X[generation_best_index, :].copy())
             self.generation_best_Y.append(self.Y[generation_best_index])
-            self.all_history_Y.append(self.Y)
-            self.all_history_FitV.append(self.FitV)
+            self.all_history_Y.append(self.Y.copy())
+            self.all_history_FitV.append(self.FitV.copy())
 
         global_best_index = np.array(self.generation_best_Y).argmin()
         global_best_X = self.generation_best_X[global_best_index]

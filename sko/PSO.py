@@ -136,7 +136,7 @@ class PSO(SkoBase):
         :return:
         '''
         if self.gbest_y > self.Y.min():
-            self.gbest_x = self.X[self.Y.argmin(), :]
+            self.gbest_x = self.X[self.Y.argmin(), :].copy()
             self.gbest_y = self.Y.min()
 
     def recorder(self):
