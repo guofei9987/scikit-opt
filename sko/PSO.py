@@ -68,11 +68,7 @@ class PSO(SkoBase):
 
     Examples
     -----------------------------
-    >>> demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
-    >>> pso = PSO(func=demo_func, dim=3)
-    >>> gbest_x, gbest_y = pso.run()
-    >>> print('best_x is ', pso.gbest_x, 'best_y is ', pso.gbest_y)
-    >>> pso.plot_history()
+    see https://scikit-opt.github.io/scikit-opt/#/en/README?id=_3-psoparticle-swarm-optimization
     """
 
     def __init__(self, func, dim, pop=40, max_iter=150, lb=None, ub=None, w=0.8, c1=0.5, c2=0.5):
