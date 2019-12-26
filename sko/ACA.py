@@ -47,7 +47,7 @@ class ACA_TSP:
 
             # 顺便记录历史最好情况
             index_best = y.argmin()
-            x_best, y_best = self.Table[index_best, :], y[index_best]
+            x_best, y_best = self.Table[index_best, :].copy(), y[index_best].copy()
             self.x_best_history.append(x_best)
             self.y_best_history.append(y_best)
 
