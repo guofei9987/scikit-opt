@@ -350,12 +350,12 @@ print(best_points, best_distance, cal_total_distance(best_points))
 ## 5. 蚁群算法
 蚁群算法(ACA, Ant Colony Algorithm)解决TSP问题
 
--> Demo code: [examples/demo_aca_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_aca_tsp.py#L23)
+-> Demo code: [examples/demo_aca_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_aca_tsp.py#L17)
 ```python
 from sko.ACA import ACA_TSP
 
-aca = ACA_TSP(func=cal_total_distance, n_dim=8,
-              size_pop=10, max_iter=20,
+aca = ACA_TSP(func=cal_total_distance, n_dim=num_points,
+              size_pop=50, max_iter=200,
               distance_matrix=distance_matrix)
 
 best_x, best_y = aca.run()

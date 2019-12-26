@@ -3,7 +3,6 @@ from scipy import spatial
 import pandas as pd
 import matplotlib.pyplot as plt
 
-np.random.seed(6)
 num_points = 25
 
 points_coordinate = np.random.rand(num_points, 2)  # generate coordinate of points
@@ -25,8 +24,9 @@ aca = ACA_TSP(func=cal_total_distance, n_dim=num_points,
 best_x, best_y = aca.run()
 
 # %% Plot
-fig, ax = plt.subplots(1, 1)
+fig, ax = plt.subplots(1, 2)
 best_points_ = np.concatenate([best_x, [best_x[0]]])
 best_points_coordinate = points_coordinate[best_points_, :]
-ax.plot(best_points_coordinate[:, 0], best_points_coordinate[:, 1], 'o-r')
+ax[0].plot(best_points_coordinate[:, 0], best_points_coordinate[:, 1], 'o-r')
+pd.DataFrame(aca.y_best_history).cummin().plot(ax=ax[1])
 plt.show()

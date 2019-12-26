@@ -12,6 +12,8 @@
 需要从py文件中解析出：
 1. # %% 做断点后赋予index值，然后插入readme
 '''
+import os
+import sys
 
 import re
 
@@ -93,3 +95,5 @@ for i in docs:
     docs_new = make_doc(origin_file=i)
     with open(i, encoding='utf-8', mode="w") as f:
         f.writelines(docs_new)
+
+sys.exit()
