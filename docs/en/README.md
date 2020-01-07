@@ -358,8 +358,8 @@ fig, ax = plt.subplots(1, 2)
 best_points_ = np.concatenate([best_points, [best_points[0]]])
 best_points_coordinate = points_coordinate[best_points_, :]
 ax[0].plot(sa_tsp.best_y_history)
-ax[0].set_xlabel("Distance")
-ax[0].set_ylabel("Iteration")
+ax[0].set_xlabel("Iteration")
+ax[0].set_ylabel("Distance")
 ax[1].plot(best_points_coordinate[:, 0], best_points_coordinate[:, 1],
            marker='o', markerfacecolor='b', color='c', linestyle='-')
 ax[1].xaxis.set_major_formatter(FormatStrFormatter('%.3f'))
