@@ -14,7 +14,7 @@ from .operators import crossover, mutation, ranking, selection
 class GeneticAlgorithmBase(SkoBase, metaclass=ABCMeta):
     def __init__(self, func, n_dim,
                  size_pop=50, max_iter=200, prob_mut=0.001,
-                 constraint_eq=[], constraint_ueq=[]):
+                 constraint_eq=tuple(), constraint_ueq=tuple()):
         self.func = func_transformer(func)
         self.size_pop = size_pop  # size of population
         self.max_iter = max_iter
@@ -23,8 +23,8 @@ class GeneticAlgorithmBase(SkoBase, metaclass=ABCMeta):
 
         # constraint:
         self.has_constraint = len(constraint_eq) > 0 or len(constraint_ueq) > 0
-        self.constraint_eq = constraint_eq  # a list of unequal constraint functions with c[i] <= 0
-        self.constraint_ueq = constraint_ueq  # a list of equal functions with ceq[i] = 0
+        self.constraint_eq = list(constraint_eq)  # a list of unequal constraint functions with c[i] <= 0
+        self.constraint_ueq = list(constraint_ueq)  # a list of equal functions with ceq[i] = 0
 
         self.Chrom = None
         self.X = None  # shape = (size_pop, n_dim)
@@ -139,7 +139,7 @@ class GA(GeneticAlgorithmBase):
                  size_pop=50, max_iter=200,
                  prob_mut=0.001,
                  lb=-1, ub=1,
-                 constraint_eq=[], constraint_ueq=[],
+                 constraint_eq=tuple(), constraint_ueq=tuple(),
                  precision=1e-7):
         super().__init__(func, n_dim, size_pop, max_iter, prob_mut, constraint_eq, constraint_ueq)
 

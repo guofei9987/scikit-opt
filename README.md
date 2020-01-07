@@ -103,15 +103,12 @@ from sko.operators import ranking, selection, crossover, mutation
 ga.register(operator_name='ranking', operator=ranking.ranking). \
     register(operator_name='crossover', operator=crossover.crossover_2point). \
     register(operator_name='mutation', operator=mutation.mutation)
-
 ```
 Now do GA as usual  
--> Demo code: [examples/demo_ga_udf.py#s5](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L29)
+-> Demo code: [examples/demo_ga_udf.py#s5](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L28)
 ```python
 best_x, best_y = ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
-
-
 ```
 
 > Until Now, the **udf** surport `crossover`, `mutation`, `selection`, `ranking` of GA
@@ -120,9 +117,8 @@ print('best_x:', best_x, '\n', 'best_y:', best_y)
 
 > For advanced users, there is another OOP style:
 
--> Demo code: [examples/demo_ga_udf.py#s6](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L34)
+-> Demo code: [examples/demo_ga_udf.py#s6](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L31)
 ```python
-
 class MyGA(GA):
     def selection(self, tourn_size=3):
         FitV = self.FitV
@@ -137,9 +133,9 @@ class MyGA(GA):
 
 
 demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + (x[2] - 0.5) ** 2
-ga = GA(func=demo_func, n_dim=3, size_pop=100, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2],
+my_ga = MyGA(func=demo_func, n_dim=3, size_pop=100, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2],
         precision=[1e-7, 1e-7, 1])
-best_x, best_y = ga.run()
+best_x, best_y = my_ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 ```
 

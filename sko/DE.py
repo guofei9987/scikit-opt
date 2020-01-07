@@ -19,7 +19,7 @@ class DE(GeneticAlgorithmBase):
     def __init__(self, func, n_dim, F=0.5,
                  size_pop=50, max_iter=200, prob_mut=0.3,
                  lb=-1, ub=1,
-                 constraint_eq=[], constraint_ueq=[]):
+                 constraint_eq=tuple(), constraint_ueq=tuple()):
         super().__init__(func, n_dim, size_pop, max_iter, prob_mut,
                          constraint_eq=constraint_eq, constraint_ueq=constraint_ueq)
 
