@@ -70,7 +70,7 @@ time: 27.68204379081726  seconds
 
 
 ### 0/1 基因的mutation
-做一个mask，是一个与 `Chrom` 大小一致的0/1矩阵，如果值为0，那么对应位置进行变异（0变1或1变0）  
+做一个mask，是一个与 `Chrom` 大小一致的0/1矩阵，如果值为1，那么对应位置进行变异（0变1或1变0）  
 自然想到用整除2的方式进行  
 
 ```python
@@ -80,7 +80,7 @@ def mutation(self):
     self.Chrom = (mask + self.Chrom) % 2
     return self.Chrom
 ```
-用pycharm的profile功能试了一下，效果良好
+如此就实现了一次性对整个种群所有基因变异的矢量化运算。用pycharm的profile功能试了一下，效果良好
 
 再次改进。我还嫌求余数这一步速度慢，画一个真值表
 
