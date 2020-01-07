@@ -26,14 +26,14 @@ pip install scikit-opt
 -> Demo code: [examples/demo_ga_udf.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L1)
 ```python
 # step1: define your own operator:
-def selection_tournament(self, tourn_size):
-    FitV = self.FitV
+def selection_tournament(algorithm, tourn_size):
+    FitV = algorithm.FitV
     sel_index = []
-    for i in range(self.size_pop):
-        aspirants_index = np.random.choice(range(self.size_pop), size=tourn_size)
+    for i in range(algorithm.size_pop):
+        aspirants_index = np.random.choice(range(algorithm.size_pop), size=tourn_size)
         sel_index.append(max(aspirants_index, key=lambda i: FitV[i]))
-    self.Chrom = self.Chrom[sel_index, :]  # next generation
-    return self.Chrom
+    algorithm.Chrom = algorithm.Chrom[sel_index, :]  # next generation
+    return algorithm.Chrom
 
 
 ```
@@ -71,11 +71,37 @@ ga.register(operator_name='ranking', operator=ranking.ranking). \
 best_x, best_y = ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 
+
 ```
 
 > 现在 **udf** 支持遗传算法的这几个算子：   `crossover`, `mutation`, `selection`, `ranking`
 
 > Scikit-opt 也提供了十来个算子，参考[这里](https://github.com/guofei9987/scikit-opt/tree/master/sko/operators)
+
+> 提供一个面向对象风格的自定义算子的方法，供进阶用户使用:
+
+-> Demo code: [examples/demo_ga_udf.py#s6](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L34)
+```python
+
+class MyGA(GA):
+    def selection(self, tourn_size=3):
+        FitV = self.FitV
+        sel_index = []
+        for i in range(self.size_pop):
+            aspirants_index = np.random.choice(range(self.size_pop), size=tourn_size)
+            sel_index.append(max(aspirants_index, key=lambda i: FitV[i]))
+        self.Chrom = self.Chrom[sel_index, :]  # next generation
+        return self.Chrom
+
+    ranking = ranking.ranking
+
+
+demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + (x[2] - 0.5) ** 2
+ga = GA(func=demo_func, n_dim=3, size_pop=100, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2],
+        precision=[1e-7, 1e-7, 1])
+best_x, best_y = ga.run()
+print('best_x:', best_x, '\n', 'best_y:', best_y)
+```
 
 
 ### 特点2：断点继续运行

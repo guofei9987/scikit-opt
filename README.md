@@ -57,7 +57,7 @@ All algorithms will be available on ~~/Spark/Pytorch~~ **TensorFlow** on version
 Have fun!
 
 
-### feature1: UDF
+### Feature1: UDF
 
 **UDF** (user defined function) is available now!
 
@@ -66,14 +66,14 @@ Now, your `selection` function is like this:
 -> Demo code: [examples/demo_ga_udf.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L1)
 ```python
 # step1: define your own operator:
-def selection_tournament(self, tourn_size):
-    FitV = self.FitV
+def selection_tournament(algorithm, tourn_size):
+    FitV = algorithm.FitV
     sel_index = []
-    for i in range(self.size_pop):
-        aspirants_index = np.random.choice(range(self.size_pop), size=tourn_size)
+    for i in range(algorithm.size_pop):
+        aspirants_index = np.random.choice(range(algorithm.size_pop), size=tourn_size)
         sel_index.append(max(aspirants_index, key=lambda i: FitV[i]))
-    self.Chrom = self.Chrom[sel_index, :]  # next generation
-    return self.Chrom
+    algorithm.Chrom = algorithm.Chrom[sel_index, :]  # next generation
+    return algorithm.Chrom
 
 
 ```
@@ -111,11 +111,37 @@ Now do GA as usual
 best_x, best_y = ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 
+
 ```
 
 > Until Now, the **udf** surport `crossover`, `mutation`, `selection`, `ranking` of GA
 
 > scikit-opt provide a dozen of operators, see [here](https://github.com/guofei9987/scikit-opt/tree/master/sko/operators)
+
+> For advanced users, there is another OOP style:
+
+-> Demo code: [examples/demo_ga_udf.py#s6](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L34)
+```python
+
+class MyGA(GA):
+    def selection(self, tourn_size=3):
+        FitV = self.FitV
+        sel_index = []
+        for i in range(self.size_pop):
+            aspirants_index = np.random.choice(range(self.size_pop), size=tourn_size)
+            sel_index.append(max(aspirants_index, key=lambda i: FitV[i]))
+        self.Chrom = self.Chrom[sel_index, :]  # next generation
+        return self.Chrom
+
+    ranking = ranking.ranking
+
+
+demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + (x[2] - 0.5) ** 2
+ga = GA(func=demo_func, n_dim=3, size_pop=100, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2],
+        precision=[1e-7, 1e-7, 1])
+best_x, best_y = ga.run()
+print('best_x:', best_x, '\n', 'best_y:', best_y)
+```
 
 ###  feature2: continue to run
 (New in version 0.3.6)  
