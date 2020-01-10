@@ -108,10 +108,9 @@ print('best_x:', best_x, '\n', 'best_y:', best_y)
 ```
 
 > Until Now, the **udf** surport `crossover`, `mutation`, `selection`, `ranking` of GA
-
 > scikit-opt provide a dozen of operators, see [here](https://github.com/guofei9987/scikit-opt/tree/master/sko/operators)
 
-> For advanced users, there is another OOP style:
+For advanced users:
 
 -> Demo code: [examples/demo_ga_udf.py#s6](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L31)
 ```python
@@ -134,8 +133,8 @@ my_ga = MyGA(func=demo_func, n_dim=3, size_pop=100, max_iter=500, lb=[-1, -10, -
 best_x, best_y = my_ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 ```
-### feature2:GPU computation
- We are developing GPU computation, using Pytorch. It will be stable on version 1.0.0
+### feature2: GPU computation
+ We are developing GPU computation, which will be stable on version 1.0.0  
 An example is already available: [https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_gpu.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_gpu.py)
 
 ###  feature3: continue to run
