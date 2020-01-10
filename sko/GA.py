@@ -40,7 +40,7 @@ class GeneticAlgorithmBase(SkoBase, metaclass=ABCMeta):
         self.all_history_FitV = []
 
     @abstractmethod
-    def chrom2x(self):
+    def chrom2x(self, Chrom):
         pass
 
     def x2y(self):
@@ -73,7 +73,7 @@ class GeneticAlgorithmBase(SkoBase, metaclass=ABCMeta):
     def run(self, max_iter=None):
         self.max_iter = max_iter or self.max_iter
         for i in range(self.max_iter):
-            self.X = self.chrom2x()
+            self.X = self.chrom2x(self.Chrom)
             self.Y = self.x2y()
             self.ranking()
             self.selection()
@@ -130,9 +130,7 @@ class GA(GeneticAlgorithmBase):
         Best ranking of every generation
     Examples
     -------------
-    >>> demo_func=lambda x: x[0]**2 + x[1]**2 + x[2]**2
-    >>> ga = GA(func=demo_func,n_dim=3, max_iter=500, lb=[-1, -10, -5], ub=[2, 10, 2])
-    >>> best_x, best_y = ga.run()
+    https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py
     """
 
     def __init__(self, func, n_dim,
@@ -177,8 +175,7 @@ class GA(GeneticAlgorithmBase):
         mask = np.logspace(start=1, stop=len_gray_code, base=0.5, num=len_gray_code)
         return (b * mask).sum(axis=1) / mask.sum()
 
-    def chrom2x(self):
-        Chrom = self.Chrom
+    def chrom2x(self, Chrom):
         cumsum_len_segment = self.Lind.cumsum()
         X = np.zeros(shape=(self.size_pop, self.n_dim))
         for i, j in enumerate(cumsum_len_segment):
@@ -187,13 +184,50 @@ class GA(GeneticAlgorithmBase):
             else:
                 Chrom_temp = Chrom[:, cumsum_len_segment[i - 1]:cumsum_len_segment[i]]
             X[:, i] = self.gray2rv(Chrom_temp)
-        self.X = self.lb + (self.ub - self.lb) * X
-        return self.X
+        X = self.lb + (self.ub - self.lb) * X
+        return X
 
     ranking = ranking.ranking
     selection = selection.selection_tournament_faster
     crossover = crossover.crossover_2point_bit
     mutation = mutation.mutation
+
+    def to(self, device):
+        '''
+        use pytorch to get parallel performance
+        '''
+        try:
+            import torch
+            from .operators_gpu import crossover_gpu, mutation_gpu, selection_gpu, ranking_gpu
+        except:
+            print('pytorch is needed')
+            return self
+
+        self.device = device
+        self.Chrom = torch.tensor(self.Chrom, device=device, dtype=torch.int8)
+
+        def chrom2x(self, Chrom):
+            '''
+            We do not intend to make all operators as tensor,
+            because objective function is probably not for pytorch
+            '''
+            Chrom = Chrom.cpu().numpy()
+            cumsum_len_segment = self.Lind.cumsum()
+            X = np.zeros(shape=(self.size_pop, self.n_dim))
+            for i, j in enumerate(cumsum_len_segment):
+                if i == 0:
+                    Chrom_temp = Chrom[:, :cumsum_len_segment[0]]
+                else:
+                    Chrom_temp = Chrom[:, cumsum_len_segment[i - 1]:cumsum_len_segment[i]]
+                X[:, i] = self.gray2rv(Chrom_temp)
+            X = self.lb + (self.ub - self.lb) * X
+            return X
+
+        self.register('mutation', mutation_gpu.mutation). \
+            register('crossover', crossover_gpu.crossover_2point_bit). \
+            register('chrom2x', chrom2x)
+
+        return self
 
 
 class GA_TSP(GeneticAlgorithmBase):
@@ -250,9 +284,8 @@ class GA_TSP(GeneticAlgorithmBase):
         self.Chrom = tmp.argsort(axis=1)
         return self.Chrom
 
-    def chrom2x(self):
-        self.X = self.Chrom
-        return self.X
+    def chrom2x(self, Chrom):
+        return Chrom
 
     ranking = ranking.ranking
     selection = selection.selection_tournament_faster
@@ -263,7 +296,7 @@ class GA_TSP(GeneticAlgorithmBase):
         self.max_iter = max_iter or self.max_iter
         for i in range(self.max_iter):
             Chrom_old = self.Chrom.copy()
-            self.X = self.chrom2x()
+            self.X = self.chrom2x(self.Chrom)
             self.Y = self.x2y()
             self.ranking()
             self.selection()
@@ -272,7 +305,7 @@ class GA_TSP(GeneticAlgorithmBase):
 
             # put parent and offspring together and select the best size_pop number of population
             self.Chrom = np.concatenate([Chrom_old, self.Chrom], axis=0)
-            self.X = self.chrom2x()
+            self.X = self.chrom2x(self.Chrom)
             self.Y = self.x2y()
             self.ranking()
             selected_idx = np.argsort(self.Y)[:self.size_pop]
@@ -289,3 +322,32 @@ class GA_TSP(GeneticAlgorithmBase):
         global_best_X = self.generation_best_X[global_best_index]
         global_best_Y = self.func(np.array([global_best_X]))
         return global_best_X, global_best_Y
+
+# %%
+# try:
+#     import torch
+
+# import torch
+# from .operators_gpu import crossover_gpu, mutation_gpu, selection_gpu, ranking_gpu
+#
+#
+# class GA_GPU(GA):
+#
+#     def to(self, device):
+#         self.device = device
+#         self.Chrom = torch.tensor(self.Chrom, device=device, dtype=torch.int8)
+#
+#         def chrom2x(self, Chrom):
+#             '''
+#             We do not intend to make all operators as tensor,
+#             because objective function is probably not for pytorch
+#             '''
+#             Chrom = Chrom.cpu().numpy()
+#             return super().chrom2x(Chrom)
+#
+#         self.register('mutation', mutation_gpu.mutation). \
+#             register('crossover', crossover_gpu.crossover_2point_bit). \
+#             register('selection', selection_gpu.selection_tournament_faster). \
+#             register('chrom2x', chrom2x)
+#
+#         return self

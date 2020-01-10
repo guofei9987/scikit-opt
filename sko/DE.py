@@ -33,7 +33,7 @@ class DE(GeneticAlgorithmBase):
         self.X = np.random.uniform(low=self.lb, high=self.ub, size=(self.size_pop, self.n_dim))
         return self.X
 
-    def chrom2x(self):
+    def chrom2x(self, Chrom):
         pass
 
     def ranking(self):
