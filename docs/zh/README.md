@@ -19,8 +19,8 @@ pip install scikit-opt
 ```
 或者直接把源代码中的 `sko` 文件夹下载下来放本地也调用可以
 
-## 特点
-### 特点1：UDF（用户自定义算子）
+## 特性
+### 特性1：UDF（用户自定义算子）
 
 举例来说，你想出一种新的“选择算子”，如下
 -> Demo code: [examples/demo_ga_udf.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L1)
@@ -99,9 +99,12 @@ best_x, best_y = my_ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 ```
 
+### 特性2: GPU 加速
+GPU加速功能还比较简单，将会在 1.0.0 版本大大完善。  
+有个 demo 已经可以在现版本运行了: [https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_gpu.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_gpu.py)
 
-### 特点2：断点继续运行
-例如，先跑10代，然后再跑20代，可以这么写：
+### 特性3：断点继续运行
+例如，先跑10代，然后在此基础上再跑20代，可以这么写：
 ```python
 from sko.GA import GA
 
