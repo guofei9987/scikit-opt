@@ -52,8 +52,8 @@ cd scikit-opt
 pip install .
 ```
 
-
-### Feature1: UDF
+# Features
+## Feature1: UDF
 
 **UDF** (user defined function) is available now!
 
@@ -133,11 +133,11 @@ my_ga = MyGA(func=demo_func, n_dim=3, size_pop=100, max_iter=500, lb=[-1, -10, -
 best_x, best_y = my_ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 ```
-### feature2: GPU computation
+## feature2: GPU computation
  We are developing GPU computation, which will be stable on version 1.0.0  
 An example is already available: [https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_gpu.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_gpu.py)
 
-###  feature3: continue to run
+##  feature3: continue to run
 (New in version 0.3.6)  
 Run an algorithm for 10 iterations, and then run another 20 iterations base on the 10 iterations before:
 ```python
