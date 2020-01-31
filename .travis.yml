@@ -22,7 +22,7 @@ script:
   - coverage run -p examples/demo_sa_tsp.py examples/data/nctu.csv
   - coverage run -p examples/demo_aca_tsp.py
   - coverage run -p examples/demo_ia.py
-  - coverage run -p examples/demo_asfs.py
+  - coverage run -p examples/demo_afsa.py
   - coverage run -p examples/demo_pso_ani.py
   - coverage run -p examples/demo_de.py
 

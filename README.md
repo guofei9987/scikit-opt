@@ -451,19 +451,19 @@ print('best routine:', best_points, 'best_distance:', best_distance)
 
 ![IA](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/ia2.png?raw=true)
 
-## 7. artificial fish swarm algorithm (AFSA)
--> Demo code: [examples/demo_asfs.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_asfs.py#L1)
+## 7. Artificial Fish Swarm Algorithm (AFSA)
+-> Demo code: [examples/demo_afsa.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_afsa.py#L1)
 ```python
 def func(x):
     x1, x2 = x
     return 1 / x1 ** 2 + x1 ** 2 + 1 / x2 ** 2 + x2 ** 2
 
 
-from sko.ASFA import ASFA
+from sko.AFSA import AFSA
 
-asfa = ASFA(func, n_dim=2, size_pop=50, max_iter=300,
+afsa = AFSA(func, n_dim=2, size_pop=50, max_iter=300,
             max_try_num=100, step=0.5, visual=0.3,
             q=0.98, delta=0.5)
-best_x, best_y = asfa.run()
+best_x, best_y = afsa.run()
 print(best_x, best_y)
 ```
