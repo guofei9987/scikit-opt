@@ -322,32 +322,3 @@ class GA_TSP(GeneticAlgorithmBase):
         global_best_X = self.generation_best_X[global_best_index]
         global_best_Y = self.func(np.array([global_best_X]))
         return global_best_X, global_best_Y
-
-# %%
-# try:
-#     import torch
-
-# import torch
-# from .operators_gpu import crossover_gpu, mutation_gpu, selection_gpu, ranking_gpu
-#
-#
-# class GA_GPU(GA):
-#
-#     def to(self, device):
-#         self.device = device
-#         self.Chrom = torch.tensor(self.Chrom, device=device, dtype=torch.int8)
-#
-#         def chrom2x(self, Chrom):
-#             '''
-#             We do not intend to make all operators as tensor,
-#             because objective function is probably not for pytorch
-#             '''
-#             Chrom = Chrom.cpu().numpy()
-#             return super().chrom2x(Chrom)
-#
-#         self.register('mutation', mutation_gpu.mutation). \
-#             register('crossover', crossover_gpu.crossover_2point_bit). \
-#             register('selection', selection_gpu.selection_tournament_faster). \
-#             register('chrom2x', chrom2x)
-#
-#         return self
