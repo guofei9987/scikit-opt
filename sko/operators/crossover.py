@@ -77,7 +77,7 @@ def crossover_pmx(self):
         pos2_recorder = {value: idx for idx, value in enumerate(Chrom2)}
         for j in range(cxpoint1, cxpoint2):
             value1, value2 = Chrom1[j], Chrom2[j]
-            pos1, pos2 = pos1_recorder[value1], pos2_recorder[value2]
+            pos1, pos2 = pos1_recorder[value2], pos2_recorder[value1]
             Chrom1[j], Chrom1[pos1] = Chrom1[pos1], Chrom1[j]
             Chrom2[j], Chrom2[pos2] = Chrom2[pos2], Chrom2[j]
             pos1_recorder[value1], pos1_recorder[value2] = pos1, j
