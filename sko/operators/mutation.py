@@ -37,6 +37,12 @@ def swap(individual):
 
 
 def reverse(individual):
+    '''
+    Reverse n1 to n2
+    Also called `2-Opt`: removes two random edges, reconnecting them so they cross
+    Karan Bhatia, "Genetic Algorithms and the Traveling Salesman Problem", 1994
+    https://pdfs.semanticscholar.org/c5dd/3d8e97202f07f2e337a791c3bf81cd0bbb13.pdf
+    '''
     n1, n2 = np.random.randint(0, individual.shape[0] - 1, 2)
     if n1 >= n2:
         n1, n2 = n2, n1 + 1
