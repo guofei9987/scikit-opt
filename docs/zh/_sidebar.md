@@ -2,4 +2,5 @@
 * [更多遗传算法](zh/more_ga.md)
 * [更多粒子群算法](zh/more_pso.md)
 * [更多模拟退火算法](zh/more_pso.md)
+* [遗传算法做曲线拟合](zh/curve_fitting.md)
 * [提升速度](zh/speed_up.md)

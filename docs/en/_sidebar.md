@@ -2,4 +2,5 @@
 * [More Genetic Algorithm](en/more_ga.md)
 * [More Particle Swarm Optimization](en/more_pso.md)
 * [More Simulated Annealing](en/more_pso.md)
+* [Curve fiting](en/curve_fitting.md)
 * [Speed Up](en/speed_up.md)
