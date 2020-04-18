@@ -118,7 +118,7 @@ class SAFast(SimulatedAnnealingBase):
     def __init__(self, func, x0, T_max=100, T_min=1e-7, L=300, max_stay_counter=150, **kwargs):
         super().__init__(func, x0, T_max, T_min, L, max_stay_counter, **kwargs)
         self.m, self.n, self.quench = kwargs.get('m', 1), kwargs.get('n', 1), kwargs.get('quench', 1)
-        self.lower, self.upper = kwargs.get('m', -10), kwargs.get('m', 10)
+        self.lower, self.upper = kwargs.get('lower', -10), kwargs.get('upper', 10)
         self.c = self.m * np.exp(-self.n * self.quench)
 
     def get_new_x(self, x):
@@ -142,9 +142,8 @@ class SABoltzmann(SimulatedAnnealingBase):
 
     def __init__(self, func, x0, T_max=100, T_min=1e-7, L=300, max_stay_counter=150, **kwargs):
         super().__init__(func, x0, T_max, T_min, L, max_stay_counter, **kwargs)
-        self.upper = kwargs.get('m', 10)
-        self.lower = kwargs.get('m', -10)
-        self.learn_rate = kwargs.get('m', 0.5)
+        self.lower, self.upper = kwargs.get('lower', -10), kwargs.get('upper', 10)
+        self.learn_rate = kwargs.get('learn_rate', 0.5)
 
     def get_new_x(self, x):
         std = min(np.sqrt(self.T), (self.upper - self.lower) / 3.0 / self.learn_rate) * np.ones(self.n_dims)
@@ -167,7 +166,7 @@ class SACauchy(SimulatedAnnealingBase):
 
     def __init__(self, func, x0, T_max=100, T_min=1e-7, L=300, max_stay_counter=150, **kwargs):
         super().__init__(func, x0, T_max, T_min, L, max_stay_counter, **kwargs)
-        self.learn_rate = kwargs.get('m', 0.5)
+        self.learn_rate = kwargs.get('learn_rate', 0.5)
 
     def get_new_x(self, x):
         u = np.random.uniform(-np.pi / 2, np.pi / 2, size=self.n_dims)
