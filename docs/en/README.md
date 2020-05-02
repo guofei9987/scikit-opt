@@ -218,7 +218,7 @@ Y_history.min(axis=1).cummin().plot(kind='line')
 plt.show()
 ```
 
-![Figure_1-1](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/ga_1.png?raw=true)
+![Figure_1-1](https://img1.github.io/heuristic_algorithm/ga_1.png)
 
 ### 2.2 Genetic Algorithm for TSP(Travelling Salesman Problem)
 Just import the `GA_TSP`, it overloads the `crossover`, `mutation` to solve the TSP
@@ -269,7 +269,7 @@ ax[1].plot(ga_tsp.generation_best_Y)
 plt.show()
 ```
 
-![GA_TPS](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/ga_tsp.png?raw=true)
+![GA_TPS](https://img1.github.io/heuristic_algorithm/ga_tsp.png)
 
 
 ## 3. PSO(Particle swarm optimization)
@@ -307,10 +307,10 @@ plt.show()
 ```
 
 
-![PSO_TPS](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/pso.png?raw=true)
+![PSO_TPS](https://img1.github.io/heuristic_algorithm/pso.png)
 
 
-![pso_ani](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/pso.gif?raw=true)  
+![pso_ani](https://img1.github.io/heuristic_algorithm/pso.gif)  
 ↑**see [examples/demo_pso_ani.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso_ani.py)**
 
 ### 3.2 PSO without constraint
@@ -350,7 +350,7 @@ plt.plot(pd.DataFrame(sa.best_y_history).cummin(axis=0))
 plt.show()
 
 ```
-![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa.png?raw=true)
+![sa](https://img1.github.io/heuristic_algorithm/sa.png)
 
 
 Moreover, scikit-opt provide 3 types of Simulated Annealing: Fast, Boltzmann, Cauchy. See [more sa](https://scikit-opt.github.io/scikit-opt/#/en/more_sa)
@@ -389,18 +389,18 @@ ax[1].set_ylabel("Latitude")
 plt.show()
 
 ```
-![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa_tsp.png?raw=true)
+![sa](https://img1.github.io/heuristic_algorithm/sa_tsp.png)
 
 
 More: Plot the animation:  
 
-![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa_tsp1.gif?raw=true)  
+![sa](https://img1.github.io/heuristic_algorithm/sa_tsp1.gif)  
 ↑**see [examples/demo_sa_tsp.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py)**
 
 
 
 
-## 5. ACA (Ant Colony Algorithm) for tsp 
+## 5. ACA (Ant Colony Algorithm) for tsp
 -> Demo code: [examples/demo_aca_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_aca_tsp.py#L17)
 ```python
 from sko.ACA import ACA_TSP
@@ -413,7 +413,7 @@ best_x, best_y = aca.run()
 
 ```
 
-![ACA](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/aca_tsp.png?raw=true)
+![ACA](https://img1.github.io/heuristic_algorithm/aca_tsp.png)
 
 
 ## 6. immune algorithm (IA)
@@ -429,7 +429,7 @@ print('best routine:', best_points, 'best_distance:', best_distance)
 
 ```
 
-![IA](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/ia2.png?raw=true)
+![IA](https://img1.github.io/heuristic_algorithm/ia2.png)
 
 ## 7. Artificial Fish Swarm Algorithm (AFSA)
 -> Demo code: [examples/demo_afsa.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_afsa.py#L1)

@@ -64,7 +64,7 @@ ga.register(operator_name='ranking', operator=ranking.ranking). \
     register(operator_name='crossover', operator=crossover.crossover_2point). \
     register(operator_name='mutation', operator=mutation.mutation)
 ```
-做遗传算法运算 
+做遗传算法运算
 -> Demo code: [examples/demo_ga_udf.py#s5](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L28)
 ```python
 best_x, best_y = ga.run()
@@ -204,7 +204,7 @@ Y_history.min(axis=1).cummin().plot(kind='line')
 plt.show()
 ```
 
-![Figure_1-1](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/ga_1.png?raw=true)
+![Figure_1-1](https://img1.github.io/heuristic_algorithm/ga_1.png)
 
 ### 2.2 遗传算法用于旅行商问题
 `GA_TSP` 针对TSP问题重载了 `交叉(crossover)`、`变异(mutation)` 两个算子
@@ -256,7 +256,7 @@ ax[1].plot(ga_tsp.generation_best_Y)
 plt.show()
 ```
 
-![GA_TPS](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/ga_tsp.png?raw=true)
+![GA_TPS](https://img1.github.io/heuristic_algorithm/ga_tsp.png)
 
 
 ## 3. 粒子群算法
@@ -292,9 +292,9 @@ plt.show()
 
 ```
 
-![PSO_TPS](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/pso.png?raw=true)
+![PSO_TPS](https://img1.github.io/heuristic_algorithm/pso.png)
 
-![pso_ani](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/pso.gif?raw=true)  
+![pso_ani](https://img1.github.io/heuristic_algorithm/pso.gif)  
 ↑**see [examples/demo_pso.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso_ani.py)**
 
 
@@ -326,7 +326,7 @@ best_x, best_y = sa.run()
 print('best_x:', best_x, 'best_y', best_y)
 
 ```
-![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa.png?raw=true)
+![sa](https://img1.github.io/heuristic_algorithm/sa.png)
 
 **第三步**，画出结果
 -> Demo code: [examples/demo_sa.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa.py#L10)
@@ -377,10 +377,10 @@ ax[1].set_ylabel("Latitude")
 plt.show()
 
 ```
-![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa_tsp.png?raw=true)
+![sa](https://img1.github.io/heuristic_algorithm/sa_tsp.png)
 
 咱还有个动画  
-![sa](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/sa_tsp1.gif?raw=true)  
+![sa](https://img1.github.io/heuristic_algorithm/sa_tsp1.gif)  
 ↑**参考代码 [examples/demo_sa_tsp.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py)**
 
 ## 5. 蚁群算法
@@ -398,7 +398,7 @@ best_x, best_y = aca.run()
 
 ```
 
-![ACA](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/aca_tsp.png?raw=true)
+![ACA](https://img1.github.io/heuristic_algorithm/aca_tsp.png)
 
 
 
@@ -417,7 +417,7 @@ print('best routine:', best_points, 'best_distance:', best_distance)
 
 ```
 
-![IA](https://github.com/guofei9987/pictures_for_blog/blob/master/heuristic_algorithm/ia2.png?raw=true)
+![IA](https://img1.github.io/heuristic_algorithm/ia2.png)
 
 
 ## 7. 人工鱼群算法
@@ -438,4 +438,3 @@ afsa = AFSA(func, n_dim=2, size_pop=50, max_iter=300,
 best_x, best_y = afsa.run()
 print(best_x, best_y)
 ```
-

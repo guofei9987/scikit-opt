@@ -1,3 +1,6 @@
 ##ignore this file##
-/__pycache__/ 
+__pycache__/
 /.idea/
+/build/
+/dist/
+/scikit_opt.egg-info/
