@@ -70,3 +70,12 @@ plt.show()
 ```
 
 ![image](https://user-images.githubusercontent.com/19920283/83831463-0ac6a400-a71a-11ea-8692-beac5f465111.png)
+
+For more information, click [here](https://github.com/guofei9987/scikit-opt/issues/58)
+
+## How to set up starting point or initial population
+
+- For `GA`, after `ga=GA(**params)`, use codes like `ga.Chrom = np.random.randint(0,2,size=(80,20))` to manually set the initial population.  
+- For `DE`, set `de.X` to your initial X.  
+- For `SA`, there is a parameter `x0`, which is the init point.
+- For `PSO`, set `pso.X` to your initial X, and run `pso.cal_y(); pso.update_gbest(); pso.update_pbest()`
