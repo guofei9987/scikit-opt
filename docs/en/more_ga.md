@@ -13,11 +13,11 @@ print('best_x:', best_x, '\n', 'best_y:', best_y)
 ```
 
 Notice:
-- if `precision` is an integer, and the number of all possible value is $2^n$, the performance is best
-- if `precision` is an integer, and the number of all possible value is not $2^n$, `GA` do these:
+- If `precision` is an integer, the number of all possible value would better be $2^n$, in which case the performance is the best. It also works if the number is not $2^n$
+<!-- - if `precision` is an integer, and the number of all possible value is not $2^n$, `GA` do these:
     1. Modify `ub` bigger, making the number of all possible value to be $2^n$
     2. Add an **unequal constraint**, and use penalty function to deal with it
-    3. If your **equal constraint** `constraint_eq` 和 **unequal constraint** `constraint_ueq` is too much, the performance is not too good. you may want to manually deal with it.
+    3. If your **equal constraint** `constraint_eq` 和 **unequal constraint** `constraint_ueq` is too much, the performance is not too good. you may want to manually deal with it. -->
 - If `precision` is not an integer, but you still want this mode, manually deal with it. For example, your original `precision=0.5`, just make a new variable, multiplied by `2`
 
 
@@ -49,7 +49,7 @@ def cal_total_distance(routine):
     cal_total_distance(np.arange(num_points))
     '''
     num_points, = routine.shape
-    routine = np.concatenate([[num_points],routine,[num_points+1]]) 
+    routine = np.concatenate([[num_points], routine, [num_points+1]])
     return sum([distance_matrix[routine[i], routine[i + 1]] for i in range(num_points+2-1)])
 ```
 

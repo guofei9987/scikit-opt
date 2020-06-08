@@ -150,16 +150,13 @@ class GA(GeneticAlgorithmBase):
 
         # if precision is integer:
         # if Lind_raw is integer, which means the number of all possible value is 2**n, no need to modify
-        # if Lind_raw is decimal, modify: make the ub bigger and add a constraint_ueq
-        int_mode = (self.precision % 1 == 0) & (Lind_raw % 1 != 0)
-        # int_mode is an array of True/False. If True, variable is int constraint and need more code to deal with
-        for i in range(self.n_dim):
-            if int_mode[i]:
-                self.constraint_ueq.append(
-                    lambda x: x[i] - self.ub[i]
-                )
-                self.has_constraint = True
-                self.ub[i] = self.lb[i] + np.exp2(self.Lind[i]) - 1
+        # if Lind_raw is decimal, we need ub_extend to make the number equal to 2**n,
+        self.int_mode_ = (self.precision % 1 == 0) & (Lind_raw % 1 != 0)
+        self.int_mode = np.any(self.int_mode_)
+        if self.int_mode:
+            self.ub_extend = np.where(self.int_mode_
+                                      , self.lb + (np.exp2(self.Lind) - 1) * self.precision
+                                      , self.ub)
 
         self.len_chrom = sum(self.Lind)
 
@@ -188,7 +185,14 @@ class GA(GeneticAlgorithmBase):
             else:
                 Chrom_temp = Chrom[:, cumsum_len_segment[i - 1]:cumsum_len_segment[i]]
             X[:, i] = self.gray2rv(Chrom_temp)
-        X = self.lb + (self.ub - self.lb) * X
+
+        if self.int_mode:
+            X = self.lb + (self.ub_extend - self.lb) * X
+            X = np.where(X > self.ub, self.ub, X)
+            # the ub may not obey precision, which is ok.
+            # for example, if precision=2, lb=0, ub=5, then x can be 5
+        else:
+            X = self.lb + (self.ub - self.lb) * X
         return X
 
     ranking = ranking.ranking
@@ -224,7 +228,12 @@ class GA(GeneticAlgorithmBase):
                 else:
                     Chrom_temp = Chrom[:, cumsum_len_segment[i - 1]:cumsum_len_segment[i]]
                 X[:, i] = self.gray2rv(Chrom_temp)
-            X = self.lb + (self.ub - self.lb) * X
+
+            if self.int_mode:
+                X = self.lb + (self.ub_extend - self.lb) * X
+                X = np.where(X > self.ub, self.ub, X)
+            else:
+                X = self.lb + (self.ub - self.lb) * X
             return X
 
         self.register('mutation', mutation_gpu.mutation). \

@@ -14,12 +14,12 @@ print('best_x:', best_x, '\n', 'best_y:', best_y)
 ```
 
 说明：
-- 当 `precision` 为整数时，会启用整数规划模式。
-- 在整数规划模式下，如果某个变量的取值可能个数是 $2^n$，不会对性能有影响
-- 在整数规划模式下，如果某个变量的取值可能个数不是 $2^n$，`GA` 会做这些事：
+- 当 `precision` 为整数时，对应的自变量会启用整数规划模式。
+- 在整数规划模式下，变量的取值可能个数最好是 $2^n$，这样收敛速度快，效果好。
+<!-- - 在整数规划模式下，如果某个变量的取值可能个数不是 $2^n$，`GA` 会做这些事：
     1. 调整 `ub`，使得可能取值扩展成 $2^n$ 个
     2. 增加一个 **不等式约束** `constraint_ueq`，并使用罚函数法来处理
-    3. 如果你的 **等式约束** `constraint_eq` 和 **不等式约束** `constraint_ueq` 已经很多了，更加推荐先手动做调整，以规避可能个数不是 $2^n$这种情况，毕竟太多的约束会影响性能。
+    3. 如果你的 **等式约束** `constraint_eq` 和 **不等式约束** `constraint_ueq` 已经很多了，更加推荐先手动做调整，以规避可能个数不是 $2^n$这种情况，毕竟太多的约束会影响性能。 -->
 - 如果 `precision` 不是整数（例如是0.5）,则不会进入整数规划模式，如果还想用这个模式，那么把对应自变量乘以2，这样 `precision` 就是整数了。
 
 ## 遗传TSP问题如何固定起点和终点？
@@ -50,7 +50,7 @@ def cal_total_distance(routine):
     '''
     num_points, = routine.shape
     # start_point,end_point 本身不参与优化。给一个固定的值，参与计算总路径
-    routine=np.concatenate([[num_points],routine,[num_points+1]]) 
+    routine = np.concatenate([[num_points], routine, [num_points+1]])
     return sum([distance_matrix[routine[i], routine[i + 1]] for i in range(num_points+2-1)])
 ```
 
@@ -76,7 +76,7 @@ plt.show()
 
 ## 如何设定初始点或初始种群
 
-- 对于遗传算法 `GA`, 运行 `ga=GA(**params)` 生成模型后，赋值设定初始种群，例如 `ga.Chrom = np.random.randint(0,2,size=(80,20))` 
+- 对于遗传算法 `GA`, 运行 `ga=GA(**params)` 生成模型后，赋值设定初始种群，例如 `ga.Chrom = np.random.randint(0,2,size=(80,20))`
 - 对于查分进化算法 `DE`，设定 `de.X` 为初始 X.  
 - 对于模拟退火算法 `SA`，入参 `x0` 就是初始点.
 - 对于粒子群算法 `PSO`，手动赋值 `pso.X` 为初始 X, 然后执行 `pso.cal_y(); pso.update_gbest(); pso.update_pbest()` 来更新历史最优点
