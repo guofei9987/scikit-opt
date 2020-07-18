@@ -6,7 +6,7 @@ __all__ = ['crossover_1point', 'crossover_2point', 'crossover_2point_bit', 'cros
 def crossover_1point(self):
     Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
     for i in range(0, size_pop, 2):
-        n = np.random.randint(0, self.len_chrom, 1)
+        n = np.random.randint(0, self.len_chrom)
         # crossover at the point n
         seg1, seg2 = self.Chrom[i, n:].copy(), self.Chrom[i + 1, n:].copy()
         self.Chrom[i, n:], self.Chrom[i + 1, n:] = seg2, seg1
