@@ -108,9 +108,9 @@ class GA(GeneticAlgorithmBase):
         The lower bound of every variables of func
     ub : array_like
         The upper bound of every vaiiables of func
-    constraint_eq : list
+    constraint_eq : tuple
         equal constraint
-    constraint_ueq : list
+    constraint_ueq : tuple
         unequal constraint
     precision : array_like
         The precision of every vaiiables of func
