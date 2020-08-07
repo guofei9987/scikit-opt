@@ -132,7 +132,8 @@ class AFSA:
         self.X[idx_individual, :] = x_new
         self.Y[idx_individual] = self.func(x_new)
         if self.Y[idx_individual] < self.best_Y:
-            self.best_X = self.X[idx_individual, :]
+            self.best_X = self.X[idx_individual, :].copy()
+            self.best_Y = self.Y[idx_individual].copy()
 
     def move(self, idx_individual):
         '''
@@ -146,7 +147,8 @@ class AFSA:
         self.X[idx_individual, :] = x_new
         self.Y[idx_individual] = self.func(x_new)
         if self.Y[idx_individual] < self.best_Y:
-            self.best_X = self.X[idx_individual, :]
+            self.best_X = self.X[idx_individual, :].copy()
+            self.best_Y = self.Y[idx_individual].copy()
 
     def prey(self, idx_individual):
         '''
