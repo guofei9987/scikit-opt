@@ -70,7 +70,8 @@ help(sko.AFSA.AFSA)
 | F         | 0\.5   | 变异系数     |
 | lb        | \-1    | 每个参数的最小值 |
 | ub        | 1      | 每个参数的最大值 |
-
+| constraint\_eq  | 空元组    | 线性约束                   |
+| constraint\_ueq | 空元组    | 非线性约束                  |
 
 ### SA
 

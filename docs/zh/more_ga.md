@@ -77,6 +77,6 @@ plt.show()
 ## 如何设定初始点或初始种群
 
 - 对于遗传算法 `GA`, 运行 `ga=GA(**params)` 生成模型后，赋值设定初始种群，例如 `ga.Chrom = np.random.randint(0,2,size=(80,20))`
-- 对于查分进化算法 `DE`，设定 `de.X` 为初始 X.  
+- 对于差分进化算法 `DE`，设定 `de.X` 为初始 X.  
 - 对于模拟退火算法 `SA`，入参 `x0` 就是初始点.
 - 对于粒子群算法 `PSO`，手动赋值 `pso.X` 为初始 X, 然后执行 `pso.cal_y(); pso.update_gbest(); pso.update_pbest()` 来更新历史最优点
