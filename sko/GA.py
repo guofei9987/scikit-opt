@@ -107,13 +107,13 @@ class GA(GeneticAlgorithmBase):
     lb : array_like
         The lower bound of every variables of func
     ub : array_like
-        The upper bound of every vaiiables of func
+        The upper bound of every variables of func
     constraint_eq : tuple
         equal constraint
     constraint_ueq : tuple
         unequal constraint
     precision : array_like
-        The precision of every vaiiables of func
+        The precision of every variables of func
     size_pop : int
         Size of population
     max_iter : int
