@@ -43,7 +43,9 @@ class SimulatedAnnealingBase(SkoBase):
         self.T_max = T_max  # initial temperature
         self.T_min = T_min  # end temperature
         self.L = int(L)  # num of iteration under every temperature（also called Long of Chain）
-        self.max_stay_counter = max_stay_counter  # stop if best_y stay unchanged over max_stay_counter times
+        # stop if best_y stay unchanged over max_stay_counter times (also called cooldown time)
+        self.max_stay_counter = max_stay_counter
+
 
         self.n_dims = len(x0)
 

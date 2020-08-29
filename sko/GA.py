@@ -39,6 +39,8 @@ class GeneticAlgorithmBase(SkoBase, metaclass=ABCMeta):
         self.all_history_Y = []
         self.all_history_FitV = []
 
+        self.best_x, self.best_y = None, None
+
     @abstractmethod
     def chrom2x(self, Chrom):
         pass
@@ -88,9 +90,9 @@ class GeneticAlgorithmBase(SkoBase, metaclass=ABCMeta):
             self.all_history_FitV.append(self.FitV)
 
         global_best_index = np.array(self.generation_best_Y).argmin()
-        global_best_X = self.generation_best_X[global_best_index]
-        global_best_Y = self.func(np.array([global_best_X]))
-        return global_best_X, global_best_Y
+        self.best_x = self.generation_best_X[global_best_index]
+        self.best_y = self.func(np.array([self.best_x]))
+        return self.best_x, self.best_y
 
     fit = run
 
@@ -332,6 +334,6 @@ class GA_TSP(GeneticAlgorithmBase):
             self.all_history_FitV.append(self.FitV.copy())
 
         global_best_index = np.array(self.generation_best_Y).argmin()
-        global_best_X = self.generation_best_X[global_best_index]
-        global_best_Y = self.func(np.array([global_best_X]))
-        return global_best_X, global_best_Y
+        self.best_x = self.generation_best_X[global_best_index]
+        self.best_y = self.func(np.array([self.best_x]))
+        return self.best_x, self.best_y

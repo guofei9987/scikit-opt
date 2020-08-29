@@ -1,5 +1,6 @@
 from abc import ABCMeta, abstractmethod
 import types
+import warnings
 
 
 class SkoBase(metaclass=ABCMeta):
@@ -18,6 +19,11 @@ class SkoBase(metaclass=ABCMeta):
 
         setattr(self, operator_name, types.MethodType(operator_wapper, self))
         return self
+
+    def fit(self, *args, **kwargs):
+        warnings.warn('.fit() will be deprecated in the future. use .run() instead.'
+                      , DeprecationWarning)
+        return self.run(*args, **kwargs)
 
 
 class Problem(object):

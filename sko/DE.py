@@ -11,10 +11,6 @@ from .operators import crossover, mutation, ranking, selection
 from .GA import GeneticAlgorithmBase, GA
 
 
-class DifferentialEvolutionBase(SkoBase, metaclass=ABCMeta):
-    pass
-
-
 class DE(GeneticAlgorithmBase):
     def __init__(self, func, n_dim, F=0.5,
                  size_pop=50, max_iter=200, prob_mut=0.3,
@@ -94,6 +90,6 @@ class DE(GeneticAlgorithmBase):
             self.all_history_Y.append(self.Y)
 
         global_best_index = np.array(self.generation_best_Y).argmin()
-        global_best_X = self.generation_best_X[global_best_index]
-        global_best_Y = self.func(np.array([global_best_X]))
-        return global_best_X, global_best_Y
+        self.best_x = self.generation_best_X[global_best_index]
+        self.best_y = self.func(np.array([self.best_x]))
+        return self.best_x, self.best_y

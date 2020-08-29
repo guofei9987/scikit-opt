@@ -90,7 +90,7 @@ help(sko.AFSA.AFSA)
 | 入参               | 默认值  | 意义                   |
 |------------------|------|----------------------|
 | func             | \-   | 目标函数                 |
-| n\_dim           | \-   | 城市数量                 |
+| n\_dim           | \-   | 城市个数                 |
 | size\_pop        | 10   | 蚂蚁数量                 |
 | max\_iter        | 20   | 最大迭代次数               |
 | distance\_matrix | \-   | 城市之间的距离矩阵，用于计算信息素的挥发 |
@@ -125,3 +125,59 @@ help(sko.AFSA.AFSA)
 | visual        | 0\.3  | 鱼的最大感知范围         |
 | q             | 0\.98 | 鱼的感知范围衰减系数       |
 | delta         | 0\.5  | 拥挤度阈值，越大越容易聚群和追尾 |
+
+## 输出一览
+
+
+### GA&GA_TSP
+
+- `ga.generation_best_Y` 每一代的最优函数值
+- `ga.generation_best_X` 每一代的最优函数值对应的输入值
+- `ga.all_history_FitV` 每一代的每个个体的适应度
+- `ga.all_history_Y` 每一代每个个体的函数值
+- `ga.best_y` 最优函数值
+- `ga.best_x` 最优函数值对应的输入值
+
+### DE
+
+
+- `de.generation_best_Y` 每一代的最优函数值
+- `de.generation_best_X` 每一代的最优函数值对应的输入值
+- `de.all_history_Y` 每一代每个个体的函数值
+- `de.best_y` 最优函数值
+- `de.best_x` 最优函数值对应的输入值
+
+
+### PSO
+- `pso.record_value` 每一代的粒子位置、粒子速度、对应的函数值。`pso.record_mode = True` 才开启记录
+- `pso.gbest_y_hist` 历史最优函数值
+- `pso.best_y` 最优函数值 （迭代中使用的是 `pso.gbest_x`, `pso.gbest_y`）
+- `pso.best_x` 最优函数值对应的输入值
+
+
+
+### SA
+
+- `sa.best_y_history` # 这个没能保持一致
+- `sa.best_x_history`
+- `sa.best_x` 最优函数值
+- `sa.best_y` 最优函数值对应的输入值
+
+### ACA
+- `aca.x_best_history`
+- `aca.y_best_history`
+- `aca.best_y` 最优函数值
+- `aca.best_x` 最优函数值对应的输入值
+
+### AFSA
+- `afsa.best_x` 最优函数值
+- `afsa.best_y` 最优函数值对应的输入值
+
+### IA
+
+- `ia.generation_best_Y` 每一代的最优函数值
+- `ia.generation_best_X` 每一代的最优函数值对应的输入值
+- `ia.all_history_FitV` 每一代的每个个体的适应度
+- `ia.all_history_Y` 每一代每个个体的函数值
+- `ia.best_y` 最优函数值
+- `ia.best_x` 最优函数值对应的输入值

@@ -99,6 +99,7 @@ class PSO(SkoBase):
         # record verbose values
         self.record_mode = False
         self.record_value = {'X': [], 'V': [], 'Y': []}
+        self.best_x, self.best_y = self.gbest_x, self.gbest_y
 
     def update_V(self):
         r1 = np.random.rand(self.pop, self.dim)
@@ -153,6 +154,7 @@ class PSO(SkoBase):
             self.update_gbest()
 
             self.gbest_y_hist.append(self.gbest_y)
-        return self
+        self.best_x, self.best_y = self.gbest_x, self.gbest_y
+        return self.best_x, self.best_y
 
     fit = run

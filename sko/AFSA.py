@@ -114,8 +114,8 @@ class AFSA:
         self.Y = np.array([self.func(x) for x in self.X])
 
         best_idx = self.Y.argmin()
-        self.best_Y = self.Y[best_idx]
-        self.best_X = self.X[best_idx, :]
+        self.best_x, self.best_y = self.X[best_idx, :], self.Y[best_idx]
+        self.best_X, self.best_Y = self.best_x, self.best_y  # will be deprecated, use lowercase
 
     def move_to_target(self, idx_individual, x_target):
         '''
@@ -132,8 +132,8 @@ class AFSA:
         self.X[idx_individual, :] = x_new
         self.Y[idx_individual] = self.func(x_new)
         if self.Y[idx_individual] < self.best_Y:
-            self.best_X = self.X[idx_individual, :].copy()
-            self.best_Y = self.Y[idx_individual].copy()
+            self.best_x = self.X[idx_individual, :].copy()
+            self.best_y = self.Y[idx_individual].copy()
 
     def move(self, idx_individual):
         '''
@@ -206,6 +206,5 @@ class AFSA:
                 self.swarm(idx_individual)
                 self.follow(idx_individual)
             self.visual *= self.q
-        return self.best_X, self.best_Y
-
-
+        self.best_X, self.best_Y = self.best_x, self.best_y  # will be deprecated, use lowercase
+        return self.best_x, self.best_y
