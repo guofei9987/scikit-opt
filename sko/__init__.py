@@ -1,4 +1,4 @@
-__version__ = '0.5.8'
+__version__ = '0.5.9'
 
 from . import DE, GA, PSO, SA, ACA, AFSA, IA
 
