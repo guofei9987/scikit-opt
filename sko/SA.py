@@ -46,15 +46,15 @@ class SimulatedAnnealingBase(SkoBase):
         # stop if best_y stay unchanged over max_stay_counter times (also called cooldown time)
         self.max_stay_counter = max_stay_counter
 
-
         self.n_dims = len(x0)
 
         self.best_x = np.array(x0)  # initial solution
         self.best_y = self.func(self.best_x)
         self.T = self.T_max
         self.iter_cycle = 0
-        self.best_y_history = [self.best_y]
-        self.best_x_history = [self.best_x]
+        self.generation_best_X, self.generation_best_Y = [self.best_x], [self.best_y]
+        # history reasons, will be deprecated
+        self.best_x_history, self.best_y_history = self.generation_best_X, self.generation_best_Y
 
     def get_new_x(self, x):
         u = np.random.uniform(-1, 1, size=self.n_dims)
@@ -84,8 +84,8 @@ class SimulatedAnnealingBase(SkoBase):
 
             self.iter_cycle += 1
             self.cool_down()
-            self.best_y_history.append(self.best_y)
-            self.best_x_history.append(self.best_x)
+            self.generation_best_Y.append(self.best_y)
+            self.generation_best_X.append(self.best_x)
 
             # if best_y stay for max_stay_counter times, stop iteration
             if self.isclose(self.best_y_history[-1], self.best_y_history[-2]):

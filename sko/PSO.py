@@ -99,7 +99,7 @@ class PSO(SkoBase):
         # record verbose values
         self.record_mode = False
         self.record_value = {'X': [], 'V': [], 'Y': []}
-        self.best_x, self.best_y = self.gbest_x, self.gbest_y
+        self.best_x, self.best_y = self.gbest_x, self.gbest_y  # history reasons, will be deprecated
 
     def update_V(self):
         r1 = np.random.rand(self.pop, self.dim)

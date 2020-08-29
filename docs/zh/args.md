@@ -158,14 +158,14 @@ help(sko.AFSA.AFSA)
 
 ### SA
 
-- `sa.best_y_history` # 这个没能保持一致
-- `sa.best_x_history`
+- `de.generation_best_Y` 每一代的最优函数值
+- `de.generation_best_X` 每一代的最优函数值对应的输入值
 - `sa.best_x` 最优函数值
 - `sa.best_y` 最优函数值对应的输入值
 
 ### ACA
-- `aca.x_best_history`
-- `aca.y_best_history`
+- `de.generation_best_Y` 每一代的最优函数值
+- `de.generation_best_X` 每一代的最优函数值对应的输入值
 - `aca.best_y` 最优函数值
 - `aca.best_x` 最优函数值对应的输入值
 

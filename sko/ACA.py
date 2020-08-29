@@ -25,7 +25,8 @@ class ACA_TSP:
         self.Tau = np.ones((n_dim, n_dim))  # 信息素矩阵，每次迭代都会更新
         self.Table = np.zeros((size_pop, n_dim)).astype(np.int)  # 某一代每个蚂蚁的爬行路径
         self.y = None  # 某一代每个蚂蚁的爬行总距离
-        self.x_best_history, self.y_best_history = [], []  # 记录各代的最佳情况
+        self.generation_best_X, self.generation_best_Y = [], []  # 记录各代的最佳情况
+        self.x_best_history, self.y_best_history = self.generation_best_X, self.generation_best_Y  # 历史原因，为了保持统一
         self.best_x, self.best_y = None, None
 
     def run(self, max_iter=None):
@@ -48,8 +49,8 @@ class ACA_TSP:
             # 顺便记录历史最好情况
             index_best = y.argmin()
             x_best, y_best = self.Table[index_best, :].copy(), y[index_best].copy()
-            self.x_best_history.append(x_best)
-            self.y_best_history.append(y_best)
+            self.generation_best_X.append(x_best)
+            self.generation_best_Y.append(y_best)
 
             # 计算需要新涂抹的信息素
             delta_tau = np.zeros((self.n_dim, self.n_dim))
@@ -63,9 +64,9 @@ class ACA_TSP:
             # 信息素飘散+信息素涂抹
             self.Tau = (1 - self.rho) * self.Tau + delta_tau
 
-        best_generation = np.array(self.y_best_history).argmin()
-        self.best_x = self.x_best_history[best_generation]
-        self.best_y = self.y_best_history[best_generation]
+        best_generation = np.array(self.generation_best_Y).argmin()
+        self.best_x = self.generation_best_X[best_generation]
+        self.best_y = self.generation_best_Y[best_generation]
         return self.best_x, self.best_y
 
     fit = run
