@@ -23,8 +23,8 @@ class GeneticAlgorithmBase(SkoBase, metaclass=ABCMeta):
 
         # constraint:
         self.has_constraint = len(constraint_eq) > 0 or len(constraint_ueq) > 0
-        self.constraint_eq = list(constraint_eq)  # a list of unequal constraint functions with c[i] <= 0
-        self.constraint_ueq = list(constraint_ueq)  # a list of equal functions with ceq[i] = 0
+        self.constraint_eq = list(constraint_eq)  # a list of equal functions with ceq[i] = 0
+        self.constraint_ueq = list(constraint_ueq)  # a list of unequal constraint functions with c[i] <= 0
 
         self.Chrom = None
         self.X = None  # shape = (size_pop, n_dim)
