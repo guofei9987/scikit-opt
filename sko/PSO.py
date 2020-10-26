@@ -78,7 +78,7 @@ class PSO(SkoBase):
         self.pop = pop  # number of particles
         self.dim = dim  # dimension of particles, which is the number of variables of func
         self.max_iter = max_iter  # max iter
-        self.verbose = verbose
+        self.verbose = verbose    # print the result of each iter or not
 
         self.has_constraints = not (lb is None and ub is None)
         self.lb = -np.ones(self.dim) if lb is None else np.array(lb)
@@ -144,7 +144,13 @@ class PSO(SkoBase):
         self.record_value['V'].append(self.V)
         self.record_value['Y'].append(self.Y)
 
-    def run(self, max_iter=None, precision=1e-7, N=10):
+    def run(self, max_iter=None, precision=1e-7, N=20):
+        '''
+        precision: None or float
+            If precision is None, it will run the number of max_iter steps
+            If precision is a float, the loop will stop if continuous N difference between pbest less than precision
+        N: int
+        '''
         self.max_iter = max_iter or self.max_iter
         c = 0
         for iter_num in range(self.max_iter):
