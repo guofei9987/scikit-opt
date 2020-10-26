@@ -71,13 +71,14 @@ class PSO(SkoBase):
     see https://scikit-opt.github.io/scikit-opt/#/en/README?id=_3-psoparticle-swarm-optimization
     """
 
-    def __init__(self, func, dim, pop=40, max_iter=150, lb=None, ub=None, w=0.8, c1=0.5, c2=0.5):
+    def __init__(self, func, dim, pop=40, max_iter=150, lb=None, ub=None, w=0.8, c1=0.5, c2=0.5, verbose=False):
         self.func = func_transformer(func)
         self.w = w  # inertia
         self.cp, self.cg = c1, c2  # parameters to control personal best, global best respectively
         self.pop = pop  # number of particles
         self.dim = dim  # dimension of particles, which is the number of variables of func
         self.max_iter = max_iter  # max iter
+        self.verbose = verbose
 
         self.has_constraints = not (lb is None and ub is None)
         self.lb = -np.ones(self.dim) if lb is None else np.array(lb)
@@ -143,8 +144,9 @@ class PSO(SkoBase):
         self.record_value['V'].append(self.V)
         self.record_value['Y'].append(self.Y)
 
-    def run(self, max_iter=None):
+    def run(self, max_iter=None, precision=1e-7, N=10):
         self.max_iter = max_iter or self.max_iter
+        c = 0
         for iter_num in range(self.max_iter):
             self.update_V()
             self.recorder()
@@ -152,6 +154,16 @@ class PSO(SkoBase):
             self.cal_y()
             self.update_pbest()
             self.update_gbest()
+            if precision is not None:
+                tor_iter = np.amax(self.pbest_y) - np.amin(self.pbest_y)
+                if tor_iter < precision:
+                    c = c + 1
+                    if c > N:
+                        break
+                else:
+                    c = 0
+            if self.verbose:
+                print('Iter: {}, Best fit: {} at {}'.format(iter_num, self.gbest_y, self.gbest_x))
 
             self.gbest_y_hist.append(self.gbest_y)
         self.best_x, self.best_y = self.gbest_x, self.gbest_y
