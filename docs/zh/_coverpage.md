@@ -2,7 +2,7 @@
 
 # scikit-opt
 
-> Powerful Python module for Heuristic Algorithms
+> 群体智能算法
 
 * 差分进化算法
 * 遗传算法

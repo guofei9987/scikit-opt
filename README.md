@@ -310,7 +310,7 @@ def demo_func(x):
 ```python
 from sko.PSO import PSO
 
-pso = PSO(func=demo_func, dim=3, pop=40, max_iter=150, lb=[0, -1, 0.5], ub=[1, 1, 1], w=0.8, c1=0.5, c2=0.5)
+pso = PSO(func=demo_func, n_dim=3, pop=40, max_iter=150, lb=[0, -1, 0.5], ub=[1, 1, 1], w=0.8, c1=0.5, c2=0.5)
 pso.run()
 print('best_x is ', pso.gbest_x, 'best_y is', pso.gbest_y)
 
@@ -323,7 +323,6 @@ import matplotlib.pyplot as plt
 
 plt.plot(pso.gbest_y_hist)
 plt.show()
-
 ```
 
 
@@ -333,13 +332,6 @@ plt.show()
 ![pso_ani](https://img1.github.io/heuristic_algorithm/pso.gif)  
 ↑**see [examples/demo_pso_ani.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso_ani.py)**
 
-### 3.2 PSO without constraint
--> Demo code: [examples/demo_pso.py#s4](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L19)
-```python
-pso = PSO(func=demo_func, dim=3)
-fitness = pso.run()
-print('best_x is ', pso.gbest_x, 'best_y is', pso.gbest_y)
-```
 
 ## 4. SA(Simulated Annealing)
 ### 4.1 SA for multiple function

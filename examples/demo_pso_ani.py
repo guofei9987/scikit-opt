@@ -8,7 +8,7 @@ def demo_func(x):
     return x1 ** 2 + (x2 - 0.05) ** 2
 
 
-pso = PSO(func=demo_func, dim=2, pop=20, max_iter=40, lb=[-1, -1], ub=[1, 1])
+pso = PSO(func=demo_func, n_dim=2, pop=20, max_iter=40, lb=[-1, -1], ub=[1, 1])
 pso.record_mode = True
 pso.run()
 print('best_x is ', pso.gbest_x, 'best_y is', pso.gbest_y)
