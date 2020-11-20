@@ -343,7 +343,7 @@ pso = PSO(func=demo_func, n_dim=2, pop=40, max_iter=max_iter, lb=[-2, -2], ub=[2
 
 Note that, you can add more then one nonlinear constraint. Just add it to `constraint_ueq`
 
-
+More over, we have an animation:  
 ![pso_ani](https://img1.github.io/heuristic_algorithm/pso.gif)  
 ↑**see [examples/demo_pso_ani.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso_ani.py)**
 
