@@ -96,12 +96,16 @@ class PSO(SkoBase):
         assert self.n_dim == len(self.lb) == len(self.ub), 'dim == len(lb) == len(ub) is not True'
         assert np.all(self.ub > self.lb), 'upper-bound must be greater than lower-bound'
 
+        self.has_constraint = bool(constraint_ueq)
+        self.constraint_ueq = constraint_ueq
+        self.is_feasible = np.array([True] * pop)
+
         self.X = np.random.uniform(low=self.lb, high=self.ub, size=(self.pop, self.n_dim))
         v_high = self.ub - self.lb
         self.V = np.random.uniform(low=-v_high, high=v_high, size=(self.pop, self.n_dim))  # speed of particles
         self.Y = self.cal_y()  # y = f(x) for all particles
         self.pbest_x = self.X.copy()  # personal best location of every particle in history
-        self.pbest_y = self.Y.copy()  # best image of every particle in history
+        self.pbest_y = np.array([[np.inf]] * pop)  # best image of every particle in history
         self.gbest_x = np.zeros((1, self.n_dim))  # global best location for all particles
         self.gbest_y = np.inf  # global best y for all particles
         self.gbest_y_hist = []  # gbest_y of every iteration
@@ -111,6 +115,13 @@ class PSO(SkoBase):
         self.record_mode = False
         self.record_value = {'X': [], 'V': [], 'Y': []}
         self.best_x, self.best_y = self.gbest_x, self.gbest_y  # history reasons, will be deprecated
+
+    def check_constraint(self, x):
+        # gather all unequal constraint functions
+        for constraint_func in self.constraint_ueq:
+            if constraint_func(x) > 0:
+                return False
+        return True
 
     def update_V(self):
         r1 = np.random.rand(self.pop, self.n_dim)
@@ -133,17 +144,23 @@ class PSO(SkoBase):
         personal best
         :return:
         '''
-        self.pbest_x = np.where(self.pbest_y > self.Y, self.X, self.pbest_x)
-        self.pbest_y = np.where(self.pbest_y > self.Y, self.Y, self.pbest_y)
+        self.need_update = self.pbest_y > self.Y
+        for idx, x in enumerate(self.X):
+            if self.need_update[idx]:
+                self.need_update[idx] = self.check_constraint(x)
+
+        self.pbest_x = np.where(self.need_update, self.X, self.pbest_x)
+        self.pbest_y = np.where(self.need_update, self.Y, self.pbest_y)
 
     def update_gbest(self):
         '''
         global best
         :return:
         '''
-        if self.gbest_y > self.Y.min():
-            self.gbest_x = self.X[self.Y.argmin(), :].copy()
-            self.gbest_y = self.Y.min()
+        idx_min = self.pbest_y.argmin()
+        if self.gbest_y > self.pbest_y[idx_min]:
+            self.gbest_x = self.X[idx_min, :].copy()
+            self.gbest_y = self.pbest_y[idx_min]
 
     def recorder(self):
         if not self.record_mode:
