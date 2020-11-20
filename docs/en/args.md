@@ -56,7 +56,7 @@ help(sko.AFSA.AFSA)
 | w         | 0\.8 | inertia weight  |
 | c1        | 0\.5 | cognitive parameter |
 | c2        | 0\.5 | social parameter |
-
+| constraint\_ueq | tuple()    | unequal constraint                  |
 
 ### DE
 

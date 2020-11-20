@@ -294,7 +294,7 @@ plt.show()
 
 ## 3. PSO(Particle swarm optimization)
 
-### 3.1 PSO with constraint
+### 3.1 PSO 
 **Step1**: define your problem:  
 -> Demo code: [examples/demo_pso.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L1)
 ```python
@@ -327,6 +327,21 @@ plt.show()
 
 
 ![PSO_TPS](https://img1.github.io/heuristic_algorithm/pso.png)
+
+### 3.2 PSO with nonlinear constraint
+
+If you need nolinear constraint like `(x[0] - 1) ** 2 + (x[1] - 0) ** 2 - 0.5 ** 2<=0`  
+Codes are like this:
+```python
+constraint_ueq = (
+    lambda x: (x[0] - 1) ** 2 + (x[1] - 0) ** 2 - 0.5 ** 2
+    ,
+)
+pso = PSO(func=demo_func, n_dim=2, pop=40, max_iter=max_iter, lb=[-2, -2], ub=[2, 2]
+          , constraint_ueq=constraint_ueq)
+```
+
+Note that, you can add more then one nonlinear constraint. Just add it to `constraint_ueq`
 
 
 ![pso_ani](https://img1.github.io/heuristic_algorithm/pso.gif)  

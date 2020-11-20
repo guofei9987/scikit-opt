@@ -56,7 +56,7 @@ help(sko.AFSA.AFSA)
 | w         | 0\.8 | 惯性权重     |
 | c1        | 0\.5 | 个体记忆     |
 | c2        | 0\.5 | 集体记忆     |
-
+| constraint\_ueq | 空元组    | 非线性约束                  |
 
 ### DE
 
