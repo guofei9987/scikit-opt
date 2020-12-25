@@ -27,8 +27,19 @@ def func_transformer(func):
     '''
 
     is_vector = getattr(func, 'is_vector', False)
+    is_parallel = getattr(func, 'is_parallel', False)
+
     if is_vector:
         return func
+    if is_parallel:
+        from multiprocessing.dummy import Pool
+
+        pool = Pool()
+
+        def func_transformed(X):
+            return np.array(pool.map(func, X))
+
+        return func_transformed
     else:
         if func.__code__.co_argcount == 1:
             def func_transformed(X):
