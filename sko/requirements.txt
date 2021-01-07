@@ -3,3 +3,4 @@ scipy
 matplotlib
 pandas
 scikit-opt
+functools
