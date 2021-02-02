@@ -27,7 +27,7 @@
 ![Python](https://img.shields.io/badge/python->=3.5-green.svg)
 ![Platform](https://img.shields.io/badge/platform-windows%20|%20linux%20|%20macos-green.svg)
 [![Downloads](https://pepy.tech/badge/scikit-opt)](https://pepy.tech/project/scikit-opt)
-[![Join the chat at https://gitter.im/guofei9987/scikit-opt](https://badges.gitter.im/guofei9987/scikit-opt.svg)](https://gitter.im/guofei9987/scikit-opt?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 
 
 
