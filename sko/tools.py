@@ -58,7 +58,7 @@ def func_transformer(func):
         elif func.__code__.co_argcount > 1:
 
             def func_transformed(X):
-                return np.array([func(*tuple(x)) for x in X])
+                return np.array([func(tuple(x)) if len(x) > 1 else func(*tuple(x)) for x in X])
 
             return func_transformed
 
