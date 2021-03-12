@@ -6,7 +6,7 @@ python:
 
 # command to install dependencies
 install:
-  - pip install -r requirements.txt
+  - pip install --upgrade  -r requirements.txt
   - pip install coverage codecov
   - python setup.py install
 
