@@ -1,5 +1,5 @@
 import numpy as np
-from functools import lru_cache 
+from functools import lru_cache
 
 
 def func_transformer(func):
@@ -32,15 +32,19 @@ def func_transformer(func):
     is_cached = getattr(func, 'is_cached', False)
 
     if is_cached:
-        @lru_cache(maxsize = None) 
-        def func_cached(X):
-            return func
-        func = func_cached
+        @lru_cache(maxsize=None)
+        def func_cached(x):
+            return func(x)
 
-    if is_vector:
+        def func_warped(X):
+            return np.array([func_cached(tuple(x)) for x in X])
+
+        return func_warped
+
+    elif is_vector:
         return func
-        
-    if is_parallel:
+
+    elif is_parallel:
         from multiprocessing.dummy import Pool
 
         pool = Pool()
