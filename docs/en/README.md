@@ -1,21 +1,3 @@
-# [scikit-opt](https://github.com/guofei9987/scikit-opt)
-
-[![PyPI](https://img.shields.io/pypi/v/scikit-opt)](https://pypi.org/project/scikit-opt/)
-[![Build Status](https://travis-ci.com/guofei9987/scikit-opt.svg?branch=master)](https://travis-ci.com/guofei9987/scikit-opt)
-[![codecov](https://codecov.io/gh/guofei9987/scikit-opt/branch/master/graph/badge.svg)](https://codecov.io/gh/guofei9987/scikit-opt)
-[![License](https://img.shields.io/pypi/l/scikit-opt.svg)](https://github.com/guofei9987/scikit-opt/blob/master/LICENSE)
-![Python](https://img.shields.io/badge/python->=3.5-green.svg)
-![Platform](https://img.shields.io/badge/platform-windows%20|%20linux%20|%20macos-green.svg)
-[![Downloads](https://pepy.tech/badge/scikit-opt)](https://pepy.tech/project/scikit-opt)
-[![Join the chat at https://gitter.im/guofei9987/scikit-opt](https://badges.gitter.im/guofei9987/scikit-opt.svg)](https://gitter.im/guofei9987/scikit-opt?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-
-
-Swarm Intelligence in Python  
-(Genetic Algorithm, Particle Swarm Optimization, Simulated Annealing, Ant Colony Algorithm, Immune Algorithm,Artificial Fish Swarm Algorithm in Python)  
-
-
-- **Documentation:** [https://scikit-opt.github.io/scikit-opt/#/en/](https://scikit-opt.github.io/scikit-opt/#/en/)
 - **文档：** [https://scikit-opt.github.io/scikit-opt/#/zh/](https://scikit-opt.github.io/scikit-opt/#/zh/)  
 - **Source code:** [https://github.com/guofei9987/scikit-opt](https://github.com/guofei9987/scikit-opt)
 - **Help us improve scikit-opt** [https://www.wjx.cn/jq/50964691.aspx](https://www.wjx.cn/jq/50964691.aspx)
@@ -274,7 +256,7 @@ plt.show()
 
 ## 3. PSO(Particle swarm optimization)
 
-### 3.1 PSO with constraint
+### 3.1 PSO 
 **Step1**: define your problem:  
 -> Demo code: [examples/demo_pso.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L1)
 ```python
@@ -308,7 +290,22 @@ plt.show()
 
 ![PSO_TPS](https://img1.github.io/heuristic_algorithm/pso.png)
 
+### 3.2 PSO with nonlinear constraint
 
+If you need nolinear constraint like `(x[0] - 1) ** 2 + (x[1] - 0) ** 2 - 0.5 ** 2<=0`  
+Codes are like this:
+```python
+constraint_ueq = (
+    lambda x: (x[0] - 1) ** 2 + (x[1] - 0) ** 2 - 0.5 ** 2
+    ,
+)
+pso = PSO(func=demo_func, n_dim=2, pop=40, max_iter=max_iter, lb=[-2, -2], ub=[2, 2]
+          , constraint_ueq=constraint_ueq)
+```
+
+Note that, you can add more then one nonlinear constraint. Just add it to `constraint_ueq`
+
+More over, we have an animation:  
 ![pso_ani](https://img1.github.io/heuristic_algorithm/pso.gif)  
 ↑**see [examples/demo_pso_ani.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso_ani.py)**
 
@@ -439,3 +436,12 @@ afsa = AFSA(func, n_dim=2, size_pop=50, max_iter=300,
 best_x, best_y = afsa.run()
 print(best_x, best_y)
 ```
+
+
+## Projects using scikit-opt
+
+
+- [Heinrich, K., Zschech, P., Janiesch, C., & Bonin, M. (2021). Process data properties matter: Introducing gated convolutional neural networks (GCNN) and key-value-predict attention networks (KVP) for next event prediction with deep learning. Decision Support Systems, 113494.](https://www.sciencedirect.com/science/article/pii/S016792362100004X)
+- [Mahbub, R. (2020). Algorithms and Optimization Techniques for Solving TSP.](https://raiyanmahbub.com/images/Research_Paper.pdf)
+- [Li, J., Chen, T., Lim, K., Chen, L., Khan, S. A., Xie, J., & Wang, X. (2019). Deep learning accelerated gold nanocluster synthesis. Advanced Intelligent Systems, 1(3), 1900029.](https://onlinelibrary.wiley.com/doi/full/10.1002/aisy.201900029)
+- [Lin, J., & Emam, Y. Data Augmentation with Policy Optimization.](http://104.131.144.199/papers/autoaugment_ppo.pdf)

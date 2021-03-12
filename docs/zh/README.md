@@ -443,3 +443,11 @@ afsa = AFSA(func, n_dim=2, size_pop=50, max_iter=300,
 best_x, best_y = afsa.run()
 print(best_x, best_y)
 ```
+
+## 使用本项目的论文
+
+
+- [Heinrich, K., Zschech, P., Janiesch, C., & Bonin, M. (2021). Process data properties matter: Introducing gated convolutional neural networks (GCNN) and key-value-predict attention networks (KVP) for next event prediction with deep learning. Decision Support Systems, 113494.](https://www.sciencedirect.com/science/article/pii/S016792362100004X)
+- [Mahbub, R. (2020). Algorithms and Optimization Techniques for Solving TSP.](https://raiyanmahbub.com/images/Research_Paper.pdf)
+- [Li, J., Chen, T., Lim, K., Chen, L., Khan, S. A., Xie, J., & Wang, X. (2019). Deep learning accelerated gold nanocluster synthesis. Advanced Intelligent Systems, 1(3), 1900029.](https://onlinelibrary.wiley.com/doi/full/10.1002/aisy.201900029)
+- [Lin, J., & Emam, Y. Data Augmentation with Policy Optimization.](http://104.131.144.199/papers/autoaugment_ppo.pdf)

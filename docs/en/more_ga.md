@@ -1,5 +1,5 @@
 
-## genetic algorithm do integer programming
+## Do integer programming with genetic algorithm 
 
 If you want some variables to be integer, then set the corresponding `precision` to an integer
 For example, our objective function is `demo_func`. We want the variables to be integer interval 2, integer interval 1, float. We set `precision=[2, 1, 1e-7]`:
