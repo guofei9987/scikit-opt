@@ -26,6 +26,8 @@ script:
   - coverage run -p examples/demo_pso_ani.py
   - coverage run -p examples/demo_de.py
   - coverage run -p examples/vrp.py
+  - coverage run -p examples/example_function_modes.py
+  - coverage run -p examples/example_method_modes.py.py
 
 # Push the results back to codecov
 after_success:
