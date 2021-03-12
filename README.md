@@ -1,21 +1,3 @@
-<table border="0" width="10%">
-  <tr>
-    <td><img src="https://img1.github.io/tmp/1.jpg" height="80" width="82"></td>
-    <td><img src="https://img1.github.io/tmp/2.jpg" height="80" width="82"></td>
-    <td><img src="https://img1.github.io/tmp/3.jpg" height="80" width="82"></td>
-  </tr>
-  <tr>
-    <td><img src="https://img1.github.io/tmp/4.jpg" height="80" width="82"></td>
-    <td><img src="https://img.shields.io/github/stars/guofei9987/scikit-opt.svg?style=social"></td>
-    <td><img src="https://img1.github.io/tmp/6.jpg" height="82" width="82"></td>
-  </tr>
-   <tr>
-    <td><img src="https://img1.github.io/tmp/7.jpg" height="82" width="82"></td>
-    <td><img src="https://img1.github.io/tmp/8.jpg" height="82" width="82"></td>
-    <td><img src="https://img1.github.io/tmp/9.jpg" height="82" width="82"></td>
-  </tr>
-</table>
-
 
 
 # [scikit-opt](https://github.com/guofei9987/scikit-opt)
@@ -474,3 +456,11 @@ afsa = AFSA(func, n_dim=2, size_pop=50, max_iter=300,
 best_x, best_y = afsa.run()
 print(best_x, best_y)
 ```
+
+
+## Projects using scikit-opt
+
+- [Mahbub, R. (2020). Algorithms and Optimization Techniques for Solving TSP.](https://raiyanmahbub.com/images/Research_Paper.pdf)
+- [Lin, J., & Emam, Y. Data Augmentation with Policy Optimization.](http://104.131.144.199/papers/autoaugment_ppo.pdf)
+- [Heinrich, K., Zschech, P., Janiesch, C., & Bonin, M. (2021). Process data properties matter: Introducing gated convolutional neural networks (GCNN) and key-value-predict attention networks (KVP) for next event prediction with deep learning. Decision Support Systems, 113494.](https://www.sciencedirect.com/science/article/pii/S016792362100004X)
+- [Li, J., Chen, T., Lim, K., Chen, L., Khan, S. A., Xie, J., & Wang, X. (2019). Deep learning accelerated gold nanocluster synthesis. Advanced Intelligent Systems, 1(3), 1900029.](https://onlinelibrary.wiley.com/doi/full/10.1002/aisy.201900029)
