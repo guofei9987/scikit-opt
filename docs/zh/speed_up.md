@@ -1,63 +1,119 @@
 ## 目标函数加速
 
-### 矢量化计算
-如果目标函数支持矢量化运算，那么运行速度可以大大加快。  
-下面的 `schaffer1` 是普通的目标函数，`schaffer2` 是支持矢量化运算的目标函数，需要用`schaffer2.is_vector = True`来告诉算法它支持矢量化运算，否则默认是非矢量化的。  
-从运行结果看，花费时间降低到30%
+本章节代码见于 [example_function_modes.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/example_function_modes.py), [example_method_modes.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/example_method_modes.py)
+
+
+为了提升速度，**scikit-opt** 支持3种提升速度的方案：**矢量化**，**并行化**，**缓存化**  
+- **矢量化**：要求目标函数本身支持矢量化运算（详见代码）。矢量化运算拥有极高的性能，通常比并行化运算要快。算法中，每代对应1次矢量化运算
+- **并行化**：对目标函数没什么要求，通常比一般运算要快。
+- **缓存化**：把每次计算的输入和输出缓存下来，下次调用时，如果已经缓存中已经存在，那么直接取出结果，而不再调用。缓存化特别适用于输入值有限的情况，例如纯整数规划、迭代到后期的TSP问题等。
+
+总的来说，性能上，**矢量化** 远远大于 **并行化** 大于 **不加速**，如果是输入值得可能个数有限，**缓存化** 远大于其他方案。
+
+
+下面比较 **不加速**、**矢量化**、**并行化** 的性能：
+
 ```python
 import numpy as np
+from sko.GA import GA
 import time
+import datetime
+from sko.tools import set_run_mode
 
 
-def schaffer1(p):
-    '''
-    This function has plenty of local minimum, with strong shocks
-    global minimum at (0,0) with value 0
-    '''
+# %% type1: common
+
+def obj_func1(p):
+    time.sleep(0.1)  # say that this function is very complicated and cost 0.1 seconds to run
     x1, x2 = p
     x = np.square(x1) + np.square(x2)
     return 0.5 + (np.square(np.sin(x)) - 0.5) / np.square(1 + 0.001 * x)
 
 
-def schaffer2(p):
-    '''
-    This function has plenty of local minimum, with strong shocks
-    global minimum at (0,0) with value 0
-    '''
+ga1 = GA(func=obj_func1, n_dim=2, size_pop=10, max_iter=5, lb=[-1, -1], ub=[1, 1], precision=1e-7)
+
+start_time = datetime.datetime.now()
+best_x, best_y = ga1.run()
+print('common mode, time costs: ', (datetime.datetime.now() - start_time).total_seconds())
+
+
+# %% type2:矢量化
+
+def obj_func2(p):
+    time.sleep(0.1)  # say that this function is very complicated and cost 1 seconds to run
     x1, x2 = p[:, 0], p[:, 1]
     x = np.square(x1) + np.square(x2)
     return 0.5 + (np.square(np.sin(x)) - 0.5) / np.square(1 + 0.001 * x)
 
 
-schaffer2.is_vector = True
-# %%
-from sko.GA import GA
+set_run_mode(obj_func2, 'vectorization')
 
-ga1 = GA(func=schaffer1, n_dim=2, size_pop=5000, max_iter=800, lb=[-1, -1], ub=[1, 1], precision=1e-7)
-ga2 = GA(func=schaffer2, n_dim=2, size_pop=5000, max_iter=800, lb=[-1, -1], ub=[1, 1], precision=1e-7)
-
-time_start = time.time()
-best_x, best_y = ga1.run()
-print('best_x:', best_x, '\n', 'best_y:', best_y)
-print('time:', time.time() - time_start, ' seconds')
-
-time_start = time.time()
+ga2 = GA(func=obj_func2, n_dim=2, size_pop=10, max_iter=5, lb=[-1, -1], ub=[1, 1], precision=1e-7)
+start_time = datetime.datetime.now()
 best_x, best_y = ga2.run()
-print('best_x:', best_x, '\n', 'best_y:', best_y)
-print('time:', time.time() - time_start, ' seconds')
+print('vector mode, time costs: ', (datetime.datetime.now() - start_time).total_seconds())
+
+
+# %% type3：并行化
+
+
+def obj_func3(p):
+    time.sleep(0.1)  # say that this function is very complicated and cost 0.1 seconds to run
+    x1, x2 = p
+    x = np.square(x1) + np.square(x2)
+    return 0.5 + (np.square(np.sin(x)) - 0.5) / np.square(1 + 0.001 * x)
+
+
+set_run_mode(obj_func3, 'parallel')
+ga3 = GA(func=obj_func3, n_dim=2, size_pop=6, max_iter=5, lb=[-1, -1], ub=[1, 1], precision=1e-7)
+start_time = datetime.datetime.now()
+best_x, best_y = ga3.run()
+print('parallel mode, time costs: ', (datetime.datetime.now() - start_time).total_seconds())
+
+
 ```
+
 output:
->best_x: [-2.98023233e-08 -2.98023233e-08]  
- best_y: [1.77635684e-15]  
-time: 88.32313132286072  seconds  
+>common mode, time costs:  5.284991
+vector mode, time costs:  0.608695
+parallel mode, time costs:  1.114424
 
 
->best_x: [2.98023233e-08 2.98023233e-08]  
- best_y: [1.77635684e-15]  
-time: 27.68204379081726  seconds  
+下面比较  **不加速** 和 **缓存化** 的性能
+```python
+def obj_func4_1(p):
+    time.sleep(0.1)  # say that this function is very complicated and cost 0.1 seconds to run
+    x1, x2 = p
+    x = np.square(x1) + np.square(x2)
+    return 0.5 + (np.square(np.sin(x)) - 0.5) / np.square(1 + 0.001 * x)
 
 
-`scikit-opt` 仍然支持非矢量化计算，因为有些函数很难写成矢量化计算的形式，还有些函数强行写成矢量化形式后可读性会大大降低。
+def obj_func4_2(p):
+    time.sleep(0.1)  # say that this function is very complicated and cost 0.1 seconds to run
+    x1, x2 = p
+    x = np.square(x1) + np.square(x2)
+    return 0.5 + (np.square(np.sin(x)) - 0.5) / np.square(1 + 0.001 * x)
+
+
+set_run_mode(obj_func4_2, 'cached')
+ga4_1 = GA(func=obj_func4_1, n_dim=2, size_pop=6, max_iter=10, lb=[-2, -2], ub=[2, 2], precision=1)
+ga4_2 = GA(func=obj_func4_2, n_dim=2, size_pop=6, max_iter=10, lb=[-2, -2], ub=[2, 2], precision=1)
+
+start_time = datetime.datetime.now()
+best_x, best_y = ga4_1.run()
+print('common mode, time costs: ', (datetime.datetime.now() - start_time).total_seconds())
+
+start_time = datetime.datetime.now()
+best_x, best_y = ga4_2.run()
+print('cache mode, time costs: ', (datetime.datetime.now() - start_time).total_seconds())
+print('cache mode, time costs: ', (datetime.datetime.now() - start_time).total_seconds())
+
+```
+
+output:
+>common mode, time costs:  6.29733
+cache mode, time costs:  0.308823
+
 
 ## 算子优化加速
 
