@@ -16,6 +16,7 @@ class GeneticAlgorithmBase(SkoBase, metaclass=ABCMeta):
                  size_pop=50, max_iter=200, prob_mut=0.001,
                  constraint_eq=tuple(), constraint_ueq=tuple()):
         self.func = func_transformer(func)
+        assert size_pop % 2 == 0, 'size_pop must be even integer'
         self.size_pop = size_pop  # size of population
         self.max_iter = max_iter
         self.prob_mut = prob_mut  # probability of mutation
