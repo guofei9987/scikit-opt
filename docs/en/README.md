@@ -438,7 +438,7 @@ print(best_x, best_y)
 ```
 
 
-## Projects using scikit-opt
+# Projects using scikit-opt
 
 
 - [Heinrich, K., Zschech, P., Janiesch, C., & Bonin, M. (2021). Process data properties matter: Introducing gated convolutional neural networks (GCNN) and key-value-predict attention networks (KVP) for next event prediction with deep learning. Decision Support Systems, 113494.](https://www.sciencedirect.com/science/article/pii/S016792362100004X)

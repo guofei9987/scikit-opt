@@ -79,8 +79,8 @@ print('parallel mode, time costs: ', (datetime.datetime.now() - start_time).tota
 ```
 
 output:
->common mode, time costs:  5.284991
-vector mode, time costs:  0.608695
+>common mode, time costs:  5.284991  
+vector mode, time costs:  0.608695  
 parallel mode, time costs:  1.114424
 
 To compare the speed of **common** and **cached**:
@@ -116,7 +116,7 @@ print('cache mode, time costs: ', (datetime.datetime.now() - start_time).total_s
 ```
 
 output:
->common mode, time costs:  6.29733
+>common mode, time costs:  6.29733  
 cache mode, time costs:  0.308823
 
 
