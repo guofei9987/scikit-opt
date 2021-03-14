@@ -2,11 +2,6 @@
 
 Codes in this section see [example_function_modes.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/example_function_modes.py), [example_method_modes.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/example_method_modes.py)
 
-### Vectorization calculation
-If the objective function supports vectorization, it can run much faster.
-The following `schaffer1` is an original objective function, `schaffer2` is the corresponding function that supports vectorization operations.  
-`schaffer2.is_vector = True` is used to tell the algorithm that it supports vectorization operations, otherwise it is non-vectorized by default.  
-As a result of the operation, the **time cost was reduced to 30%**  
 
 To boost speed performance, **scikit-opt** supports 3 ways to speed up the objective function: **vectorization**, **parallel**, **cached**
 - **Vectorization** requires that the objective function support vectorization. If so, the vectorization will gain extreme performance.
