@@ -1,3 +1,25 @@
+
+
+# [scikit-opt](https://github.com/guofei9987/scikit-opt)
+
+[![PyPI](https://img.shields.io/pypi/v/scikit-opt)](https://pypi.org/project/scikit-opt/)
+[![Build Status](https://travis-ci.com/guofei9987/scikit-opt.svg?branch=master)](https://travis-ci.com/guofei9987/scikit-opt)
+[![codecov](https://codecov.io/gh/guofei9987/scikit-opt/branch/master/graph/badge.svg)](https://codecov.io/gh/guofei9987/scikit-opt)
+[![License](https://img.shields.io/pypi/l/scikit-opt.svg)](https://github.com/guofei9987/scikit-opt/blob/master/LICENSE)
+![Python](https://img.shields.io/badge/python->=3.5-green.svg)
+![Platform](https://img.shields.io/badge/platform-windows%20|%20linux%20|%20macos-green.svg)
+[![fork](https://img.shields.io/github/forks/guofei9987/scikit-opt?style=social)](https://github.com/guofei9987/scikit-opt/fork)
+[![Downloads](https://pepy.tech/badge/scikit-opt)](https://pepy.tech/project/scikit-opt)
+[![Discussions](https://img.shields.io/badge/discussions-green.svg)](https://github.com/guofei9987/scikit-opt/discussions)
+
+
+
+
+Swarm Intelligence in Python  
+(Genetic Algorithm, Particle Swarm Optimization, Simulated Annealing, Ant Colony Algorithm, Immune Algorithm,Artificial Fish Swarm Algorithm in Python)  
+
+
+- **Documentation:** [https://scikit-opt.github.io/scikit-opt/#/en/](https://scikit-opt.github.io/scikit-opt/#/en/)
 - **文档：** [https://scikit-opt.github.io/scikit-opt/#/zh/](https://scikit-opt.github.io/scikit-opt/#/zh/)  
 - **Source code:** [https://github.com/guofei9987/scikit-opt](https://github.com/guofei9987/scikit-opt)
 - **Help us improve scikit-opt** [https://www.wjx.cn/jq/50964691.aspx](https://www.wjx.cn/jq/50964691.aspx)
