@@ -1,5 +1,4 @@
 import numpy as np
-from multiprocessing.dummy import Pool
 from functools import lru_cache
 from types import MethodType, FunctionType
 import warnings
@@ -80,16 +79,25 @@ def func_transformer(func):
 
         return func_warped
     elif mode == 'parallel':
+        from multiprocessing.dummy import Pool as ThreadPool
 
+        pool = ThreadPool()
+
+        def func_transformed(X):
+            return np.array(pool.map(func, X))
+
+        return func_transformed
+    elif mode == 'multiprocess':
+        from multiprocessing import Pool
         pool = Pool()
 
         def func_transformed(X):
             return np.array(pool.map(func, X))
 
         return func_transformed
+
     else:  # common
         def func_transformed(X):
             return np.array([func(x) for x in X])
 
         return func_transformed
-
