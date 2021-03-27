@@ -137,11 +137,8 @@ my_ga = MyGA(func=demo_func, n_dim=3, size_pop=100, max_iter=500, lb=[-1, -10, -
 best_x, best_y = my_ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 ```
-## feature2: GPU computation
- We are developing GPU computation, which will be stable on version 1.0.0  
-An example is already available: [https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_gpu.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_gpu.py)
 
-##  feature3: continue to run
+##  feature2: continue to run
 (New in version 0.3.6)  
 Run an algorithm for 10 iterations, and then run another 20 iterations base on the 10 iterations before:
 ```python
@@ -152,6 +149,21 @@ ga = GA(func=func, n_dim=1)
 ga.run(10)
 ga.run(20)
 ```
+
+## feature3: 4-ways to accelerate
+- [x] vectorization
+- [x] multithreading
+- [x] multiprocessing
+- [x] cached
+
+see [https://github.com/guofei9987/scikit-opt/blob/master/examples/example_function_modes.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/example_function_modes.py)
+
+
+
+## feature4: GPU computation
+ We are developing GPU computation, which will be stable on version 1.0.0  
+An example is already available: [https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_gpu.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_gpu.py)
+
 
 # Quick start
 
@@ -227,19 +239,24 @@ ga = GA(func=schaffer, n_dim=2, size_pop=50, max_iter=800, lb=[-1, -1], ub=[1, 1
 best_x, best_y = ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 
-```
+print(ga)
+# # %% Plot the result
+# import pandas as pd
+# import matplotlib.pyplot as plt
+#
+# Y_history = pd.DataFrame(ga.all_history_Y)
+# fig, ax = plt.subplots(2, 1)
+# ax[0].plot(Y_history.index, Y_history.values, '.', color='red')
+# Y_history.min(axis=1).cummin().plot(kind='line')
+# plt.show()
+
+a=1
+if a!=1 :
+    print(1)```
 
 **Step3**: plot the result  
--> Demo code: [examples/demo_ga.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#L21)
+-> Demo code: [examples/demo_ga.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#LNone)
 ```python
-import pandas as pd
-import matplotlib.pyplot as plt
-
-Y_history = pd.DataFrame(ga.all_history_Y)
-fig, ax = plt.subplots(2, 1)
-ax[0].plot(Y_history.index, Y_history.values, '.', color='red')
-Y_history.min(axis=1).cummin().plot(kind='line')
-plt.show()
 ```
 
 ![Figure_1-1](https://img1.github.io/heuristic_algorithm/ga_1.png)

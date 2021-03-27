@@ -13,6 +13,7 @@ Totally speaking, **vectorization** is much faster then **parallel**, which is f
 
 To compare the speed of **common**, **vectorization**, **parallel**:
 
+see [/examples/example_function_modes.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/example_function_modes.py)
 
 ```python
 import numpy as np
@@ -82,9 +83,15 @@ for task_type in ('io_costly', 'cpu_costly'):
 ```
 
 output:
->common mode, time costs:  5.284991  
-vector mode, time costs:  0.608695  
-parallel mode, time costs:  1.114424
+>on io_costly task,use common mode, costs 5.116588s  
+on io_costly task,use multithreading mode, costs 3.113499s  
+on io_costly task,use multiprocessing mode, costs 3.119855s  
+on io_costly task,use vectorization mode, costs 0.604762s  
+on cpu_costly task,use common mode, costs 1.625032s  
+on cpu_costly task,use multithreading mode, costs 1.60131s  
+on cpu_costly task,use multiprocessing mode, costs 1.673792s  
+on cpu_costly task,use vectorization mode, costs 0.192595s  
+
 
 To compare the speed of **common** and **cached**:
 
@@ -119,7 +126,9 @@ print('cache mode, time costs: ', (datetime.datetime.now() - start_time).total_s
 ```
 
 output:
->common mode, time costs:  6.29733  
-cache mode, time costs:  0.308823
+>on io_costly task,use common mode, costs 6.120317s  
+on io_costly task,use cached mode, costs 1.106842s  
+on cpu_costly task,use common mode, costs 1.914744s  
+on cpu_costly task,use cached mode, costs 0.222713s  
 
 
