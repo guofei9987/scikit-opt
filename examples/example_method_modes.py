@@ -42,7 +42,7 @@ class YourClass:
 your_class = YourClass()
 
 set_run_mode(your_class.obj_func2, 'vectorization')
-set_run_mode(your_class.obj_func3, 'parallel')
+set_run_mode(your_class.obj_func3, 'multithreading')
 
 ga1 = GA(func=your_class.obj_func1, n_dim=2, size_pop=10, max_iter=5, lb=[-1, -1], ub=[1, 1], precision=1e-7)
 ga2 = GA(func=your_class.obj_func2, n_dim=2, size_pop=10, max_iter=5, lb=[-1, -1], ub=[1, 1], precision=1e-7)

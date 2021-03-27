@@ -18,12 +18,17 @@ ga = GA(func=schaffer, n_dim=2, size_pop=50, max_iter=800, lb=[-1, -1], ub=[1, 1
 best_x, best_y = ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 
-# %% Plot the result
-import pandas as pd
-import matplotlib.pyplot as plt
+print(ga)
+# # %% Plot the result
+# import pandas as pd
+# import matplotlib.pyplot as plt
+#
+# Y_history = pd.DataFrame(ga.all_history_Y)
+# fig, ax = plt.subplots(2, 1)
+# ax[0].plot(Y_history.index, Y_history.values, '.', color='red')
+# Y_history.min(axis=1).cummin().plot(kind='line')
+# plt.show()
 
-Y_history = pd.DataFrame(ga.all_history_Y)
-fig, ax = plt.subplots(2, 1)
-ax[0].plot(Y_history.index, Y_history.values, '.', color='red')
-Y_history.min(axis=1).cummin().plot(kind='line')
-plt.show()
+a=1
+if a!=1 :
+    print(1)

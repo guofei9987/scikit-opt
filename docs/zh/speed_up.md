@@ -5,13 +5,15 @@
 
 为了提升速度，**scikit-opt** 支持3种提升速度的方案：**矢量化**，**并行化**，**缓存化**  
 - **矢量化**：要求目标函数本身支持矢量化运算（详见代码）。矢量化运算拥有极高的性能，通常比并行化运算要快。算法中，每代对应1次矢量化运算
-- **并行化**：对目标函数没什么要求，通常比一般运算要快。
+- **多线程**：对目标函数没什么要求，通常比一般运算要快。如果目标函数是 IO 密集型，能达到更优的性能
+- **多进程**：对目标函数没什么要求，通常比一般运算要快。如果目标函数是 CPU 密集型，能达到更优的性能
 - **缓存化**：把每次计算的输入和输出缓存下来，下次调用时，如果已经缓存中已经存在，那么直接取出结果，而不再调用。缓存化特别适用于输入值有限的情况，例如纯整数规划、迭代到后期的TSP问题等。
 
-总的来说，性能上，**矢量化** 远远大于 **并行化** 大于 **不加速**，如果是输入值得可能个数有限，**缓存化** 远大于其他方案。
+总的来说，性能上，**矢量化** 远远大于 **多线程/多进程** 大于 **不加速**，如果是输入值得可能个数有限，**缓存化** 远大于其他方案。
 
 
-下面比较 **不加速**、**矢量化**、**并行化** 的性能：
+下面比较 **不加速**、**矢量化**、**多线程**、**多进程** 的性能：
+
 
 ```python
 import numpy as np
@@ -21,56 +23,62 @@ import datetime
 from sko.tools import set_run_mode
 
 
-# %% type1: common
+def generate_costly_function(task_type='io_costly'):
+    # generate a high cost function to test all the modes
+    # cost_type can be 'io_costly' or 'cpu_costly'
+    if task_type == 'io_costly':
+        def costly_function():
+            time.sleep(0.1)
+            return 1
+    else:
+        def costly_function():
+            n = 10000
+            step1 = [np.log(i + 1) for i in range(n)]
+            step2 = [np.power(i, 1.1) for i in range(n)]
+            step3 = sum(step1) + sum(step2)
+            return step3
 
-def obj_func1(p):
-    time.sleep(0.1)  # say that this function is very complicated and cost 0.1 seconds to run
-    x1, x2 = p
-    x = np.square(x1) + np.square(x2)
-    return 0.5 + (np.square(np.sin(x)) - 0.5) / np.square(1 + 0.001 * x)
-
-
-ga1 = GA(func=obj_func1, n_dim=2, size_pop=10, max_iter=5, lb=[-1, -1], ub=[1, 1], precision=1e-7)
-
-start_time = datetime.datetime.now()
-best_x, best_y = ga1.run()
-print('common mode, time costs: ', (datetime.datetime.now() - start_time).total_seconds())
-
-
-# %% type2:矢量化
-
-def obj_func2(p):
-    time.sleep(0.1)  # say that this function is very complicated and cost 1 seconds to run
-    x1, x2 = p[:, 0], p[:, 1]
-    x = np.square(x1) + np.square(x2)
-    return 0.5 + (np.square(np.sin(x)) - 0.5) / np.square(1 + 0.001 * x)
+    return costly_function
 
 
-set_run_mode(obj_func2, 'vectorization')
-
-ga2 = GA(func=obj_func2, n_dim=2, size_pop=10, max_iter=5, lb=[-1, -1], ub=[1, 1], precision=1e-7)
-start_time = datetime.datetime.now()
-best_x, best_y = ga2.run()
-print('vector mode, time costs: ', (datetime.datetime.now() - start_time).total_seconds())
+for task_type in ('io_costly', 'cpu_costly'):
+    costly_function = generate_costly_function(task_type=task_type)
 
 
-# %% type3：并行化
+    def obj_func(p):
+        costly_function()
+        x1, x2 = p
+        x = np.square(x1) + np.square(x2)
+        return 0.5 + (np.square(np.sin(x)) - 0.5) / np.square(1 + 0.001 * x)
 
 
-def obj_func3(p):
-    time.sleep(0.1)  # say that this function is very complicated and cost 0.1 seconds to run
-    x1, x2 = p
-    x = np.square(x1) + np.square(x2)
-    return 0.5 + (np.square(np.sin(x)) - 0.5) / np.square(1 + 0.001 * x)
+    for mode in ('common', 'multithreading', 'multiprocessing'):
+        set_run_mode(obj_func, mode)
+        ga = GA(func=obj_func, n_dim=2, size_pop=10, max_iter=5, lb=[-1, -1], ub=[1, 1], precision=1e-7)
+        start_time = datetime.datetime.now()
+        best_x, best_y = ga.run()
+        print('on {task_type} task,use {mode} mode, costs {time_costs}s'
+              .format(task_type=task_type, mode=mode,
+                      time_costs=(datetime.datetime.now() - start_time).total_seconds()))
+
+    # to use the vectorization mode, the function itself should support the mode.
+    mode = 'vectorization'
 
 
-set_run_mode(obj_func3, 'parallel')
-ga3 = GA(func=obj_func3, n_dim=2, size_pop=6, max_iter=5, lb=[-1, -1], ub=[1, 1], precision=1e-7)
-start_time = datetime.datetime.now()
-best_x, best_y = ga3.run()
-print('parallel mode, time costs: ', (datetime.datetime.now() - start_time).total_seconds())
+    def obj_func2(p):
+        costly_function()
+        x1, x2 = p[:, 0], p[:, 1]
+        x = np.square(x1) + np.square(x2)
+        return 0.5 + (np.square(np.sin(x)) - 0.5) / np.square(1 + 0.001 * x)
 
 
+    set_run_mode(obj_func2, mode)
+    ga = GA(func=obj_func2, n_dim=2, size_pop=10, max_iter=5, lb=[-1, -1], ub=[1, 1], precision=1e-7)
+    start_time = datetime.datetime.now()
+    best_x, best_y = ga.run()
+    print('on {task_type} task,use {mode} mode, costs {time_costs}s'
+          .format(task_type=task_type, mode=mode,
+                  time_costs=(datetime.datetime.now() - start_time).total_seconds()))
 ```
 
 output:

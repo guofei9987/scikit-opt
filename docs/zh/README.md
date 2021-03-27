@@ -99,11 +99,7 @@ best_x, best_y = my_ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 ```
 
-## 特性2: GPU 加速
-GPU加速功能还比较简单，将会在 1.0.0 版本大大完善。  
-有个 demo 已经可以在现版本运行了: [https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_gpu.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_gpu.py)
-
-## 特性3：断点继续运行
+## 特性2：断点继续运行
 例如，先跑10代，然后在此基础上再跑20代，可以这么写：
 ```python
 from sko.GA import GA
@@ -113,6 +109,20 @@ ga = GA(func=func, n_dim=1)
 ga.run(10)
 ga.run(20)
 ```
+
+
+
+## 特性3：4种加速方法
+- [x] 矢量化计算：vectorization
+- [x] 多线程计算：multithreading，适用于 IO 密集型目标函数
+- [x] 多进程计算：multiprocessing，适用于 CPU 密集型目标函数
+- [x] 缓存化计算：cached，适用于目标函数的每次输入有大量重复
+
+see [https://github.com/guofei9987/scikit-opt/blob/master/examples/example_function_modes.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/example_function_modes.py)
+
+## 特性4: GPU 加速
+GPU加速功能还比较简单，将会在 1.0.0 版本大大完善。  
+有个 demo 已经可以在现版本运行了: [https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_gpu.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_gpu.py)
 
 
 # 快速开始
@@ -189,19 +199,24 @@ ga = GA(func=schaffer, n_dim=2, size_pop=50, max_iter=800, lb=[-1, -1], ub=[1, 1
 best_x, best_y = ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 
-```
+print(ga)
+# # %% Plot the result
+# import pandas as pd
+# import matplotlib.pyplot as plt
+#
+# Y_history = pd.DataFrame(ga.all_history_Y)
+# fig, ax = plt.subplots(2, 1)
+# ax[0].plot(Y_history.index, Y_history.values, '.', color='red')
+# Y_history.min(axis=1).cummin().plot(kind='line')
+# plt.show()
+
+a=1
+if a!=1 :
+    print(1)```
 
 **第三步**：用 matplotlib 画出结果  
--> Demo code: [examples/demo_ga.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#L21)
+-> Demo code: [examples/demo_ga.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#LNone)
 ```python
-import pandas as pd
-import matplotlib.pyplot as plt
-
-Y_history = pd.DataFrame(ga.all_history_Y)
-fig, ax = plt.subplots(2, 1)
-ax[0].plot(Y_history.index, Y_history.values, '.', color='red')
-Y_history.min(axis=1).cummin().plot(kind='line')
-plt.show()
 ```
 
 ![Figure_1-1](https://img1.github.io/heuristic_algorithm/ga_1.png)

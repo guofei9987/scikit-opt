@@ -13,10 +13,12 @@ def set_run_mode(func, mode):
         can be  common, vectorization , parallel, cached
     :return:
     '''
-    if mode == 'multiprocess' and sys.platform == 'win32':
-        warnings.warn('multiprocess not support in windows, turning to multithreading')
-        mode = 'parallel'
-
+    if mode == 'multiprocessing' and sys.platform == 'win32':
+        warnings.warn('multiprocessing not support in windows, turning to multithreading')
+        mode = 'multithreading'
+    if mode == 'parallel':
+        mode = 'multithreading'
+        warnings.warn('use multithreading instead of parallel')
     func.__dict__['mode'] = mode
     return
 
@@ -70,8 +72,9 @@ def func_transformer(func):
         ''')
         set_run_mode(func, 'vectorization')
 
-    mode = getattr(func, 'mode', 'others')  # vectorial, parallel, cached
-
+    mode = getattr(func, 'mode', 'others')
+    valid_mode = ('common', 'multithreading', 'multiprocessing', 'vectorization', 'cached', 'others')
+    assert mode in valid_mode, 'valid mode should be in ' + str(valid_mode)
     if mode == 'vectorization':
         return func
     elif mode == 'cached':
@@ -83,7 +86,7 @@ def func_transformer(func):
             return np.array([func_cached(tuple(x)) for x in X])
 
         return func_warped
-    elif mode == 'parallel':
+    elif mode == 'multithreading':
         from multiprocessing.dummy import Pool as ThreadPool
 
         pool = ThreadPool()
@@ -92,7 +95,7 @@ def func_transformer(func):
             return np.array(pool.map(func, X))
 
         return func_transformed
-    elif mode == 'multiprocess':
+    elif mode == 'multiprocessing':
         from multiprocessing import Pool
         pool = Pool()
 
