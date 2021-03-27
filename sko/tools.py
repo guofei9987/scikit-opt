@@ -2,6 +2,7 @@ import numpy as np
 from functools import lru_cache
 from types import MethodType, FunctionType
 import warnings
+import sys
 
 
 def set_run_mode(func, mode):
@@ -12,6 +13,10 @@ def set_run_mode(func, mode):
         can be  common, vectorization , parallel, cached
     :return:
     '''
+    if mode == 'multiprocess' and sys.platform == 'win32':
+        warnings.warn('multiprocess not support in windows, turning to multithreading')
+        mode = 'parallel'
+
     func.__dict__['mode'] = mode
     return
 
