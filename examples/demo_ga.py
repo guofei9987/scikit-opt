@@ -19,16 +19,13 @@ best_x, best_y = ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 
 print(ga)
-# # %% Plot the result
-# import pandas as pd
-# import matplotlib.pyplot as plt
-#
-# Y_history = pd.DataFrame(ga.all_history_Y)
-# fig, ax = plt.subplots(2, 1)
-# ax[0].plot(Y_history.index, Y_history.values, '.', color='red')
-# Y_history.min(axis=1).cummin().plot(kind='line')
-# plt.show()
+# %% Plot the result
+import pandas as pd
+import matplotlib.pyplot as plt
 
-a=1
-if a!=1 :
-    print(1)
+Y_history = pd.DataFrame(ga.all_history_Y)
+fig, ax = plt.subplots(2, 1)
+ax[0].plot(Y_history.index, Y_history.values, '.', color='red')
+Y_history.min(axis=1).cummin().plot(kind='line')
+plt.show()
+
