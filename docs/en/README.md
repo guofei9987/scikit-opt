@@ -218,11 +218,9 @@ from sko.GA import GA
 ga = GA(func=schaffer, n_dim=2, size_pop=50, max_iter=800, lb=[-1, -1], ub=[1, 1], precision=1e-7)
 best_x, best_y = ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
-
-
 ```
 
--> Demo code: [examples/demo_ga.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#L22)
+-> Demo code: [examples/demo_ga.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#L20)
 ```python
 import pandas as pd
 import matplotlib.pyplot as plt

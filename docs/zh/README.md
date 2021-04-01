@@ -198,26 +198,21 @@ from sko.GA import GA
 ga = GA(func=schaffer, n_dim=2, size_pop=50, max_iter=800, lb=[-1, -1], ub=[1, 1], precision=1e-7)
 best_x, best_y = ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
-
-print(ga)
-# # %% Plot the result
-# import pandas as pd
-# import matplotlib.pyplot as plt
-#
-# Y_history = pd.DataFrame(ga.all_history_Y)
-# fig, ax = plt.subplots(2, 1)
-# ax[0].plot(Y_history.index, Y_history.values, '.', color='red')
-# Y_history.min(axis=1).cummin().plot(kind='line')
-# plt.show()
-
-a=1
-if a!=1 :
-    print(1)```
-
-**第三步**：用 matplotlib 画出结果  
--> Demo code: [examples/demo_ga.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#LNone)
-```python
 ```
+
+*第三步**：用 matplotlib 画出结果  
+-> Demo code: [examples/demo_ga.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#L20)
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+
+Y_history = pd.DataFrame(ga.all_history_Y)
+fig, ax = plt.subplots(2, 1)
+ax[0].plot(Y_history.index, Y_history.values, '.', color='red')
+Y_history.min(axis=1).cummin().plot(kind='line')
+plt.show()
+```
+
 
 ![Figure_1-1](https://img1.github.io/heuristic_algorithm/ga_1.png)
 
