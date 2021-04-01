@@ -219,24 +219,19 @@ ga = GA(func=schaffer, n_dim=2, size_pop=50, max_iter=800, lb=[-1, -1], ub=[1, 1
 best_x, best_y = ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 
-print(ga)
-# # %% Plot the result
-# import pandas as pd
-# import matplotlib.pyplot as plt
-#
-# Y_history = pd.DataFrame(ga.all_history_Y)
-# fig, ax = plt.subplots(2, 1)
-# ax[0].plot(Y_history.index, Y_history.values, '.', color='red')
-# Y_history.min(axis=1).cummin().plot(kind='line')
-# plt.show()
 
-a=1
-if a!=1 :
-    print(1)```
+```
 
-**Step3**: plot the result  
--> Demo code: [examples/demo_ga.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#LNone)
+-> Demo code: [examples/demo_ga.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#L22)
 ```python
+import pandas as pd
+import matplotlib.pyplot as plt
+
+Y_history = pd.DataFrame(ga.all_history_Y)
+fig, ax = plt.subplots(2, 1)
+ax[0].plot(Y_history.index, Y_history.values, '.', color='red')
+Y_history.min(axis=1).cummin().plot(kind='line')
+plt.show()
 ```
 
 ![Figure_1-1](https://img1.github.io/heuristic_algorithm/ga_1.png)
@@ -295,7 +290,7 @@ plt.show()
 
 ## 3. PSO(Particle swarm optimization)
 
-### 3.1 PSO 
+### 3.1 PSO
 **Step1**: define your problem:  
 -> Demo code: [examples/demo_pso.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L1)
 ```python
