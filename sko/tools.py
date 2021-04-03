@@ -3,6 +3,9 @@ from functools import lru_cache
 from types import MethodType, FunctionType
 import warnings
 import sys
+import multiprocessing
+
+multiprocessing.set_start_method('fork')
 
 
 def set_run_mode(func, mode):
