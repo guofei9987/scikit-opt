@@ -131,10 +131,10 @@ ga.run(20)
 ```
 
 ## feature3: 4-ways to accelerate
-- [x] vectorization
-- [x] multithreading
-- [x] multiprocessing
-- [x] cached
+- vectorization
+- multithreading
+- multiprocessing
+- cached
 
 see [https://github.com/guofei9987/scikit-opt/blob/master/examples/example_function_modes.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/example_function_modes.py)
 
