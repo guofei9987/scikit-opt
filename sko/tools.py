@@ -5,7 +5,8 @@ import warnings
 import sys
 import multiprocessing
 
-multiprocessing.set_start_method('fork')
+if sys.platform != 'win32':
+    multiprocessing.set_start_method('fork')
 
 
 def set_run_mode(func, mode):
