@@ -160,8 +160,8 @@ help(sko.AFSA.AFSA)
 
 - `sa.generation_best_Y` best Y of every generation
 - `sa.generation_best_X` X for best Y of every generation
-- `sa.best_x` best y
-- `sa.best_y` best x
+- `sa.best_x` best x
+- `sa.best_y` best y
 
 ### ACA
 - `sa.generation_best_Y` best Y of every generation
