@@ -1,6 +1,6 @@
 import numpy as np
 
-__all__ = ['crossover_1point', 'crossover_2point', 'crossover_2point_bit', 'crossover_pmx']
+__all__ = ['crossover_1point', 'crossover_2point', 'crossover_2point_bit', 'crossover_pmx', 'crossover_2point_prob']
 
 
 def crossover_1point(self):
@@ -43,6 +43,21 @@ def crossover_2point_bit(self):
     mask2 = (Chrom1 ^ Chrom2) & mask
     Chrom1 ^= mask2
     Chrom2 ^= mask2
+    return self.Chrom
+
+
+def crossover_2point_prob(self, crossover_prob):
+    '''
+    2 points crossover with probability
+    '''
+    Chrom, size_pop, len_chrom = self.Chrom, self.size_pop, self.len_chrom
+    for i in range(0, size_pop, 2):
+        if np.random.rand() < crossover_prob:
+            n1, n2 = np.random.randint(0, self.len_chrom, 2)
+            if n1 > n2:
+                n1, n2 = n2, n1
+            seg1, seg2 = self.Chrom[i, n1:n2].copy(), self.Chrom[i + 1, n1:n2].copy()
+            self.Chrom[i, n1:n2], self.Chrom[i + 1, n1:n2] = seg2, seg1
     return self.Chrom
 
 
