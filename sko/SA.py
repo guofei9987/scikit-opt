@@ -46,7 +46,7 @@ class SimulatedAnnealingBase(SkoBase):
         # stop if best_y stay unchanged over max_stay_counter times (also called cooldown time)
         self.max_stay_counter = max_stay_counter
 
-        self.n_dims = len(x0)
+        self.n_dim = len(x0)
 
         self.best_x = np.array(x0)  # initial solution
         self.best_y = self.func(self.best_x)
@@ -57,7 +57,7 @@ class SimulatedAnnealingBase(SkoBase):
         self.best_x_history, self.best_y_history = self.generation_best_X, self.generation_best_Y
 
     def get_new_x(self, x):
-        u = np.random.uniform(-1, 1, size=self.n_dims)
+        u = np.random.uniform(-1, 1, size=self.n_dim)
         x_new = x + 20 * np.sign(u) * self.T * ((1 + 1.0 / self.T) ** np.abs(u) - 1.0)
         return x_new
 
@@ -105,8 +105,31 @@ class SimulatedAnnealingBase(SkoBase):
     fit = run
 
 
-class SAFast(SimulatedAnnealingBase):
-    '''
+class SimulatedAnnealingValue(SimulatedAnnealingBase):
+    """
+    SA on real value function
+    """
+
+    def __init__(self, func, x0, T_max=100, T_min=1e-7, L=300, max_stay_counter=150, **kwargs):
+        super().__init__(func, x0, T_max, T_min, L, max_stay_counter, **kwargs)
+        lb, ub = kwargs.get('lb', None), kwargs.get('ub', None)
+
+        if lb is not None and ub is not None:
+            self.has_bounds = True
+            self.lb, self.ub = np.array(lb) * np.ones(self.n_dim), np.array(ub) * np.ones(self.n_dim)
+            assert self.n_dim == len(self.lb) == len(self.ub), 'dim == len(lb) == len(ub) is not True'
+            assert np.all(self.ub > self.lb), 'upper-bound must be greater than lower-bound'
+            self.hop = kwargs.get('hop', self.ub - self.lb)
+        elif lb is None and ub is None:
+            self.has_bounds = False
+            self.hop = kwargs.get('hop', 10)
+        else:
+            raise ValueError('input parameter error: lb, ub both exist, or both not exist')
+        self.hop = self.hop * np.ones(self.n_dim)
+
+
+class SAFast(SimulatedAnnealingValue):
+    """
     u ~ Uniform(0, 1, size = d)
     y = sgn(u - 0.5) * T * ((1 + 1/T)**abs(2*u - 1) - 1.0)
 
@@ -115,25 +138,27 @@ class SAFast(SimulatedAnnealingBase):
 
     c = n * exp(-n * quench)
     T_new = T0 * exp(-c * k**quench)
-    '''
+    """
 
     def __init__(self, func, x0, T_max=100, T_min=1e-7, L=300, max_stay_counter=150, **kwargs):
         super().__init__(func, x0, T_max, T_min, L, max_stay_counter, **kwargs)
         self.m, self.n, self.quench = kwargs.get('m', 1), kwargs.get('n', 1), kwargs.get('quench', 1)
-        self.lower, self.upper = kwargs.get('lower', -10), kwargs.get('upper', 10)
+        # self.lower, self.upper = kwargs.get('lower', -10), kwargs.get('upper', 10)
         self.c = self.m * np.exp(-self.n * self.quench)
 
     def get_new_x(self, x):
-        r = np.random.uniform(-1, 1, size=self.n_dims)
+        r = np.random.uniform(-1, 1, size=self.n_dim)
         xc = np.sign(r) * self.T * ((1 + 1.0 / self.T) ** np.abs(r) - 1.0)
-        x_new = x + xc * (self.upper - self.lower)
+        x_new = x + xc * self.hop
+        if self.has_bounds:
+            return np.clip(x_new, self.lb, self.ub)
         return x_new
 
     def cool_down(self):
         self.T = self.T_max * np.exp(-self.c * self.iter_cycle ** self.quench)
 
 
-class SABoltzmann(SimulatedAnnealingBase):
+class SABoltzmann(SimulatedAnnealingValue):
     '''
     std = minimum(sqrt(T) * ones(d), (upper - lower) / (3*learn_rate))
     y ~ Normal(0, std, size = d)
@@ -148,16 +173,19 @@ class SABoltzmann(SimulatedAnnealingBase):
         self.learn_rate = kwargs.get('learn_rate', 0.5)
 
     def get_new_x(self, x):
-        std = min(np.sqrt(self.T), (self.upper - self.lower) / 3.0 / self.learn_rate) * np.ones(self.n_dims)
-        xc = np.random.normal(0, 1.0, size=self.n_dims)
+        a, b = np.sqrt(self.T), self.hop / 3.0 / self.learn_rate
+        std = np.where(a < b, a, b)
+        xc = np.random.normal(0, 1.0, size=self.n_dim)
         x_new = x + xc * std * self.learn_rate
+        if self.has_bounds:
+            return np.clip(x_new, self.lb, self.ub)
         return x_new
 
     def cool_down(self):
         self.T = self.T_max / np.log(self.iter_cycle + 1.0)
 
 
-class SACauchy(SimulatedAnnealingBase):
+class SACauchy(SimulatedAnnealingValue):
     '''
     u ~ Uniform(-pi/2, pi/2, size=d)
     xc = learn_rate * T * tan(u)
@@ -171,9 +199,11 @@ class SACauchy(SimulatedAnnealingBase):
         self.learn_rate = kwargs.get('learn_rate', 0.5)
 
     def get_new_x(self, x):
-        u = np.random.uniform(-np.pi / 2, np.pi / 2, size=self.n_dims)
+        u = np.random.uniform(-np.pi / 2, np.pi / 2, size=self.n_dim)
         xc = self.learn_rate * self.T * np.tan(u)
         x_new = x + xc
+        if self.has_bounds:
+            return np.clip(x_new, self.lb, self.ub)
         return x_new
 
     def cool_down(self):
