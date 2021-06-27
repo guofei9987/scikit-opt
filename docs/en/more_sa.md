@@ -28,7 +28,7 @@ x_new = x_old + learn_rate * y
 T_new = T0 / log(1 + k)
 ```
 ### Do Simulated Annealing
-#### 1. Fast Simulated Annealing
+#### 1.1 Fast Simulated Annealing
 -> Demo code: [examples/demo_sa.py#s4](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa.py#L17)
 ```python
 from sko.SA import SAFast
@@ -38,8 +38,21 @@ sa_fast.run()
 print('Fast Simulated Annealing: best_x is ', sa_fast.best_x, 'best_y is ', sa_fast.best_y)
 
 ```
-#### 2. Boltzmann Simulated Annealing
+
+
+#### 1.2 Fast Simulated Annealing with bounds
 -> Demo code: [examples/demo_sa.py#s5](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa.py#L24)
+```python
+from sko.SA import SAFast
+
+sa_fast = SAFast(func=demo_func, x0=[1, 1, 1], T_max=1, T_min=1e-9, q=0.99, L=300, max_stay_counter=150,
+                 lb=[-1, 1, -1], ub=[2, 3, 4])
+sa_fast.run()
+print('Fast Simulated Annealing with bounds: best_x is ', sa_fast.best_x, 'best_y is ', sa_fast.best_y)
+
+```
+#### 2.1 Boltzmann Simulated Annealing
+-> Demo code: [examples/demo_sa.py#s6](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa.py#L32)
 ```python
 from sko.SA import SABoltzmann
 
@@ -47,13 +60,37 @@ sa_boltzmann = SABoltzmann(func=demo_func, x0=[1, 1, 1], T_max=1, T_min=1e-9, q=
 sa_boltzmann.run()
 print('Boltzmann Simulated Annealing: best_x is ', sa_boltzmann.best_x, 'best_y is ', sa_fast.best_y)
 
+
+```
+
+#### 2.2 Boltzmann Simulated Annealing with bounds
+-> Demo code: [examples/demo_sa.py#s7](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa.py#L40)
+```python
+from sko.SA import SABoltzmann
+
+sa_boltzmann = SABoltzmann(func=demo_func, x0=[1, 1, 1], T_max=1, T_min=1e-9, q=0.99, L=300, max_stay_counter=150,
+                           lb=-1, ub=[2, 3, 4])
+sa_boltzmann.run()
+print('Boltzmann Simulated Annealing with bounds: best_x is ', sa_boltzmann.best_x, 'best_y is ', sa_fast.best_y)
+
 ```
 #### 3. Cauchy Simulated Annealing
--> Demo code: [examples/demo_sa.py#s6](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa.py#L31)
+-> Demo code: [examples/demo_sa.py#s8](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa.py#L48)
 ```python
 from sko.SA import SACauchy
 
 sa_cauchy = SACauchy(func=demo_func, x0=[1, 1, 1], T_max=1, T_min=1e-9, q=0.99, L=300, max_stay_counter=150)
 sa_cauchy.run()
 print('Cauchy Simulated Annealing: best_x is ', sa_cauchy.best_x, 'best_y is ', sa_cauchy.best_y)
+
+```
+#### 3. Cauchy Simulated Annealing with bounds
+-> Demo code: [examples/demo_sa.py#s9](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa.py#L55)
+```python
+from sko.SA import SACauchy
+
+sa_cauchy = SACauchy(func=demo_func, x0=[1, 1, 1], T_max=1, T_min=1e-9, q=0.99, L=300, max_stay_counter=150,
+                     lb=[-1, 1, -1], ub=[2, 3, 4])
+sa_cauchy.run()
+print('Cauchy Simulated Annealing with bounds: best_x is ', sa_cauchy.best_x, 'best_y is ', sa_cauchy.best_y)
 ```

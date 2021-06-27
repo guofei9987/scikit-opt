@@ -143,7 +143,6 @@ class SAFast(SimulatedAnnealingValue):
     def __init__(self, func, x0, T_max=100, T_min=1e-7, L=300, max_stay_counter=150, **kwargs):
         super().__init__(func, x0, T_max, T_min, L, max_stay_counter, **kwargs)
         self.m, self.n, self.quench = kwargs.get('m', 1), kwargs.get('n', 1), kwargs.get('quench', 1)
-        # self.lower, self.upper = kwargs.get('lower', -10), kwargs.get('upper', 10)
         self.c = self.m * np.exp(-self.n * self.quench)
 
     def get_new_x(self, x):
@@ -159,17 +158,16 @@ class SAFast(SimulatedAnnealingValue):
 
 
 class SABoltzmann(SimulatedAnnealingValue):
-    '''
+    """
     std = minimum(sqrt(T) * ones(d), (upper - lower) / (3*learn_rate))
     y ~ Normal(0, std, size = d)
     x_new = x_old + learn_rate * y
 
     T_new = T0 / log(1 + k)
-    '''
+    """
 
     def __init__(self, func, x0, T_max=100, T_min=1e-7, L=300, max_stay_counter=150, **kwargs):
         super().__init__(func, x0, T_max, T_min, L, max_stay_counter, **kwargs)
-        self.lower, self.upper = kwargs.get('lower', -10), kwargs.get('upper', 10)
         self.learn_rate = kwargs.get('learn_rate', 0.5)
 
     def get_new_x(self, x):
@@ -186,13 +184,13 @@ class SABoltzmann(SimulatedAnnealingValue):
 
 
 class SACauchy(SimulatedAnnealingValue):
-    '''
+    """
     u ~ Uniform(-pi/2, pi/2, size=d)
     xc = learn_rate * T * tan(u)
     x_new = x_old + xc
 
     T_new = T0 / (1 + k)
-    '''
+    """
 
     def __init__(self, func, x0, T_max=100, T_min=1e-7, L=300, max_stay_counter=150, **kwargs):
         super().__init__(func, x0, T_max, T_min, L, max_stay_counter, **kwargs)

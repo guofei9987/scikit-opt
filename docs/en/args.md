@@ -83,6 +83,21 @@ help(sko.AFSA.AFSA)
 | T\_min             | 1e\-7 | min temperature  |
 | L                  | 300   | long of chain  |
 | max\_stay\_counter | 150   | cooldown time  |
+| lb              | \-1    | lower bound of variables. Can be int/float/list  |
+| ub              | 1      | upper bound of variables. Can be int/float/list  |
+
+
+
+### SA_TSP
+
+| input parameters | default value    | meaning     |
+|--------------------|-------|-------|
+| func               | \-    | objective function  |
+| x0                 | \-    | initial point |
+| T\_max             | 100   | max temperature |
+| T\_min             | 1e\-7 | min temperature  |
+| L                  | 300   | long of chain  |
+| max\_stay\_counter | 150   | cooldown time  |
 
 
 ### ACA_TSP
