@@ -151,7 +151,7 @@ help(sko.AFSA.AFSA)
 ### PSO
 - `pso.record_value` location, velocity, function value of every generation and every particles. only when `pso.record_mode = True`.
 - `pso.gbest_y_hist` best y every generation
-- `pso.best_y` best y （迭代中使用的是 `pso.gbest_x`, `pso.gbest_y`）
+- `pso.best_y` best y （In PSO, use `pso.gbest_x`, `pso.gbest_y`）
 - `pso.best_x` best x
 
 
@@ -170,8 +170,8 @@ help(sko.AFSA.AFSA)
 - `aca.best_x` best x
 
 ### AFSA
-- `afsa.best_x` best y
-- `afsa.best_y` best x
+- `afsa.best_x` best x
+- `afsa.best_y` best y
 
 ### IA
 
