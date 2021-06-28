@@ -5,7 +5,8 @@ from sko.GA import GA
 def x2gray(x, n_dim, lb, ub, precision):
     ga = GA(func=lambda k: None, n_dim=n_dim, size_pop=2, max_iter=1, lb=lb, ub=ub, precision=precision)
 
-    x = (x - ga.lb) / (ga.ub - ga.lb)  # map to (0,1)
+    ub = ga.ub_extend if ga.int_mode else ga.ub  # for int mode
+    x = (x - ga.lb) / (ub - ga.lb)  # map to (0,1)
     x = np.round(x * (np.exp2(ga.Lind) - 1)).astype(int)  # map to int
 
     res = np.zeros((x.shape[0], ga.Lind.sum()))
