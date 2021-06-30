@@ -3,7 +3,6 @@
 # @Time    : 2019/8/20
 # @Author  : github.com/guofei9987
 
-import random
 import numpy as np
 from .base import SkoBase
 from sko.tools import func_transformer
@@ -298,7 +297,7 @@ class RCGA(GeneticAlgorithmBase):
         Chrom, size_pop, len_chrom, Y = self.Chrom, self.size_pop, len(self.Chrom[0]), self.FitV
         for i in range(0, size_pop, 2):
 
-            if random.random() > self.prob_cros:
+            if np.random.random() > self.prob_cros:
                 continue
             for j in range(len_chrom):
 
@@ -306,7 +305,7 @@ class RCGA(GeneticAlgorithmBase):
                 yup = 1
                 y1 = Chrom[i][j]
                 y2 = Chrom[i + 1][j]
-                r = random.random()
+                r = np.random.random()
                 if r <= 0.5:
                     betaq = (2 * r) ** (1.0 / (1 + 1.0))
                 else:
@@ -333,14 +332,14 @@ class RCGA(GeneticAlgorithmBase):
         size_pop, n_dim, Chrom= self.size_pop, self.n_dim, self.Chrom
         for i in range(size_pop):
             for j in range(n_dim):
-                r = random.random()
+                r = np.random.random()
                 if r <= self.prob_mut:
                     y = Chrom[i][j]
                     ylow = 0
                     yup = 1
                     delta1 = 1.0 * (y - ylow) / (yup - ylow)
                     delta2 = 1.0 * (yup - y) / (yup - ylow)
-                    r = random.random()
+                    r = np.random.random()
                     mut_pow = 1.0 / (1 + 1.0)
                     if r <= 0.5:
                         xy = 1.0 - delta1
