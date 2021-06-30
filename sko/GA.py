@@ -244,6 +244,117 @@ class GA(GeneticAlgorithmBase):
             register('chrom2x', chrom2x)
 
         return self
+    
+class RCGA(GeneticAlgorithmBase):
+    '''
+     Parameters
+    ----------------
+    func : function
+        The func you want to do optimal
+    n_dim : int
+        number of variables of func
+    size_pop : int
+        Size of population
+    max_iter : int
+        Max of iter
+    lb : array_like
+        The lower bound of every variables of func
+    ub : array_like
+        The upper bound of every variables of func
+    prob_mut : float between 0 and 1
+        Probability of mutation
+    prob_cros : float between 0 and 1
+        Probability of crossover
+    '''
+    def __init__(self, func, n_dim,
+                 size_pop=50, max_iter=200,
+                 prob_mut=0.001,
+                 prob_cros=0.9,
+                 lb=-1, ub=1,
+                ):
+        super().__init__(func, n_dim, size_pop, max_iter, prob_mut)
+        self.lb, self.ub = np.array(lb) * np.ones(self.n_dim), np.array(ub) * np.ones(self.n_dim)
+        self.prob_cros = prob_cros
+        self.crtbp()
+
+    def crtbp(self):
+        # create the population, random floating point numbers of 0 ~ 1
+        self.Chrom = np.random.random([self.size_pop, self.n_dim])
+        return self.Chrom
+
+    def chrom2x(self,Chrom):
+        X = self.lb + (self.ub - self.lb) * self.Chrom
+        return X
+
+    def crossover_SBX(self):
+        '''
+        simulated binary crossover
+        :param self:
+        :return self.Chrom:
+        '''
+        Chrom, size_pop, len_chrom, Y = self.Chrom, self.size_pop, len(self.Chrom[0]), self.FitV
+        for i in range(0, size_pop, 2):
+
+            if random.random() > self.prob_cros:
+                continue
+            for j in range(len_chrom):
+                ylow = 0
+                yup = 1
+                y1 = Chrom[i][j]
+                y2 = Chrom[i + 1][j]
+                r = random.random()
+                if r <= 0.5:
+                    betaq = (2 * r) ** (1.0 / (1 + 1.0))
+                else:
+                    betaq = (0.5 / (1.0 - r)) ** (1.0 / (1 + 1.0))
+
+                child1 = 0.5 * ((1 + betaq) * y1 + (1 - betaq) * y2)
+                child2 = 0.5 * ((1 - betaq) * y1 + (1 + betaq) * y2)
+
+                child1 = min(max(child1, ylow), yup)
+                child2 = min(max(child2, ylow), yup)
+
+                self.Chrom[i][j] = child1
+                self.Chrom[i + 1][j] = child2
+        return self.Chrom
+
+    def mutation(self):
+        '''
+        Routine for real polynomial mutation of an individual
+        mutation of 0/1 type chromosome
+        :param self:
+        :return:
+        '''
+        #
+        size_pop, n_dim, Chrom= self.size_pop, self.n_dim, self.Chrom
+        for i in range(size_pop):
+            for j in range(n_dim):
+                r = random.random()
+                if r <= self.prob_mut:
+                    y = Chrom[i][j]
+                    ylow = 0
+                    yup = 1
+                    delta1 = 1.0 * (y - ylow) / (yup - ylow)
+                    delta2 = 1.0 * (yup - y) / (yup - ylow)
+                    r = random.random()
+                    mut_pow = 1.0 / (1 + 1.0)
+                    if r <= 0.5:
+                        xy = 1.0 - delta1
+                        val = 2.0 * r + (1.0 - 2.0 * r) * (xy ** (1 + 1.0))
+                        deltaq = val ** mut_pow - 1.0
+                    else:
+                        xy = 1.0 - delta2
+                        val = 2.0 * (1.0 - r) + 2.0 * (r - 0.5) * (xy ** (1 + 1.0))
+                        deltaq = 1.0 - val ** mut_pow
+                    y = y + deltaq * (yup - ylow)
+                    y = min(yup, max(y, ylow))
+                    self.Chrom[i][j] = y
+        return self.Chrom
+
+    ranking = ranking.ranking
+    selection = selection.selection_tournament_faster
+    crossover = crossover_SBX
+    mutation = mutation
 
 
 class GA_TSP(GeneticAlgorithmBase):
