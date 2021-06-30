@@ -246,7 +246,6 @@ class GA(GeneticAlgorithmBase):
         return self
     
 class RCGA(GeneticAlgorithmBase):
-    
     """real-coding genetic algorithm
 
     Parameters
@@ -267,7 +266,6 @@ class RCGA(GeneticAlgorithmBase):
         The lower bound of every variables of func
     ub : array_like
         The upper bound of every variables of func
-
     """
     def __init__(self, func, n_dim,
                  size_pop=50, max_iter=200,
