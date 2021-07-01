@@ -29,6 +29,7 @@ script:
   - coverage run -p examples/example_function_modes.py
   - coverage run -p examples/example_method_modes.py
   - coverage run -p tests/test_x2gray.py
+  - coverage run -p examples/demo_rcga.py
 
 # Push the results back to codecov
 after_success:
