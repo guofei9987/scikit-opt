@@ -85,6 +85,31 @@ def rosenbrock(p):
         res += 100 * np.square(np.square(p[i]) - p[i + 1]) + np.square(p[i] - 1)
     return res
 
+def zakharov(p):
+    """
+    它是一个具有范围的 n 维单峰函数
+    -5<=xi<=10
+    除了全局最小值之外，该函数没有局部最小值。It
+    The global minimum can be found at 0, for f(0, ..., 0).
+    :param p:
+    :return:
+    """
+    temp2=[0.5*i*x for i, x in enumerate(p)]
+    part2 = np.sum(temp2)
+
+    temp1=[np.square(x) for x in p]
+    part1=np.sum(temp1)
+    return  part1+ part2**2 + part2**4
+
+def ackley(p):
+    """ Ackley_N.2
+    -32<=xi<=32. Convex 2dim , non-seperable function .
+    The global minimum value -200 can be found at f(0,0)
+    :param p:
+    :return:
+    """
+    x,y=p
+    return -200 * np.exp(-0.02 * np.sqrt(np.square(x)) + np.square(y))
 
 if __name__ == '__main__':
     print(sphere((0, 0)))
@@ -93,3 +118,5 @@ if __name__ == '__main__':
     print(griewank((0, 0, 0)))
     print(rastrigrin((0, 0, 0)))
     print(rosenbrock((1, 1, 1)))
+    print(zakharov((0, 0, 0)))
+    print(ackley((0, 0)))
