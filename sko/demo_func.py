@@ -6,8 +6,10 @@ def function_for_TSP(num_points, seed=None):
     if seed:
         np.random.seed(seed=seed)
 
-    points_coordinate = np.random.rand(num_points, 2)  # generate coordinate of points randomly
-    distance_matrix = spatial.distance.cdist(points_coordinate, points_coordinate, metric='euclidean')
+    # generate coordinate of points randomly
+    points_coordinate = np.random.rand(num_points, 2)
+    distance_matrix = spatial.distance.cdist(
+        points_coordinate, points_coordinate, metric='euclidean')
 
     # print('distance_matrix is: \n', distance_matrix)
 
@@ -82,8 +84,10 @@ def rosenbrock(p):
     n_dim = len(p)
     res = 0
     for i in range(n_dim - 1):
-        res += 100 * np.square(np.square(p[i]) - p[i + 1]) + np.square(p[i] - 1)
+        res += 100 * \
+            np.square(np.square(p[i]) - p[i + 1]) + np.square(p[i] - 1)
     return res
+
 
 def zakharov(p):
     """
@@ -94,12 +98,13 @@ def zakharov(p):
     :param p:
     :return:
     """
-    temp2=[0.5*i*x for i, x in enumerate(p)]
+    temp2 = [0.5*i*x for i, x in enumerate(p)]
     part2 = np.sum(temp2)
 
-    temp1=[np.square(x) for x in p]
-    part1=np.sum(temp1)
-    return  part1+ part2**2 + part2**4
+    temp1 = [np.square(x) for x in p]
+    part1 = np.sum(temp1)
+    return part1 + part2**2 + part2**4
+
 
 def ackley(p):
     """ Ackley_N.2
@@ -108,8 +113,9 @@ def ackley(p):
     :param p:
     :return:
     """
-    x,y=p
+    x, y = p
     return -200 * np.exp(-0.02 * np.sqrt(np.square(x)) + np.square(y))
+
 
 if __name__ == '__main__':
     print(sphere((0, 0)))
