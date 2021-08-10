@@ -88,6 +88,14 @@ def rosenbrock(p):
             np.square(np.square(p[i]) - p[i + 1]) + np.square(p[i] - 1)
     return res
 
+def sixhumpcamel(p):
+    """
+    带域的 2dim 的多模态全局最小化函数
+    -5<=xi<=5,
+    f(-0.08..., 0.712...) 的全局最小值为 -1.0...4
+    """
+    x,y=p
+    return 4*np.square(x)+ x*y -4*np.square(y) -2.1*np.power(x,4) + 4*np.power(y,4) +1/3*np.power(x,6)
 
 def zakharov(p):
     """
@@ -116,6 +124,13 @@ def ackley(p):
     x, y = p
     return -200 * np.exp(-0.02 * np.sqrt(np.square(x)) + np.square(y))
 
+def cigar(p):
+    """  
+    多峰全局优化函数，域为-100<=xi<=100，对于i=1...n。
+    f(0,...0) 的全局最小值为 0
+    """
+    x=p
+    return np.square(float(x[0])) + np.power(10.0,6) * sphere(x[1:])
 
 if __name__ == '__main__':
     print(sphere((0, 0)))
@@ -126,3 +141,5 @@ if __name__ == '__main__':
     print(rosenbrock((1, 1, 1)))
     print(zakharov((0, 0, 0)))
     print(ackley((0, 0)))
+    print(cigar((0,0,0,0,)))
+    print(sixhumpcamel((-0.08984201368301331, 0.7126564032704135)))
