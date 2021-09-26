@@ -6,8 +6,10 @@ def function_for_TSP(num_points, seed=None):
     if seed:
         np.random.seed(seed=seed)
 
-    points_coordinate = np.random.rand(num_points, 2)  # generate coordinate of points randomly
-    distance_matrix = spatial.distance.cdist(points_coordinate, points_coordinate, metric='euclidean')
+    # generate coordinate of points randomly
+    points_coordinate = np.random.rand(num_points, 2)
+    distance_matrix = spatial.distance.cdist(
+        points_coordinate, points_coordinate, metric='euclidean')
 
     # print('distance_matrix is: \n', distance_matrix)
 
@@ -82,9 +84,53 @@ def rosenbrock(p):
     n_dim = len(p)
     res = 0
     for i in range(n_dim - 1):
-        res += 100 * np.square(np.square(p[i]) - p[i + 1]) + np.square(p[i] - 1)
+        res += 100 * \
+            np.square(np.square(p[i]) - p[i + 1]) + np.square(p[i] - 1)
     return res
 
+def sixhumpcamel(p):
+    """
+    带域的 2dim 的多模态全局最小化函数
+    -5<=xi<=5,
+    f(-0.08..., 0.712...) 的全局最小值为 -1.0...4
+    """
+    x,y=p
+    return 4*np.square(x)+ x*y -4*np.square(y) -2.1*np.power(x,4) + 4*np.power(y,4) +1/3*np.power(x,6)
+
+def zakharov(p):
+    """
+    它是一个具有范围的 n 维单峰函数
+    -5<=xi<=10
+    除了全局最小值之外，该函数没有局部最小值。It
+    The global minimum can be found at 0, for f(0, ..., 0).
+    :param p:
+    :return:
+    """
+    temp2 = [0.5*i*x for i, x in enumerate(p)]
+    part2 = np.sum(temp2)
+
+    temp1 = [np.square(x) for x in p]
+    part1 = np.sum(temp1)
+    return part1 + part2**2 + part2**4
+
+
+def ackley(p):
+    """ Ackley_N.2
+    -32<=xi<=32. Convex 2dim , non-seperable function .
+    The global minimum value -200 can be found at f(0,0)
+    :param p:
+    :return:
+    """
+    x, y = p
+    return -200 * np.exp(-0.02 * np.sqrt(np.square(x)) + np.square(y))
+
+def cigar(p):
+    """  
+    多峰全局优化函数，域为-100<=xi<=100，对于i=1...n。
+    f(0,...0) 的全局最小值为 0
+    """
+    x=p
+    return np.square(float(x[0])) + np.power(10.0,6) * sphere(x[1:])
 
 if __name__ == '__main__':
     print(sphere((0, 0)))
@@ -93,3 +139,7 @@ if __name__ == '__main__':
     print(griewank((0, 0, 0)))
     print(rastrigrin((0, 0, 0)))
     print(rosenbrock((1, 1, 1)))
+    print(zakharov((0, 0, 0)))
+    print(ackley((0, 0)))
+    print(cigar((0,0,0,0,)))
+    print(sixhumpcamel((-0.08984201368301331, 0.7126564032704135)))
