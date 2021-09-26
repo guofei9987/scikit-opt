@@ -27,8 +27,8 @@ help(sko.AFSA.AFSA)
 | prob\_mut       | 0\.001 | 变异概率                   |
 | lb              | \-1    | 每个自变量的最小值               |
 | ub              | 1      | 每个自变量的最大值               |
-| constraint\_eq  | 空元组    | 线性约束                   |
-| constraint\_ueq | 空元组    | 非线性约束                  |
+| constraint\_eq  | 空元组    | 等式约束                   |
+| constraint\_ueq | 空元组    | 不等式约束                  |
 | precision       | 1e\-7  | 精准度，int/float或者它们组成的列表 |
 
 
@@ -56,7 +56,7 @@ help(sko.AFSA.AFSA)
 | w         | 0\.8 | 惯性权重     |
 | c1        | 0\.5 | 个体记忆     |
 | c2        | 0\.5 | 集体记忆     |
-| constraint\_ueq | 空元组    | 非线性约束                  |
+| constraint\_ueq | 空元组    | 不等式约束                  |
 
 ### DE
 
@@ -70,8 +70,8 @@ help(sko.AFSA.AFSA)
 | F         | 0\.5   | 变异系数     |
 | lb        | \-1    | 每个自变量的最小值 |
 | ub        | 1      | 每个自变量的最大值 |
-| constraint\_eq  | 空元组    | 线性约束                   |
-| constraint\_ueq | 空元组    | 非线性约束                  |
+| constraint\_eq  | 空元组    | 等式约束                   |
+| constraint\_ueq | 空元组    | 不等式约束                  |
 
 ### SA
 
