@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# @Time    : 2019/10/15
+# @Author  : github.com/Agrover112 , github.com/guofei9987
+
 import numpy as np
 from sko.GA import GA
 from sko.tool_kit import x2gray

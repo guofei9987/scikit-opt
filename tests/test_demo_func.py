@@ -1,5 +1,7 @@
 import unittest
-
+# -*- coding: utf-8 -*-
+# @Time    : 2019/10/15
+# @Author  : github.com/Agrover112
 from sko.demo_func import ackley, cigar, function_for_TSP, rastrigrin, rosenbrock, sixhumpcamel, sphere, schaffer, zakharov, shubert, griewank, rastrigrin, rosenbrock, sixhumpcamel, zakharov, ackley, cigar
 
 
