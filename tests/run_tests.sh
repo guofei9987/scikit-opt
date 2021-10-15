@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # -*- coding: utf-8 -*-
-# @Time    : 2019/10/15
+# @Time    : 2021/10/15
 # @Author  : github.com/Agrover112
 
 echo -n "Running tests...."
