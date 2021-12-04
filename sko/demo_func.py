@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# @Time    : 2019/10/15
+# @Author  : github.com/Agrover112 , github.com/guofei9987
+
 import numpy as np
 from scipy import spatial
 
@@ -132,14 +136,4 @@ def cigar(p):
     x=p
     return np.square(float(x[0])) + np.power(10.0,6) * sphere(x[1:])
 
-if __name__ == '__main__':
-    print(sphere((0, 0)))
-    print(schaffer((0, 0)))
-    print(shubert((-7.08350643, -7.70831395)))
-    print(griewank((0, 0, 0)))
-    print(rastrigrin((0, 0, 0)))
-    print(rosenbrock((1, 1, 1)))
-    print(zakharov((0, 0, 0)))
-    print(ackley((0, 0)))
-    print(cigar((0,0,0,0,)))
-    print(sixhumpcamel((-0.08984201368301331, 0.7126564032704135)))
+
