@@ -200,7 +200,7 @@ best_x, best_y = ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 ```
 
-*第三步**：用 matplotlib 画出结果  
+**第三步**：用 matplotlib 画出结果  
 -> Demo code: [examples/demo_ga.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#L20)
 ```python
 import pandas as pd
@@ -457,7 +457,19 @@ print(best_x, best_y)
 # 使用本项目的论文
 
 
-- [Heinrich, K., Zschech, P., Janiesch, C., & Bonin, M. (2021). Process data properties matter: Introducing gated convolutional neural networks (GCNN) and key-value-predict attention networks (KVP) for next event prediction with deep learning. Decision Support Systems, 113494.](https://www.sciencedirect.com/science/article/pii/S016792362100004X)
+- [Yu, J., He, Y., Yan, Q., & Kang, X. (2021). SpecView: Malware Spectrum Visualization Framework With Singular Spectrum Transformation. IEEE Transactions on Information Forensics and Security, 16, 5093-5107.](https://ieeexplore.ieee.org/abstract/document/9607026/)
+- [Zhen, H., Zhai, H., Ma, W., Zhao, L., Weng, Y., Xu, Y., ... & He, X. (2021). Design and tests of reinforcement-learning-based optimal power flow solution generator. Energy Reports.](https://www.sciencedirect.com/science/article/pii/S2352484721012737)
+- [Heinrich, K., Zschech, P., Janiesch, C., & Bonin, M. (2021). Process data properties matter: Introducing gated convolutional neural networks (GCNN) and key-value-predict attention networks (KVP) for next event prediction with deep learning. Decision Support Systems, 143, 113494.](https://www.sciencedirect.com/science/article/pii/S016792362100004X)
+- [Tang, H. K., & Goh, S. K. (2021). A Novel Non-population-based Meta-heuristic Optimizer Inspired by the Philosophy of Yi Jing. arXiv preprint arXiv:2104.08564.](https://arxiv.org/abs/2104.08564)
+- [Wu, G., Li, L., Li, X., Chen, Y., Chen, Z., Qiao, B., ... & Xia, L. (2021). Graph embedding based real-time social event matching for EBSNs recommendation. World Wide Web, 1-22.](https://link.springer.com/article/10.1007/s11280-021-00934-y)
+- [Pan, X., Zhang, Z., Zhang, H., Wen, Z., Ye, W., Yang, Y., ... & Zhao, X. (2021). A fast and robust mixture gases identification and concentration detection algorithm based on attention mechanism equipped recurrent neural network with double loss function. Sensors and Actuators B: Chemical, 342, 129982.](https://www.sciencedirect.com/science/article/abs/pii/S0925400521005517)
+- [Castella Balcell, M. (2021). Optimization of the station keeping system for the WindCrete floating offshore wind turbine.](https://upcommons.upc.edu/handle/2117/350262)
+- [Zhai, B., Wang, Y., Wang, W., & Wu, B. (2021). Optimal Variable Speed Limit Control Strategy on Freeway Segments under Fog Conditions. arXiv preprint arXiv:2107.14406.](https://arxiv.org/abs/2107.14406)
+- [Yap, X. H. (2021). Multi-label classification on locally-linear data: Application to chemical toxicity prediction.](https://etd.ohiolink.edu/apexprod/rws_olink/r/1501/10?clear=10&p10_accession_num=wright162901936395651)
+- [Gebhard, L. (2021). Expansion Planning of Low-Voltage Grids Using Ant Colony Optimization Ausbauplanung von Niederspannungsnetzen mithilfe eines Ameisenalgorithmus.](https://ad-publications.cs.uni-freiburg.de/theses/Master_Lukas_Gebhard_2021.pdf)
+- [Ma, X., Zhou, H., & Li, Z. (2021). Optimal Design for Interdependencies between Hydrogen and Power Systems. IEEE Transactions on Industry Applications.](https://ieeexplore.ieee.org/abstract/document/9585654)
+- [de Curso, T. D. C. (2021). Estudo do modelo Johansen-Ledoit-Sornette de bolhas financeiras.](https://d1wqtxts1xzle7.cloudfront.net/67649721/TCC_Thibor_Final-with-cover-page-v2.pdf?Expires=1639140872&Signature=LDZoVsAGO0mLMlVsQjnzpLlRhLyt5wdIDmBjm1yWog5bsx6apyRE9aHuwfnFnc96uvam573wiHMeV08QlK2vhRcQS1d0buenBT5fwoRuq6PTDoMsXmpBb-lGtu9ETiMb4sBYvcQb-X3C7Hh0Ec1FoJZ040gXJPWdAli3e1TdOcGrnOaBZMgNiYX6aKFIZaaXmiQeV3418~870bH4IOQXOapIE6-23lcOL-32T~FSjsOrENoLUkcosv6UHPourKgsRufAY-C2HBUWP36iJ7CoH0jSTo1e45dVgvqNDvsHz7tmeI~0UPGH-A8MWzQ9h2ElCbCN~UNQ8ycxOa4TUKfpCw__&Key-Pair-Id=APKAJLOHF5GGSLRBV4ZA)
+- [Wu, T., Liu, J., Liu, J., Huang, Z., Wu, H., Zhang, C., ... & Zhang, G. (2021). A Novel AI-based Framework for AoI-optimal Trajectory Planning in UAV-assisted Wireless Sensor Networks. IEEE Transactions on Wireless Communications.](https://ieeexplore.ieee.org/abstract/document/9543607)
+- [Liu, H., Wen, Z., & Cai, W. (2021, August). FastPSO: Towards Efficient Swarm Intelligence Algorithm on GPUs. In 50th International Conference on Parallel Processing (pp. 1-10).](https://dl.acm.org/doi/abs/10.1145/3472456.3472474)
 - [Mahbub, R. (2020). Algorithms and Optimization Techniques for Solving TSP.](https://raiyanmahbub.com/images/Research_Paper.pdf)
 - [Li, J., Chen, T., Lim, K., Chen, L., Khan, S. A., Xie, J., & Wang, X. (2019). Deep learning accelerated gold nanocluster synthesis. Advanced Intelligent Systems, 1(3), 1900029.](https://onlinelibrary.wiley.com/doi/full/10.1002/aisy.201900029)
-- [Lin, J., & Emam, Y. Data Augmentation with Policy Optimization.](http://104.131.144.199/papers/autoaugment_ppo.pdf)
