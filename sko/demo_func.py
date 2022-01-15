@@ -34,13 +34,14 @@ def sphere(p):
 
 def schaffer(p):
     '''
-    二维函数，具有无数个极小值点、强烈的震荡形态。很难找到全局最优值
-    在(0,0)处取的最值0
-    -10<=x1,x2<=10
+    This function has plenty of local minimum, with strong shocks
+    global minimum at (0,0) with value 0
+    https://en.wikipedia.org/wiki/Test_functions_for_optimization
     '''
     x1, x2 = p
-    x = np.square(x1) + np.square(x2)
-    return 0.5 + (np.square(np.sin(np.sqrt(x))) - 0.5) / np.square(1 + 0.001 * x)
+    part1 = np.square(x1) - np.square(x2)
+    part2 = np.square(x1) + np.square(x2)
+    return 0.5 + (np.square(np.sin(part1)) - 0.5) / np.square(1 + 0.001 * part2)
 
 
 def shubert(p):
@@ -89,8 +90,9 @@ def rosenbrock(p):
     res = 0
     for i in range(n_dim - 1):
         res += 100 * \
-            np.square(np.square(p[i]) - p[i + 1]) + np.square(p[i] - 1)
+               np.square(np.square(p[i]) - p[i + 1]) + np.square(p[i] - 1)
     return res
+
 
 def sixhumpcamel(p):
     """
@@ -98,8 +100,10 @@ def sixhumpcamel(p):
     -5<=xi<=5,
     f(-0.08..., 0.712...) 的全局最小值为 -1.0...4
     """
-    x,y=p
-    return 4*np.square(x)+ x*y -4*np.square(y) -2.1*np.power(x,4) + 4*np.power(y,4) +1/3*np.power(x,6)
+    x, y = p
+    return 4 * np.square(x) + x * y - 4 * np.square(y) - 2.1 * np.power(x, 4) + 4 * np.power(y, 4) + 1 / 3 * np.power(x,
+                                                                                                                      6)
+
 
 def zakharov(p):
     """
@@ -110,12 +114,12 @@ def zakharov(p):
     :param p:
     :return:
     """
-    temp2 = [0.5*i*x for i, x in enumerate(p)]
+    temp2 = [0.5 * i * x for i, x in enumerate(p)]
     part2 = np.sum(temp2)
 
     temp1 = [np.square(x) for x in p]
     part1 = np.sum(temp1)
-    return part1 + part2**2 + part2**4
+    return part1 + part2 ** 2 + part2 ** 4
 
 
 def ackley(p):
@@ -128,12 +132,11 @@ def ackley(p):
     x, y = p
     return -200 * np.exp(-0.02 * np.sqrt(np.square(x)) + np.square(y))
 
+
 def cigar(p):
     """  
     多峰全局优化函数，域为-100<=xi<=100，对于i=1...n。
     f(0,...0) 的全局最小值为 0
     """
-    x=p
-    return np.square(float(x[0])) + np.power(10.0,6) * sphere(x[1:])
-
-
+    x = p
+    return np.square(float(x[0])) + np.power(10.0, 6) * sphere(x[1:])

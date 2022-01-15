@@ -7,10 +7,12 @@ def schaffer(p):
     '''
     This function has plenty of local minimum, with strong shocks
     global minimum at (0,0) with value 0
+    https://en.wikipedia.org/wiki/Test_functions_for_optimization
     '''
     x1, x2 = p
-    x = np.square(x1) + np.square(x2)
-    return 0.5 + (np.square(np.sin(x)) - 0.5) / np.square(1 + 0.001 * x)
+    part1 = np.square(x1) - np.square(x2)
+    part2 = np.square(x1) + np.square(x2)
+    return 0.5 + (np.square(np.sin(part1)) - 0.5) / np.square(1 + 0.001 * part2)
 
 
 import torch
