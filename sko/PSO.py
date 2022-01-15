@@ -171,7 +171,7 @@ class PSO(SkoBase):
         self.record_value['V'].append(self.V)
         self.record_value['Y'].append(self.Y)
 
-    def run(self, max_iter=None, precision=1e-7, N=20):
+    def run(self, max_iter=None, precision=None, N=20):
         '''
         precision: None or float
             If precision is None, it will run the number of max_iter steps
@@ -244,7 +244,7 @@ class PSO_TSP(SkoBase):
             ind1, ind2 = ind2, ind1 + 1
 
         part1 = x2[ind1:ind2]
-        part2 = [i for i in x1 if i not in part1] # this is very slow
+        part2 = [i for i in x1 if i not in part1]  # this is very slow
 
         return np.array(part1 + part2)
 
