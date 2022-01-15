@@ -202,16 +202,18 @@ def schaffer(p):
     '''
     This function has plenty of local minimum, with strong shocks
     global minimum at (0,0) with value 0
+    https://en.wikipedia.org/wiki/Test_functions_for_optimization
     '''
     x1, x2 = p
-    x = np.square(x1) + np.square(x2)
-    return 0.5 + (np.square(np.sin(x)) - 0.5) / np.square(1 + 0.001 * x)
+    part1 = np.square(x1) - np.square(x2)
+    part2 = np.square(x1) + np.square(x2)
+    return 0.5 + (np.square(np.sin(part1)) - 0.5) / np.square(1 + 0.001 * part2)
 
 
 ```
 
 **Step2**: do Genetic Algorithm  
--> Demo code: [examples/demo_ga.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#L14)
+-> Demo code: [examples/demo_ga.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#L16)
 ```python
 from sko.GA import GA
 
@@ -220,7 +222,7 @@ best_x, best_y = ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 ```
 
--> Demo code: [examples/demo_ga.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#L20)
+-> Demo code: [examples/demo_ga.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#L22)
 ```python
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -471,7 +473,6 @@ print(best_x, best_y)
 
 
 # Projects using scikit-opt
-
 
 - [Yu, J., He, Y., Yan, Q., & Kang, X. (2021). SpecView: Malware Spectrum Visualization Framework With Singular Spectrum Transformation. IEEE Transactions on Information Forensics and Security, 16, 5093-5107.](https://ieeexplore.ieee.org/abstract/document/9607026/)
 - [Zhen, H., Zhai, H., Ma, W., Zhao, L., Weng, Y., Xu, Y., ... & He, X. (2021). Design and tests of reinforcement-learning-based optimal power flow solution generator. Energy Reports.](https://www.sciencedirect.com/science/article/pii/S2352484721012737)
