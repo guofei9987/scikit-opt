@@ -52,7 +52,7 @@ with github? Here are the steps you need to take.
     The easiest way to do this is to either enable
     [Travis-CI](https://travis-ci.org/) on your fork, or to make a pull
     request and check there.
-4.  If it is a big, new feature please submit an example.
+4.  If it is a big, new feature please submit an example to path `/examples/` or `/tests/` and add it to `.travis.yml`.
 5.  [Submit a pull
     request](https://help.github.com/articles/using-pull-requests)
 

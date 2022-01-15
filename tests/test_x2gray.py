@@ -23,8 +23,7 @@ class TestX2Gray(unittest.TestCase):
 
             value = ga.chrom2x(ga.Chrom)
             chrom2 = x2gray(x=value, n_dim=n_dim, lb=lb, ub=ub, precision=precision)
-            self.assertTrue(np.allclose(ga.Chrom, chrom2),msg='x2gray error')
-
+            self.assertTrue(np.allclose(ga.Chrom, chrom2), msg='x2gray error')
 
 
 if __name__ == '__main__':

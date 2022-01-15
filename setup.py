@@ -1,13 +1,13 @@
 from setuptools import setup, find_packages
-from os import path as os_path
+import os
 import sko
 
-this_directory = os_path.abspath(os_path.dirname(__file__))
+this_directory = os.path.abspath(os.path.dirname(__file__))
 
 
 # 读取文件内容
 def read_file(filename):
-    with open(os_path.join(this_directory, filename), encoding='utf-8') as f:
+    with open(os.path.join(this_directory, filename), encoding='utf-8') as f:
         long_description = f.read()
     return long_description
 

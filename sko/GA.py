@@ -255,6 +255,7 @@ class GA(GeneticAlgorithmBase):
 
         return self
 
+
 class RCGA(GeneticAlgorithmBase):
     """real-coding genetic algorithm
 
@@ -277,12 +278,13 @@ class RCGA(GeneticAlgorithmBase):
     ub : array_like
         The upper bound of every variables of func
     """
+
     def __init__(self, func, n_dim,
                  size_pop=50, max_iter=200,
                  prob_mut=0.001,
                  prob_cros=0.9,
                  lb=-1, ub=1,
-                ):
+                 ):
         super().__init__(func, n_dim, size_pop, max_iter, prob_mut)
         self.lb, self.ub = np.array(lb) * np.ones(self.n_dim), np.array(ub) * np.ones(self.n_dim)
         self.prob_cros = prob_cros
@@ -293,7 +295,7 @@ class RCGA(GeneticAlgorithmBase):
         self.Chrom = np.random.random([self.size_pop, self.n_dim])
         return self.Chrom
 
-    def chrom2x(self,Chrom):
+    def chrom2x(self, Chrom):
         X = self.lb + (self.ub - self.lb) * self.Chrom
         return X
 
@@ -338,7 +340,7 @@ class RCGA(GeneticAlgorithmBase):
         :return:
         '''
         #
-        size_pop, n_dim, Chrom= self.size_pop, self.n_dim, self.Chrom
+        size_pop, n_dim, Chrom = self.size_pop, self.n_dim, self.Chrom
         for i in range(size_pop):
             for j in range(n_dim):
                 r = np.random.random()
@@ -367,6 +369,7 @@ class RCGA(GeneticAlgorithmBase):
     selection = selection.selection_tournament_faster
     crossover = crossover_SBX
     mutation = mutation
+
 
 class GA_TSP(GeneticAlgorithmBase):
     """
