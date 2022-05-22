@@ -123,14 +123,17 @@ def zakharov(p):
 
 
 def ackley(p):
-    """ Ackley_N.2
-    -32<=xi<=32. Convex 2dim , non-seperable function .
-    The global minimum value -200 can be found at f(0,0)
+    """ Ackley
+    -5<=xi<=5. Convex 2dim , non-seperable function .
+    The global minimum value 0 can be found at f(0,0)
+    https://en.wikipedia.org/wiki/Test_functions_for_optimization
     :param p:
     :return:
     """
     x, y = p
-    return -200 * np.exp(-0.02 * np.sqrt(np.square(x)) + np.square(y))
+    part1 = np.square(x) + np.square(y)
+    part2 = np.cos(2 * np.pi * x) + np.cos(2 * np.pi * y)
+    return -20 * np.exp(-0.02 * np.sqrt(0.5 * part1)) - np.exp(0.5 * part2) + np.e + 20
 
 
 def cigar(p):
