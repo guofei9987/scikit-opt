@@ -38,7 +38,7 @@ class TestDemoFunc(unittest.TestCase):
         self.assertEqual(zakharov((0, 0, 0)), 0.0, msg="zakharov failed for 3 arguments ")
 
     def test_ackley(self):
-        self.assertEqual(ackley((0, 0)), -200.0, msg="ackley failed for 2 arguments ")
+        self.assertEqual(ackley((0, 0)), 0.0, msg="ackley failed for 2 arguments ")
 
     def test_cigar(self):
         self.assertEqual(cigar((0, 0)), 0.0, msg="cigar failed for 2 arguments ")
