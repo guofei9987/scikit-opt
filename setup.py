@@ -28,7 +28,7 @@ setup(name='scikit-opt',
       author='Guo Fei',
       author_email='guofei9987@foxmail.com',
       license='MIT',
-      packages=find_packages(),
+      packages=find_packages(exclude=("*tests.*", "*tests")),
       platforms=['linux', 'windows', 'macos'],
       install_requires=['numpy', 'scipy'],
       zip_safe=False)
