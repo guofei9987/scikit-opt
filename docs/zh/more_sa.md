@@ -60,7 +60,7 @@ from sko.SA import SABoltzmann
 
 sa_boltzmann = SABoltzmann(func=demo_func, x0=[1, 1, 1], T_max=1, T_min=1e-9, q=0.99, L=300, max_stay_counter=150)
 sa_boltzmann.run()
-print('Boltzmann Simulated Annealing: best_x is ', sa_boltzmann.best_x, 'best_y is ', sa_fast.best_y)
+print('Boltzmann Simulated Annealing: best_x is ', sa_boltzmann.best_x, 'best_y is ', sa_boltzmann.best_y)
 
 
 ```
@@ -73,7 +73,7 @@ from sko.SA import SABoltzmann
 sa_boltzmann = SABoltzmann(func=demo_func, x0=[1, 1, 1], T_max=1, T_min=1e-9, q=0.99, L=300, max_stay_counter=150,
                            lb=-1, ub=[2, 3, 4])
 sa_boltzmann.run()
-print('Boltzmann Simulated Annealing with bounds: best_x is ', sa_boltzmann.best_x, 'best_y is ', sa_fast.best_y)
+print('Boltzmann Simulated Annealing with bounds: best_x is ', sa_boltzmann.best_x, 'best_y is ', sa_boltzmann.best_y)
 
 ```
 #### 3. Cauchy Simulated Annealing
