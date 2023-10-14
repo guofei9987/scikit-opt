@@ -256,6 +256,68 @@ class GA(GeneticAlgorithmBase):
         return self
 
 
+class EGA(GA):
+    """
+
+    """
+    def __init__(self, func, n_dim,
+                 size_pop=50, max_iter=200,
+                 prob_mut=0.001, n_elitist=0,
+                 lb=-1, ub=1,
+                 constraint_eq=tuple(), constraint_ueq=tuple(),
+                 precision=1e-7, early_stop=None):
+        super().__init__(func, n_dim, size_pop, max_iter, prob_mut, lb, ub, constraint_eq, constraint_ueq, precision,
+                         early_stop)
+        self._n_elitist = n_elitist
+
+    def run(self, max_iter=None):
+        self.max_iter = max_iter or self.max_iter
+        best = []
+        for i in range(self.max_iter):
+            self.X = self.chrom2x(self.Chrom)
+            self.Y = self.x2y()
+            self.ranking()
+
+            # select elitists do not selection(), crossover() and mutation() and remove them from population
+            # provisionally.
+            idx_elitist = np.sort(self.Y.argsort()[0:self._n_elitist])
+            self.size_pop -= self._n_elitist
+            elitist_FitV = np.take(self.FitV, idx_elitist, axis=0)
+            self.FitV = np.delete(self.FitV, idx_elitist, axis=0)
+            elitist_Chrom = np.take(self.Chrom, idx_elitist, axis=0)
+            self.Chrom = np.delete(self.Chrom, idx_elitist, axis=0)
+
+            self.selection()
+            self.crossover()
+            self.mutation()
+
+            # add elitists back to next generation population.
+            idx_insert = np.array([idx_v - i for i, idx_v in enumerate(idx_elitist)])
+            self.size_pop += self._n_elitist
+            self.FitV = np.insert(self.FitV, idx_insert, elitist_FitV, axis=0)
+            self.Chrom = np.insert(self.Chrom, idx_insert, elitist_Chrom, axis=0)
+
+            # record the best ones
+            generation_best_index = self.FitV.argmax()
+            self.generation_best_X.append(self.X[generation_best_index, :])
+            self.generation_best_Y.append(self.Y[generation_best_index])
+            self.all_history_Y.append(self.Y)
+            self.all_history_FitV.append(self.FitV)
+
+            if self.early_stop:
+                best.append(min(self.generation_best_Y))
+                if len(best) >= self.early_stop:
+                    if best.count(min(best)) == len(best):
+                        break
+                    else:
+                        best.pop(0)
+
+        global_best_index = np.array(self.generation_best_Y).argmin()
+        self.best_x = self.generation_best_X[global_best_index]
+        self.best_y = self.func(np.array([self.best_x]))
+        return self.best_x, self.best_y
+
+
 class RCGA(GeneticAlgorithmBase):
     """real-coding genetic algorithm
 
