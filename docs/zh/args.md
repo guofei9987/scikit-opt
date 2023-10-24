@@ -30,6 +30,7 @@ help(sko.AFSA.AFSA)
 | constraint\_eq  | 空元组    | 等式约束                   |
 | constraint\_ueq | 空元组    | 不等式约束                  |
 | precision       | 1e\-7  | 精准度，int/float或者它们组成的列表 |
+| n_processes     | 0  | 使用的核数, 0表示使用全部的核 |
 
 
 ### GA_TSP
@@ -57,6 +58,8 @@ help(sko.AFSA.AFSA)
 | c1        | 0\.5 | 个体记忆     |
 | c2        | 0\.5 | 集体记忆     |
 | constraint\_ueq | 空元组    | 不等式约束                  |
+| n_processes     | 0  | 使用的核数, 0表示使用全部的核 |
+
 
 ### DE
 
@@ -72,6 +75,8 @@ help(sko.AFSA.AFSA)
 | ub        | 1      | 每个自变量的最大值 |
 | constraint\_eq  | 空元组    | 等式约束                   |
 | constraint\_ueq | 空元组    | 不等式约束                  |
+| n_processes     | 0  | 使用的核数, 0表示使用全部的核 |
+
 
 ### SA
 
