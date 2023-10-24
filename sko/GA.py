@@ -14,8 +14,8 @@ from .operators import crossover, mutation, ranking, selection
 class GeneticAlgorithmBase(SkoBase, metaclass=ABCMeta):
     def __init__(self, func, n_dim,
                  size_pop=50, max_iter=200, prob_mut=0.001,
-                 constraint_eq=tuple(), constraint_ueq=tuple(), early_stop=None):
-        self.func = func_transformer(func)
+                 constraint_eq=tuple(), constraint_ueq=tuple(), early_stop=None, n_processes=0):
+        self.func = func_transformer(func, n_processes)
         assert size_pop % 2 == 0, 'size_pop must be even integer'
         self.size_pop = size_pop  # size of population
         self.max_iter = max_iter
@@ -133,6 +133,8 @@ class GA(GeneticAlgorithmBase):
         Max of iter
     prob_mut : float between 0 and 1
         Probability of mutation
+    n_processes : int
+        Number of processes, 0 means use all cpu
     Attributes
     ----------------------
     Lind : array_like
@@ -151,8 +153,8 @@ class GA(GeneticAlgorithmBase):
                  prob_mut=0.001,
                  lb=-1, ub=1,
                  constraint_eq=tuple(), constraint_ueq=tuple(),
-                 precision=1e-7, early_stop=None):
-        super().__init__(func, n_dim, size_pop, max_iter, prob_mut, constraint_eq, constraint_ueq, early_stop)
+                 precision=1e-7, early_stop=None, n_processes=0):
+        super().__init__(func, n_dim, size_pop, max_iter, prob_mut, constraint_eq, constraint_ueq, early_stop, n_processes=n_processes)
 
         self.lb, self.ub = np.array(lb) * np.ones(self.n_dim), np.array(ub) * np.ones(self.n_dim)
         self.precision = np.array(precision) * np.ones(self.n_dim)  # works when precision is int, float, list or array
@@ -277,6 +279,8 @@ class RCGA(GeneticAlgorithmBase):
         The lower bound of every variables of func
     ub : array_like
         The upper bound of every variables of func
+    n_processes : int
+        Number of processes, 0 means use all cpu
     """
 
     def __init__(self, func, n_dim,
@@ -284,8 +288,9 @@ class RCGA(GeneticAlgorithmBase):
                  prob_mut=0.001,
                  prob_cros=0.9,
                  lb=-1, ub=1,
+                 n_processes=0
                  ):
-        super().__init__(func, n_dim, size_pop, max_iter, prob_mut)
+        super().__init__(func, n_dim, size_pop, max_iter, prob_mut, n_processes=n_processes)
         self.lb, self.ub = np.array(lb) * np.ones(self.n_dim), np.array(ub) * np.ones(self.n_dim)
         self.prob_cros = prob_cros
         self.crtbp()
