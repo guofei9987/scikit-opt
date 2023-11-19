@@ -27,7 +27,7 @@ def set_run_mode(func, mode):
     return
 
 
-def func_transformer(func):
+def func_transformer(func, n_processes):
     '''
     transform this kind of function:
     ```
@@ -91,18 +91,24 @@ def func_transformer(func):
 
         return func_warped
     elif mode == 'multithreading':
+        assert n_processes >= 0, 'n_processes should >= 0'
         from multiprocessing.dummy import Pool as ThreadPool
-
-        pool = ThreadPool()
+        if n_processes == 0:
+            pool = ThreadPool()
+        else:
+            pool = ThreadPool(n_processes)
 
         def func_transformed(X):
             return np.array(pool.map(func, X))
 
         return func_transformed
     elif mode == 'multiprocessing':
+        assert n_processes >= 0, 'n_processes should >= 0'
         from multiprocessing import Pool
-        pool = Pool()
-
+        if n_processes == 0:
+            pool = Pool()
+        else:
+            pool = Pool(n_processes)
         def func_transformed(X):
             return np.array(pool.map(func, X))
 

@@ -61,6 +61,8 @@ class PSO(SkoBase):
         equal constraint. Note: not available yet.
     constraint_ueq : tuple
         unequal constraint
+    n_processes : int
+        Number of processes, 0 means use all cpu
     Attributes
     ----------------------
     pbest_x : array_like, shape is (pop,dim)
@@ -82,11 +84,11 @@ class PSO(SkoBase):
 
     def __init__(self, func, n_dim=None, pop=40, max_iter=150, lb=-1e5, ub=1e5, w=0.8, c1=0.5, c2=0.5,
                  constraint_eq=tuple(), constraint_ueq=tuple(), verbose=False
-                 , dim=None):
+                 , dim=None, n_processes=0):
 
         n_dim = n_dim or dim  # support the earlier version
 
-        self.func = func_transformer(func)
+        self.func = func_transformer(func, n_processes)
         self.w = w  # inertia
         self.cp, self.cg = c1, c2  # parameters to control personal best, global best respectively
         self.pop = pop  # number of particles

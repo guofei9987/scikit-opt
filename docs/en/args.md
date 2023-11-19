@@ -30,6 +30,7 @@ help(sko.AFSA.AFSA)
 | constraint\_eq  | tuple()    | equal constraint        |
 | constraint\_ueq | tuple()    | unequal constraint                  |
 | precision       | 1e\-7  | precision，int/float or list |
+| n_processes     | 0  | number of processes, 0 means use all cpu |
 
 
 ### GA_TSP
@@ -57,6 +58,7 @@ help(sko.AFSA.AFSA)
 | c1        | 0\.5 | cognitive parameter |
 | c2        | 0\.5 | social parameter |
 | constraint\_ueq | tuple()    | unequal constraint                  |
+| n_processes     | 0  | number of processes, 0 means use all cpu |
 
 ### DE
 
@@ -72,6 +74,7 @@ help(sko.AFSA.AFSA)
 | ub        | 1      | upper bound of variables |
 | constraint\_eq  | tuple()   | equal constraint                   |
 | constraint\_ueq | tuple()    | unequal constraint                 |
+| n_processes     | 0  | number of processes, 0 means use all cpu |
 
 ### SA
 
