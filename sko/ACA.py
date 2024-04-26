@@ -23,7 +23,7 @@ class ACA_TSP:
         self.prob_matrix_distance = 1 / (distance_matrix + 1e-10 * np.eye(n_dim, n_dim))  # 避免除零错误
 
         self.Tau = np.ones((n_dim, n_dim))  # 信息素矩阵，每次迭代都会更新
-        self.Table = np.zeros((size_pop, n_dim)).astype(np.int)  # 某一代每个蚂蚁的爬行路径
+        self.Table = np.zeros((size_pop, n_dim), dtype=int)  # 某一代每个蚂蚁的爬行路径
         self.y = None  # 某一代每个蚂蚁的爬行总距离
         self.generation_best_X, self.generation_best_Y = [], []  # 记录各代的最佳情况
         self.x_best_history, self.y_best_history = self.generation_best_X, self.generation_best_Y  # 历史原因，为了保持统一
