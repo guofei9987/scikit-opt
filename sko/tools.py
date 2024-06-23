@@ -6,7 +6,10 @@ import sys
 import multiprocessing
 
 if sys.platform != 'win32':
-    multiprocessing.set_start_method('fork')
+    try:
+        multiprocessing.set_start_method('fork')
+    except RuntimeError:
+        pass
 
 
 def set_run_mode(func, mode):
