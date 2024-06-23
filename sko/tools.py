@@ -80,7 +80,7 @@ def func_transformer(func, n_processes):
         set_run_mode(func, 'vectorization')
 
     mode = getattr(func, 'mode', 'others')
-    valid_mode = ('common', 'multithreading', 'multiprocessing', 'vectorization', 'cached', 'others')
+    valid_mode = ('common', 'multithreading', 'multiprocessing', 'vectorization', 'cached', 'joblib', 'others')
     assert mode in valid_mode, 'valid mode should be in ' + str(valid_mode)
     if mode == 'vectorization':
         return func
@@ -116,7 +116,16 @@ def func_transformer(func, n_processes):
             return np.array(pool.map(func, X))
 
         return func_transformed
-
+        
+    elif mode == "joblib":
+        from joblib import Parallel, delayed
+        def func_transformed(X):
+            res = Parallel(n_jobs=-1, batch_size='auto')(
+                delayed(func)(x) for x in X
+            )
+            return np.array(res)
+        return func_transformed
+        
     else:  # common
         def func_transformed(X):
             return np.array([func(x) for x in X])
