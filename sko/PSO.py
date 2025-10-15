@@ -4,7 +4,6 @@
 # @Author  : github.com/guofei9987
 
 import numpy as np
-from sklearn.utils.validation import check_random_state
 from sko.tools import func_transformer
 from .base import SkoBase
 from .operators import crossover, mutation, ranking, selection
@@ -62,8 +61,6 @@ class PSO(SkoBase):
         equal constraint. Note: not available yet.
     constraint_ueq : tuple
         unequal constraint
-    random_state : int
-        Random seed for reproducibility
     n_processes : int
         Number of processes, 0 means use all cpu
     Attributes
@@ -87,7 +84,7 @@ class PSO(SkoBase):
 
     def __init__(self, func, n_dim=None, pop=40, max_iter=150, lb=-1e5, ub=1e5, w=0.8, c1=0.5, c2=0.5,
                  constraint_eq=tuple(), constraint_ueq=tuple(), verbose=False
-                 , dim=None, random_state=None, n_processes=0):
+                 , dim=None, n_processes=0):
 
         n_dim = n_dim or dim  # support the earlier version
 
@@ -98,7 +95,6 @@ class PSO(SkoBase):
         self.n_dim = n_dim  # dimension of particles, which is the number of variables of func
         self.max_iter = max_iter  # max iter
         self.verbose = verbose  # print the result of each iter or not
-        self.random_state = check_random_state(random_state) # use a dedicated random_state for reproducibility of experiments
 
         self.lb, self.ub = np.array(lb) * np.ones(self.n_dim), np.array(ub) * np.ones(self.n_dim)
         assert self.n_dim == len(self.lb) == len(self.ub), 'dim == len(lb) == len(ub) is not True'
@@ -108,9 +104,9 @@ class PSO(SkoBase):
         self.constraint_ueq = constraint_ueq
         self.is_feasible = np.array([True] * pop)
 
-        self.X = self.random_state.uniform(low=self.lb, high=self.ub, size=(self.pop, self.n_dim))
+        self.X = np.random.uniform(low=self.lb, high=self.ub, size=(self.pop, self.n_dim))
         v_high = self.ub - self.lb
-        self.V = self.random_state.uniform(low=-v_high, high=v_high, size=(self.pop, self.n_dim))  # speed of particles
+        self.V = np.random.uniform(low=-v_high, high=v_high, size=(self.pop, self.n_dim))  # speed of particles
         self.Y = self.cal_y()  # y = f(x) for all particles
         self.pbest_x = self.X.copy()  # personal best location of every particle in history
         self.pbest_y = np.array([[np.inf]] * pop)  # best image of every particle in history
@@ -132,8 +128,8 @@ class PSO(SkoBase):
         return True
 
     def update_V(self):
-        r1 = self.random_state.rand(self.pop, self.n_dim)
-        r2 = self.random_state.rand(self.pop, self.n_dim)
+        r1 = np.random.rand(self.pop, self.n_dim)
+        r2 = np.random.rand(self.pop, self.n_dim)
         self.V = self.w * self.V + \
                  self.cp * r1 * (self.pbest_x - self.X) + \
                  self.cg * r2 * (self.gbest_x - self.X)
