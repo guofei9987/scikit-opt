@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        python-version:
+          - "3.6"
+          - "3.8"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install --upgrade  -r requirements.txt
+      - run: pip install coverage codecov
+      - run: python setup.py install
+      - run: coverage run -p sko/demo_func.py
+      - run: coverage run -p examples/demo_ga.py
+      - run: coverage run -p examples/demo_ga_tsp.py
+      - run: coverage run -p examples/demo_ga_udf.py
+      - run: coverage run -p examples/demo_ga_udf_tsp.py
+      - run: coverage run -p examples/demo_pso.py
+      - run: coverage run -p examples/demo_sa.py
+      - run: coverage run -p examples/demo_sa_tsp.py examples/data/nctu.csv
+      - run: coverage run -p examples/demo_aca_tsp.py
+      - run: coverage run -p examples/demo_ia.py
+      - run: coverage run -p examples/demo_afsa.py
+      - run: coverage run -p examples/demo_pso_ani.py
+      - run: coverage run -p examples/demo_de.py
+      - run: coverage run -p examples/vrp.py
+      - run: coverage run -p examples/example_function_modes.py
+      - run: coverage run -p examples/example_method_modes.py
+      - run: coverage run -p tests/test_x2gray.py
+      - run: coverage run -p examples/demo_rcga.py
+      - run: coverage combine
+      - run: codecov
