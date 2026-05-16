@@ -13,12 +13,12 @@
 <a href="https://hellogithub.com/repository/guofei9987/scikit-opt" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=6763d615842e4449a02f024f3e2e345c&claim_uid=se0WHo8cbiLv2w1&theme=small" alt="Featured｜HelloGitHub" /></a>
 
 
-Swarm Intelligence in Python  
+Swarm Intelligence in Python
 (Genetic Algorithm, Particle Swarm Optimization, Simulated Annealing, Ant Colony Algorithm, Immune Algorithm, Artificial Fish Swarm Algorithm in Python)
 
 
 - **Documentation:** [https://scikit-opt.github.io/scikit-opt/#/en/](https://scikit-opt.github.io/scikit-opt/#/en/)
-- **文档：** [https://scikit-opt.github.io/scikit-opt/#/zh/](https://scikit-opt.github.io/scikit-opt/#/zh/)  
+- **文档：** [https://scikit-opt.github.io/scikit-opt/#/zh/](https://scikit-opt.github.io/scikit-opt/#/zh/)
 - **Source code:** [https://github.com/guofei9987/scikit-opt](https://github.com/guofei9987/scikit-opt)
 - **Help us improve scikit-opt** [https://www.wjx.cn/jq/50964691.aspx](https://www.wjx.cn/jq/50964691.aspx)
 
@@ -39,8 +39,8 @@ pip install .
 
 **UDF** (user defined function) is available now!
 
-For example, you just worked out a new type of `selection` function.  
-Now, your `selection` function is like this:  
+For example, you just worked out a new type of `selection` function.
+Now, your `selection` function is like this:
 -> Demo code: [examples/demo_ga_udf.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L1)
 ```python
 # step1: define your own operator:
@@ -56,7 +56,7 @@ def selection_tournament(algorithm, tourn_size):
 
 ```
 
-Import and build ga  
+Import and build ga
 -> Demo code: [examples/demo_ga_udf.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L12)
 ```python
 import numpy as np
@@ -67,13 +67,13 @@ ga = GA(func=demo_func, n_dim=3, size_pop=100, max_iter=500, prob_mut=0.001,
         lb=[-1, -10, -5], ub=[2, 10, 2], precision=[1e-7, 1e-7, 1])
 
 ```
-Regist your udf to GA  
+Register your udf to GA
 -> Demo code: [examples/demo_ga_udf.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L20)
 ```python
 ga.register(operator_name='selection', operator=selection_tournament, tourn_size=3)
 ```
 
-scikit-opt also provide some operators  
+scikit-opt also provide some operators
 -> Demo code: [examples/demo_ga_udf.py#s4](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L22)
 ```python
 from sko.operators import ranking, selection, crossover, mutation
@@ -82,14 +82,14 @@ ga.register(operator_name='ranking', operator=ranking.ranking). \
     register(operator_name='crossover', operator=crossover.crossover_2point). \
     register(operator_name='mutation', operator=mutation.mutation)
 ```
-Now do GA as usual  
+Now do GA as usual
 -> Demo code: [examples/demo_ga_udf.py#s5](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_udf.py#L28)
 ```python
 best_x, best_y = ga.run()
 print('best_x:', best_x, '\n', 'best_y:', best_y)
 ```
 
-> Until Now, the **udf** surport `crossover`, `mutation`, `selection`, `ranking` of GA
+> Until Now, the **udf** support `crossover`, `mutation`, `selection`, `ranking` of GA
 > scikit-opt provide a dozen of operators, see [here](https://github.com/guofei9987/scikit-opt/tree/master/sko/operators)
 
 For advanced users:
@@ -117,7 +117,7 @@ print('best_x:', best_x, '\n', 'best_y:', best_y)
 ```
 
 ##  feature2: continue to run
-(New in version 0.3.6)  
+(New in version 0.3.6)
 Run an algorithm for 10 iterations, and then run another 20 iterations base on the 10 iterations before:
 ```python
 from sko.GA import GA
@@ -139,14 +139,14 @@ see [https://github.com/guofei9987/scikit-opt/blob/master/examples/example_funct
 
 
 ## feature4: GPU computation
- We are developing GPU computation, which will be stable on version 1.0.0  
+ We are developing GPU computation, which will be stable on version 1.0.0
 An example is already available: [https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_gpu.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_gpu.py)
 
 
 # Quick start
 
 ## 1. Differential Evolution
-**Step1**：define your problem  
+**Step1**：define your problem
 -> Demo code: [examples/demo_de.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_de.py#L1)
 ```python
 '''
@@ -175,7 +175,7 @@ constraint_ueq = [
 
 ```
 
-**Step2**: do Differential Evolution  
+**Step2**: do Differential Evolution
 -> Demo code: [examples/demo_de.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_de.py#L25)
 ```python
 from sko.DE import DE
@@ -190,7 +190,7 @@ print('best_x:', best_x, '\n', 'best_y:', best_y)
 
 ## 2. Genetic Algorithm
 
-**Step1**：define your problem  
+**Step1**：define your problem
 -> Demo code: [examples/demo_ga.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#L1)
 ```python
 import numpy as np
@@ -210,7 +210,7 @@ def schaffer(p):
 
 ```
 
-**Step2**: do Genetic Algorithm  
+**Step2**: do Genetic Algorithm
 -> Demo code: [examples/demo_ga.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga.py#L16)
 ```python
 from sko.GA import GA
@@ -237,8 +237,8 @@ plt.show()
 ### 2.2 Genetic Algorithm for TSP(Travelling Salesman Problem)
 Just import the `GA_TSP`, it overloads the `crossover`, `mutation` to solve the TSP
 
-**Step1**: define your problem. Prepare your points coordinate and the distance matrix.  
-Here I generate the data randomly as a demo:  
+**Step1**: define your problem. Prepare your points coordinate and the distance matrix.
+Here I generate the data randomly as a demo:
 -> Demo code: [examples/demo_ga_tsp.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_tsp.py#L1)
 ```python
 import numpy as np
@@ -261,7 +261,7 @@ def cal_total_distance(routine):
 
 ```
 
-**Step2**: do GA  
+**Step2**: do GA
 -> Demo code: [examples/demo_ga_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_tsp.py#L19)
 ```python
 
@@ -272,7 +272,7 @@ best_points, best_distance = ga_tsp.run()
 
 ```
 
-**Step3**: Plot the result:  
+**Step3**: Plot the result:
 -> Demo code: [examples/demo_ga_tsp.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_ga_tsp.py#L26)
 ```python
 fig, ax = plt.subplots(1, 2)
@@ -289,7 +289,7 @@ plt.show()
 ## 3. PSO(Particle swarm optimization)
 
 ### 3.1 PSO
-**Step1**: define your problem:  
+**Step1**: define your problem:
 -> Demo code: [examples/demo_pso.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L1)
 ```python
 def demo_func(x):
@@ -299,7 +299,7 @@ def demo_func(x):
 
 ```
 
-**Step2**: do PSO  
+**Step2**: do PSO
 -> Demo code: [examples/demo_pso.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L6)
 ```python
 from sko.PSO import PSO
@@ -310,7 +310,7 @@ print('best_x is ', pso.gbest_x, 'best_y is', pso.gbest_y)
 
 ```
 
-**Step3**: Plot the result  
+**Step3**: Plot the result
 -> Demo code: [examples/demo_pso.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso.py#L13)
 ```python
 import matplotlib.pyplot as plt
@@ -324,7 +324,7 @@ plt.show()
 
 ### 3.2 PSO with nonlinear constraint
 
-If you need nolinear constraint like `(x[0] - 1) ** 2 + (x[1] - 0) ** 2 - 0.5 ** 2<=0`  
+If you need nolinear constraint like `(x[0] - 1) ** 2 + (x[1] - 0) ** 2 - 0.5 ** 2<=0`
 Codes are like this:
 ```python
 constraint_ueq = (
@@ -337,20 +337,20 @@ pso = PSO(func=demo_func, n_dim=2, pop=40, max_iter=max_iter, lb=[-2, -2], ub=[2
 
 Note that, you can add more then one nonlinear constraint. Just add it to `constraint_ueq`
 
-More over, we have an animation:  
-![pso_ani](https://img1.github.io/heuristic_algorithm/pso.gif)  
+More over, we have an animation:
+![pso_ani](https://img1.github.io/heuristic_algorithm/pso.gif)
 ↑**see [examples/demo_pso_ani.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_pso_ani.py)**
 
 
 ## 4. SA(Simulated Annealing)
 ### 4.1 SA for multiple function
-**Step1**: define your problem  
+**Step1**: define your problem
 -> Demo code: [examples/demo_sa.py#s1](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa.py#L1)
 ```python
 demo_func = lambda x: x[0] ** 2 + (x[1] - 0.05) ** 2 + x[2] ** 2
 
 ```
-**Step2**: do SA  
+**Step2**: do SA
 -> Demo code: [examples/demo_sa.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa.py#L3)
 ```python
 from sko.SA import SA
@@ -361,7 +361,7 @@ print('best_x:', best_x, 'best_y', best_y)
 
 ```
 
-**Step3**: Plot the result  
+**Step3**: Plot the result
 -> Demo code: [examples/demo_sa.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa.py#L10)
 ```python
 import matplotlib.pyplot as plt
@@ -376,9 +376,9 @@ plt.show()
 
 Moreover, scikit-opt provide 3 types of Simulated Annealing: Fast, Boltzmann, Cauchy. See [more sa](https://scikit-opt.github.io/scikit-opt/#/en/more_sa)
 ### 4.2 SA for TSP
-**Step1**: oh, yes, define your problems. To boring to copy this step.  
+**Step1**: oh, yes, define your problems. To boring to copy this step.
 
-**Step2**: DO SA for TSP  
+**Step2**: DO SA for TSP
 -> Demo code: [examples/demo_sa_tsp.py#s2](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py#L21)
 ```python
 from sko.SA import SA_TSP
@@ -389,7 +389,7 @@ best_points, best_distance = sa_tsp.run()
 print(best_points, best_distance, cal_total_distance(best_points))
 ```
 
-**Step3**: plot the result  
+**Step3**: plot the result
 -> Demo code: [examples/demo_sa_tsp.py#s3](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py#L28)
 ```python
 from matplotlib.ticker import FormatStrFormatter
@@ -413,9 +413,9 @@ plt.show()
 ![sa](https://img1.github.io/heuristic_algorithm/sa_tsp.png)
 
 
-More: Plot the animation:  
+More: Plot the animation:
 
-![sa](https://img1.github.io/heuristic_algorithm/sa_tsp1.gif)  
+![sa](https://img1.github.io/heuristic_algorithm/sa_tsp1.gif)
 ↑**see [examples/demo_sa_tsp.py](https://github.com/guofei9987/scikit-opt/blob/master/examples/demo_sa_tsp.py)**
 
 

@@ -145,7 +145,7 @@ help(sko.AFSA.AFSA)
 | delta         | 0\.5  | fishes toleration of crowd |
 
 ## outputs
-*(in this part, `x` is also called value of objective funtion. `x` is also called inputs of objective funtion)*
+*(in this part, `x` is also called value of objective function. `x` is also called inputs of objective function)*
 
 ### GA&GA_TSP
 
