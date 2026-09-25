@@ -41,8 +41,12 @@ class ACA_TSP:
                     taboo_set = set(self.Table[j, :k + 1])  # 已经经过的点和当前点，不能再次经过
                     allow_list = list(set(range(self.n_dim)) - taboo_set)  # 在这些点中做选择
                     prob = prob_matrix[self.Table[j, k], allow_list]
-                    prob = prob / prob.sum()  # 概率归一化
-                    next_point = np.random.choice(allow_list, size=1, p=prob)[0]
+                    prob_sum = prob.sum()
+                    if prob_sum == 0:  # 避免除零错误：概率全为0时退化为均匀选择
+                        next_point = np.random.choice(allow_list, size=1)[0]
+                    else:
+                        prob = prob / prob_sum  # 概率归一化
+                        next_point = np.random.choice(allow_list, size=1, p=prob)[0]
                     self.Table[j, k + 1] = next_point
 
             # 计算距离
