@@ -113,6 +113,7 @@ class PSO(SkoBase):
         self.gbest_x = self.pbest_x.mean(axis=0).reshape(1, -1)  # global best location for all particles
         self.gbest_y = np.inf  # global best y for all particles
         self.gbest_y_hist = []  # gbest_y of every iteration
+        self.update_pbest()
         self.update_gbest()
 
         # record verbose values
