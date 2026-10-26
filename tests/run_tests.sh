@@ -9,6 +9,8 @@ echo  -e "\n Testing demo funcs"
 python3 test_demo_func.py
 echo -e "\n Testing x2gray......"
 python3 test_x2gray.py
+echo -e "\n Testing DE......"
+python3 test_de.py
 #echo -e "\nTesting xyz......" For future reference
 #python3 test_xyz.py
 echo "All tests done!"

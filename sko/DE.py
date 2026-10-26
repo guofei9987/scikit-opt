@@ -74,7 +74,10 @@ class DE(GeneticAlgorithmBase):
         self.X = U = self.U
         f_U = self.x2y()
 
-        self.X = np.where((f_X < f_U).reshape(-1, 1), X, U)
+        keep_X = f_X < f_U
+        self.X = np.where(keep_X.reshape(-1, 1), X, U)
+        # self.Y holds f(U) after x2y(), reset it to the values of the selected population
+        self.Y = np.where(keep_X, f_X, f_U)
         return self.X
 
     def run(self, max_iter=None):
